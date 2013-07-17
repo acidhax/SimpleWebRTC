@@ -1,20 +1,9 @@
 {
-  "name": "disco-service",
-  "version": "0.0.0",
-  "description": "ERROR: No README.md file found!",
-  "main": "index.js",
-  "dependencies": {
-    "express": "~3.3.4"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@bitbucket.org:grahamkennery/disco-service.git"
-  },
-  "author": "",
-  "license": "BSD",
-  "gitHead": "c34ce76b4c67fe51290c7bb20936cd98a57ce826"
+    "name": "application-name"
+  , "version": "0.0.1"
+  , "private": true
+  , "dependencies": {
+      "express": "2.5.8"
+    , "ejs": ">= 0.0.1"
+  }
 }
