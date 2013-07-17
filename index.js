@@ -26,7 +26,7 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', function(req, res) {
-	res.send("sup" + process.env.num);
+	res.send("sup");
 });
 
 app.listen(3003, function(){
