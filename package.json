@@ -1,9 +1,10 @@
 {
-    "name": "disco-service"
-  , "version": "0.0.1"
-  , "private": true
-  , "dependencies": {
-      "express": "2.5.8"
-    , "ejs": ">= 0.0.1"
+  "name": "disco-service",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "2.5.8",
+    "ejs": ">= 0.0.1",
+    "disco-database": "git+ssh://git@bitbucket.org:grahamkennery/disco-database.git"
   }
 }
