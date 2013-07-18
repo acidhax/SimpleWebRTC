@@ -1,5 +1,6 @@
 var express = require('express'),
-	clc = require('cli-color');
+	clc = require('cli-color'),
+	db = require('./db');
 
 var app = module.exports = express.createServer();
 
