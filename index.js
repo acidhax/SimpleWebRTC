@@ -16,7 +16,7 @@ app.configure(function(){
   app.use(express.session({ 
   	secret: process.env.sessionSecret || 'Something to do with disco',
   	store: new RedisStore({ client: db.redis.client, prefix: 'discoSession:' }),
-  	cookie: { path: '/', httpOnly: false, maxAge: 1000 * 60 * 60 * 24 * 60 },
+  	cookie: { path: '/', httpOnly: false, maxAge: 1000 * 60 * 60 * 24 * 60, domain: process.env.cookieDomain || 'groupnotes.ca' },
     key: 'disco.sid'
   }));
   app.use(app.router);
