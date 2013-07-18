@@ -1,12 +1,5 @@
 var express = require('express'),
-	cluster = require('cluster'),
-	util = require('util');
-
-if (cluster.isWorker) {
-	console.log = function() {
-		process.send({log: util.format.apply(null, [].slice.call(arguments))});
-	}
-}
+	clc = require('cli-color');
 
 var app = module.exports = express.createServer();
 
@@ -24,6 +17,10 @@ app.configure(function(){
 
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+  app.use(function(req, res, next){
+	  console.log('%s %s', clc.yellow(req.method), req.url);
+	  next();
+	});
 });
 
 app.configure('production', function(){
@@ -45,5 +42,5 @@ app.get('/crash-bandicoot', function(req, res) {
 });
 
 app.listen(3003, function(){
-  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+  console.log("Service listening on port " + clc.yellow(app.address().port) + " in " + app.settings.env + " mode");
 });
