@@ -4,7 +4,7 @@ var express = require('express'),
 
 if (cluster.isWorker) {
 	console.log = function() {
-		process.send({log: util.format.apply(null, [].slice.call(arguments)});
+		process.send({log: util.format.apply(null, [].slice.call(arguments))});
 	}
 }
 
