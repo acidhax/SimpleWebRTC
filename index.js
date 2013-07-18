@@ -1,11 +1,13 @@
 var express = require('express'),
-	cluster = require('cluster');
+	cluster = require('cluster'),
+	util = require('util');
 
 if (cluster.isWorker) {
 	console.log = function() {
 		var theargs = [].slice.call(arguments);
 
-		process.send({log: theargs.join(' ')});
+		var thestring = util.format.apply(null, theargs);
+		process.send({log: );
 	}
 }
 
