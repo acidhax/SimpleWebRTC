@@ -1,7 +1,15 @@
-var express = require('express');
+var express = require('express'),
+	cluster = require('cluster');
+
+if (cluster.isWorker) {
+	console.log = function() {
+		var theargs = [].slice.call(arguments);
+
+		process.send({log: theargs.join(' ')});
+	}
+}
 
 var app = module.exports = express.createServer();
-
 
 // Configuration
 app.configure(function(){
