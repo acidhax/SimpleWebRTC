@@ -2,6 +2,8 @@ var express = require('express'),
 	clc = require('cli-color'),
 	db = require('./db');
 
+var RedisStore = require('connect-redis')(express);
+
 var app = module.exports = express.createServer();
 
 // Configuration
@@ -11,7 +13,12 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
-  app.use(express.session({ secret: process.env.sessionSecret || 'Something to do with disco' }));
+  app.use(express.session({ 
+  	secret: process.env.sessionSecret || 'Something to do with disco',
+  	store: new RedisStore({ client: db.redis.client, prefix: 'discoSession:' }),
+  	cookie: { path: '/', httpOnly: false, maxAge: 1000 * 60 * 60 * 24 * 60 },
+    key: 'disco.sid'
+  }));
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 });
