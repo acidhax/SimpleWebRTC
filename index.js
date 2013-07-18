@@ -38,7 +38,12 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', function(req, res) {
-	res.send('yo');
+	if (!req.session.count) {
+		req.session.count = 0;
+	}
+
+	req.session.count++;
+	res.send('yo: ' + req.session.count);
 });
 
 app.get('/crash-bandicoot', function(req, res) {
