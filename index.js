@@ -7,7 +7,7 @@ if (cluster.isWorker) {
 		var theargs = [].slice.call(arguments);
 
 		var thestring = util.format.apply(null, theargs);
-		process.send({log: thestring);
+		process.send({log: thestring});
 	}
 }
 
