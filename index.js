@@ -20,16 +20,16 @@ app.configure(function(){
   	store: new RedisStore({ client: db.redis.client, prefix: 'discoSession:' }),
   	cookie: { path: '/', httpOnly: false, maxAge: 1000 * 60 * 60 * 24 * 60, domain: process.env.cookieDomain || 'groupnotes.ca' },    key: 'disco.sid'
   }));
+  app.use(function(req, res, next){
+    console.log('%s %s', clc.yellow(req.method), req.url);
+    next();
+  });
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 });
 
 app.configure('development', function(){
   	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-  	app.use(function(req, res, next){
-		console.log('%s %s', clc.yellow(req.method), req.url);
-		next();
-	});
 });
 
 app.configure('production', function(){

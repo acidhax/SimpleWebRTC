@@ -1,6 +1,5 @@
 
 exports.login = function(req, res) {
-	console.log('wut');
 	if (req.session.email) {
 		res.redirect('/logged-in');
 	} else {
