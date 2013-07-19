@@ -5,7 +5,7 @@ var express = require('express'),
 
 var RedisStore = require('connect-redis')(express);
 
-var app = module.exports = express.createServer();
+var app = module.exports = express();
 // Configuration
 app.configure(function(){
   app.set('trust proxy', true);
