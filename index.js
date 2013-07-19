@@ -1,23 +1,24 @@
 var express = require('express'),
 	clc = require('cli-color'),
-	db = require('./db');
+	db = require('./db'),
+  user = require('./routes/user');
 
 var RedisStore = require('connect-redis')(express);
 
 var app = module.exports = express.createServer();
-
 // Configuration
 app.configure(function(){
+  app.set('trust proxy', true);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
+  app.set('layout', 'layout.ejs');
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.session({ 
   	secret: process.env.sessionSecret || 'Something to do with disco',
   	store: new RedisStore({ client: db.redis.client, prefix: 'discoSession:' }),
-  	cookie: { path: '/', httpOnly: false, maxAge: 1000 * 60 * 60 * 24 * 60, domain: process.env.cookieDomain || 'groupnotes.ca' },
-    key: 'disco.sid'
+  	cookie: { path: '/', httpOnly: false, maxAge: 1000 * 60 * 60 * 24 * 60, domain: process.env.cookieDomain || 'groupnotes.ca' },    key: 'disco.sid'
   }));
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
@@ -54,6 +55,11 @@ app.get('/crash-bandicoot', function(req, res) {
   })();
 });
 
+app.get('/login', user.login);
+app.post('/login', user.loginPost);
+app.get('/logged-in', user.loggedIn);
+app.get('/logout', user.logout);
+
 app.listen(3003, function(){
-  console.log("Service listening on port " + clc.yellow(app.address().port) + " in " + app.settings.env + " mode");
+  console.log("Service listening on port " + clc.yellow(3003) + " in " + app.settings.env + " mode");
 });

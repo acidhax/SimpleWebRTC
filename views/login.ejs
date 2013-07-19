@@ -1,0 +1,36 @@
+<html>
+<head>
+	<title>Project Disco Login</title>
+	<script src="/js/jquery.js"></script>
+	<script>
+	$(function() {
+		$('form').on('submit', function(e) {
+			e.preventDefault();
+			var email = $('.email').val();
+
+			if (email && email.length) {
+				$.post('/login', {
+					email:email
+				}, function(data) {
+					if (data && data.success) {
+						window.location = '/logged-in';
+					} else {
+						alert('No dice');
+					}
+				});
+			}
+		});
+	});
+	</script>
+</head>
+<body>
+
+<div>
+	<form id="login">
+		<input class="email" type="email" placeholder="Email">
+		<input type="submit">
+	</form>
+</div>
+
+</body>
+</html>
