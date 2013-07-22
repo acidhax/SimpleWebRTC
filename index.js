@@ -59,6 +59,7 @@ app.get('/login', user.login);
 app.post('/login', user.loginPost);
 app.get('/logged-in', user.loggedIn);
 app.get('/logout', user.logout);
+app.post('/add-friend', user.addFriend);
 
 app.listen(3003, function(){
   console.log("Service listening on port " + clc.yellow(3003) + " in " + app.settings.env + " mode");

@@ -41,9 +41,9 @@ exports.loginPost = function(req, res) {
 
 exports.loggedIn = function(req, res) {
 	if (req.session.accountId) {
-		db.Account.findById(req.session.accountId, function(err, account) {
+		db.Account.findById(req.session.accountId).populate('friends').exec(function(err, account) {
 			if (!err && account) {
-				res.render('logged-in', {email: account.email});		
+				res.render('logged-in', {email: account.email, friends: account.friends});
 			} else {
 				req.session.accountId = null;
 				res.redirect('/login');
@@ -59,4 +59,31 @@ exports.loggedIn = function(req, res) {
 exports.logout = function(req, res) {
 	req.session.accountId = null;
 	res.redirect('/login');
+};
+
+exports.addFriend = function(req, res) {
+	var email = req.body.email;
+	if (req.session.accountId) {
+		db.Account.findById(req.session.accountId, function(err, myAccount) {
+			if (!err && myAccount) {
+				if (myAccount.email === email) {
+					res.send({success: false, reason:'not-yourself-bro'});
+				} else {
+					myAccount.addFriendByEmail(email, function(err, account) {
+						if (!err && account) {
+							res.send({success: true});
+						} else if (!err) {
+							res.send({success: false, reason:'no-account'});
+						} else {
+							res.send({success: false});
+						}
+					});
+				}
+			} else {
+				res.send({success: false, reason: 'not-logged-in-wtf'});
+			}
+		});
+	} else {
+		res.send({success: false, reason: 'wtf'});
+	}
 };

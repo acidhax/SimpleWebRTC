@@ -1,9 +1,48 @@
 <html>
 <head>
-<title>Logged in</title>
+	<title>Logged in</title>
+	<script src="/js/jquery.js"></script>
+	<script>
+	$(function() {
+		$('form').on('submit', function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+
+			var email = $('.email').val();
+
+			if (email && email.length) {
+				$.post('/add-friend', {email: email}, function(data) {
+					if (data.success) {
+						window.location.reload();
+					} else if (data.reason === 'not-yourself-bro') {
+						alert("You can't add yourself, bro");
+					} else if (data.reason === 'no-account') {
+						alert('Nobody found with that email, bro');
+					} else {
+						alert('Something went wrong, bro');
+					}
+				});
+			} else {
+				alert('dude... type an email');
+			}
+		})
+	});
+	</script>
 </head>
 <body>
 	<h1>Welcome to project disco, <%= email %></h1>
 	<a href="/logout">Log out</a>
+
+	<h2>Friends:</h2>
+	<ul>
+	<% for (var n = 0; n < friends.length; n++) { %>
+		<li><%= friends[n].email %></li>
+	<% } %>
+	</ul>
+
+	<form>
+		<input type="email" class="email" placeholder="Friend's email">
+		<input type="submit">
+	</form>
 </body>
 </html>
