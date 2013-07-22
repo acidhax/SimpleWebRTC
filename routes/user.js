@@ -1,3 +1,5 @@
+var db = require('../db'),
+	clc = require('cli-color');
 
 exports.login = function(req, res) {
 	if (req.session.email) {
@@ -9,22 +11,52 @@ exports.login = function(req, res) {
 
 exports.loginPost = function(req, res) {
 	if (req.body.email) {
-		req.session.email = req.body.email;
-		res.send({success: true});
+		var email = req.body.email;
+		db.Account.findByEmail(req.body.email, function(err, account) {
+			if (!err && account) {
+				console.log(clc.green('Logging in') + ':', account.email, account.loggedInCount);
+				req.session.accountId = account._id;
+				account.loggedInCount++;
+				account.save();
+				res.send({success: true});
+			} else if (!err) {
+				account = new db.Account({email: email, loggedInCount: 1});
+				console.log(clc.green('Creating and logging in') + ':', account.email);
+				account.save(function(err) {
+					if (!err) {
+						req.session.accountId = account._id;
+						res.send({success: true});
+					} else {
+						res.send({success: false, reason: 'db-err-2'});
+					}
+				});
+			} else {
+				res.send({success: false, reason: 'db-err'});
+			}
+		});
 	} else {
 		res.send({success: false});
 	}
 };
 
 exports.loggedIn = function(req, res) {
-	if (req.session.email) {
-		res.render('logged-in', {email: req.session.email});
+	if (req.session.accountId) {
+		db.Account.findById(req.session.accountId, function(err, account) {
+			if (!err && account) {
+				res.render('logged-in', {email: account.email});		
+			} else {
+				req.session.accountId = null;
+				res.redirect('/login');
+			}
+		});
+		
 	} else {
+		console.log(clc.red('Ummm, unauthorized?'));
 		res.redirect('/login');
 	}
 }
 
 exports.logout = function(req, res) {
-	req.session.email = null;
+	req.session.accountId = null;
 	res.redirect('/login');
 };
