@@ -83,6 +83,7 @@ exports.addFriend = function(req, res) {
 					myAccount.addFriendByEmail(email, function(err, account) {
 						if (!err && account) {
 							res.send({success: true});
+							db.metrics.addFriend(myAccount.email, account.email);
 						} else if (!err) {
 							res.send({success: false, reason:'no-account'});
 						} else {
