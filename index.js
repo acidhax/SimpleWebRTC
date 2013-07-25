@@ -37,6 +37,10 @@ app.configure('production', function(){
 });
 
 // Routes
+app.get('*', function(req, res, next) {
+  res.set('X-PartyOn', 'Garth');
+  next();
+});
 
 app.get('/', function(req, res) {
 	if (!req.session.count) {
