@@ -15,8 +15,8 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
-  app.use(express.session({ 
-  	secret: process.env.sessionSecret || 'Something to do with disco',
+  app.use(express.session({
+  	secret: process.env.sessionSecret || 'TIZZZ A PARTAAAY UP IN THE HIZZOOOO',
   	store: new RedisStore({ client: db.redis.client, prefix: 'discoSession:' }),
   	cookie: { path: '/', httpOnly: false, maxAge: 1000 * 60 * 60 * 24 * 60, domain: process.env.cookieDomain || 'groupnotes.ca' },    key: 'disco.sid'
   }));
