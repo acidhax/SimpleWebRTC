@@ -2,7 +2,11 @@ var express = require('express'),
 	clc = require('cli-color'),
 	db = require('./db'),
   user = require('./routes/user'),
-  fs = require('fs');
+  fs = require('fs'),
+  serviceListenPort = process.env.serviceListenPort || 3003,
+  serviceListenProtocol = process.env.serviceListenProtocol || 'http',
+  serviceExternalPort = process.env.serviceExternalPort || 443,
+  serviceExternalProtocol = process.env.serviceExternalProtocol || 'https';
 
 var RedisStore = null;
 if (fs.existsSync('../connect-redis-pubsub')) {
@@ -71,6 +75,6 @@ app.get('/logged-in', user.loggedIn);
 app.get('/logout', user.logout);
 app.post('/add-friend', user.addFriend);
 
-app.listen(3003, function(){
-  console.log("Service listening on port " + clc.yellow(3003) + " in " + app.settings.env + " mode");
+app.listen(serviceListenPort, function(){
+  console.log("Service listening on port " + clc.yellow(serviceListenPort + ' ' +serviceExternalPort)  + " in " + app.settings.env + " mode");
 });
