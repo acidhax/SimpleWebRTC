@@ -1,9 +1,15 @@
 var express = require('express'),
 	clc = require('cli-color'),
 	db = require('./db'),
-  user = require('./routes/user');
+  user = require('./routes/user'),
+  fs = require('fs');
 
-var RedisStore = require('connect-redis-pubsub')(express);
+var RedisStore = null;
+if (fs.existsSync('../connect-redis-pubsub')) {
+  RedisStore = require('../connect-redis-pubsub')(express);
+} else {
+  RedisStore = require('connect-redis-pubsub')(express);
+}
 
 var app = module.exports = express();
 // Configuration
