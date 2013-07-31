@@ -3,7 +3,7 @@ var express = require('express'),
 	db = require('./db'),
   user = require('./routes/user');
 
-var RedisStore = require('connect-redis')(express);
+var RedisStore = require('connect-redis-pubsub')(express);
 
 var app = module.exports = express();
 // Configuration
