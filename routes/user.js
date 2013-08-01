@@ -20,6 +20,7 @@ exports.loginPost = function(req, res) {
 				account.save();
 				res.send({success: true});
 				db.metrics.login(account.email);
+				db.sessions.addSessionToAccount(account._id, req.sessionID);
 			} else if (!err) {
 				account = new db.Account({email: email, loggedInCount: 1});
 				console.log(clc.green('Creating and logging in') + ':', account.email);
@@ -29,6 +30,7 @@ exports.loginPost = function(req, res) {
 						res.send({success: true});
 						db.metrics.accountCreated(account.email);
 						db.metrics.login(account.email);
+						db.sessions.addSessionToAccount(account._id, req.sessionID);
 					} else {
 						res.send({success: false, reason: 'db-err-2'});
 					}
@@ -64,6 +66,7 @@ exports.logout = function(req, res) {
 		db.Account.findById(req.session.accountId, function(err, account) {
 			if (!err && account) {
 				db.metrics.logout(account.email);
+				db.sessions.removeSessionFromAccount(account._id, req.sessionID);
 			}
 		});
 	}

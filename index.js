@@ -6,7 +6,10 @@ var express = require('express'),
   serviceListenPort = process.env.serviceListenPort || 3003,
   serviceListenProtocol = process.env.serviceListenProtocol || 'http',
   serviceExternalPort = process.env.serviceExternalPort || 443,
-  serviceExternalProtocol = process.env.serviceExternalProtocol || 'https';
+  serviceExternalProtocol = process.env.serviceExternalProtocol || 'https',
+  sessionSecret = process.env.sessionSecret || 'TIZZZ A PARTAAAY UP IN THE HIZZOOOO',
+  sessionKey = process.env.sessionKey || 'disco.sid',
+  cookieParser = express.cookieParser(sessionSecret);
 
 var RedisStore = null;
 if (fs.existsSync('../connect-redis-pubsub')) {
@@ -26,7 +29,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.session({
-  	secret: process.env.sessionSecret || 'TIZZZ A PARTAAAY UP IN THE HIZZOOOO',
+  	secret: sessionSecret,
   	store: new RedisStore({ 
       client: db.redis.client, 
       subClient: db.redis.subClient, 
@@ -35,10 +38,10 @@ app.configure(function(){
   	cookie: { 
       path: '/', 
       httpOnly: false, 
-      maxAge: process.env.sessionMaxAge || 1000 * 60 * 60 * 24 * 60,
+      maxAge: process.env.sessionMaxAge?parseInt(process.env.sessionMaxAge, 10):(1000 * 60 * 60 * 24 * 60),
       domain: process.env.cookieDomain || 'groupnotes.ca' 
     },
-    key: process.env.sessionKey || 'disco.sid'
+    key: sessionKey
   }));
   app.use(function(req, res, next){
     console.log('%s %s', clc.yellow(req.method), req.url);
