@@ -88,6 +88,18 @@ app.get('/logged-in', user.loggedIn);
 app.get('/logout', user.logout);
 app.post('/add-friend', user.addFriend);
 
+
+app.get('/extension-connect', function(req, res) {
+  db.wormhole.getHealthiestWormhole(function(err, wormhole) {
+    if (!err && wormhole && wormhole.length) {
+      res.redirect(wormhole[0] + '/wormhole/disco/connect.js');
+    } else {
+      res.writeHead(res.statusCode);
+      res.end();
+    }
+  });
+});
+
 app.listen(serviceListenPort, function(){
   console.log("Service listening on port " + clc.yellow(serviceListenPort + ' ' +serviceExternalPort)  + " in " + app.settings.env + " mode");
 });
