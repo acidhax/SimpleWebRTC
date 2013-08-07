@@ -120,9 +120,13 @@ exports.getProfilePhoto = function (req, res) {
 	res.setHeader('Content-Type', 'image/jpeg');
 	if (req.params && req.params.accountId) {
 		db.Account.getProfilePhoto(req.params.accountId, function (err, data) {
-			res.setHeader('Content-Length', data.length);
-			console.log(err, data);
-			res.end(data, "binary");
+			if (!err && data) {
+				res.setHeader('Content-Length', data.length);
+				console.log(err, data);
+				res.end(data, "binary");
+			} else {
+				res.end();
+			}
 		});
 	} else {
 		res.end();
