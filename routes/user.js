@@ -1,5 +1,6 @@
 var db = require('../db'),
-	clc = require('cli-color');
+	clc = require('cli-color'),
+	fs = require('fs');
 
 exports.login = function(req, res) {
 	if (req.session.email) {
@@ -111,5 +112,7 @@ exports.uploadPhoto = function (req, res) {
 				res.send("done.");
 			});
 		});
+	} else {
+		res.send("not done");
 	}
 };
