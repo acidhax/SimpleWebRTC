@@ -122,7 +122,6 @@ exports.getProfilePhoto = function (req, res) {
 		db.Account.getProfilePhoto(req.params.accountId, function (err, data) {
 			if (!err && data) {
 				res.setHeader('Content-Length', data.length);
-				console.log(err, data);
 				res.end(data, "binary");
 			} else {
 				res.end();
