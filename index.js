@@ -25,21 +25,21 @@ app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.set('layout', 'layout.ejs');
-  app.use(express.bodyParser());
+  app.use(express.bodyParser({ keepExtensions: true}));
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.session({
   	secret: sessionSecret,
-  	store: new RedisStore({ 
-      client: db.redis.client, 
-      subClient: db.redis.subClient, 
-      prefix: process.env.sessionPrefix || 'discoSession:' 
+  	store: new RedisStore({
+      client: db.redis.client,
+      subClient: db.redis.subClient,
+      prefix: process.env.sessionPrefix || 'discoSession:'
     }),
-  	cookie: { 
-      path: '/', 
-      httpOnly: false, 
+  	cookie: {
+      path: '/',
+      httpOnly: false,
       maxAge: process.env.sessionMaxAge?parseInt(process.env.sessionMaxAge, 10):(1000 * 60 * 60 * 24 * 60),
-      domain: process.env.cookieDomain || 'groupnotes.ca' 
+      domain: process.env.cookieDomain || 'groupnotes.ca'
     },
     key: sessionKey
   }));
@@ -87,6 +87,8 @@ app.post('/login', user.loginPost);
 app.get('/logged-in', user.loggedIn);
 app.get('/logout', user.logout);
 app.post('/add-friend', user.addFriend);
+
+app.post('/uploadPhoto', user.uploadPhoto);
 
 
 app.get('/extension-connect', function(req, res) {

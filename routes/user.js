@@ -54,7 +54,7 @@ exports.loggedIn = function(req, res) {
 				res.redirect('/login');
 			}
 		});
-		
+
 	} else {
 		console.log(clc.red('Ummm, unauthorized?'));
 		res.redirect('/login');
@@ -70,7 +70,7 @@ exports.logout = function(req, res) {
 			}
 		});
 	}
-	
+
 	req.session.accountId = null;
 	res.redirect('/login');
 };
@@ -100,5 +100,16 @@ exports.addFriend = function(req, res) {
 		});
 	} else {
 		res.send({success: false, reason: 'wtf'});
+	}
+};
+
+exports.uploadPhoto = function (req, res) {
+	console.log(req.files.displayImage);
+	if (req.session && req.session.accountId && req.files && req.files.displayImage) {
+		fs.readFile(req.files.displayImage.path, function (err, photo) {
+			db.profilePhoto.setPhoto(req.session.accountId, photo, function (err) {
+				res.send("done.");
+			});
+		});
 	}
 };

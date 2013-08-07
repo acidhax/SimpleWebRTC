@@ -4,7 +4,7 @@
 	<script src="/js/jquery.js"></script>
 	<script>
 	$(function() {
-		$('form').on('submit', function(e) {
+		$('#test').on('submit', function(e) {
 			e.stopPropagation();
 			e.preventDefault();
 
@@ -40,9 +40,14 @@
 	<% } %>
 	</ul>
 
-	<form>
+	<form id="test">
 		<input type="email" class="email" placeholder="Friend's email">
 		<input type="submit">
+	</form>
+
+	<form method="POST" action="/uploadPhoto" enctype="multipart/form-data">
+		<input type="file" name="displayImage"></input>
+		<input type="submit" value="upload">
 	</form>
 </body>
 </html>
