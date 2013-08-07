@@ -89,7 +89,7 @@ app.get('/logout', user.logout);
 app.post('/add-friend', user.addFriend);
 
 app.post('/uploadPhoto', user.uploadPhoto);
-
+app.get('/user/profilePhoto/:accountId', user.getProfilePhoto);
 
 app.get('/extension-connect', function(req, res) {
   db.wormhole.getHealthiestWormhole(function(err, wormhole) {

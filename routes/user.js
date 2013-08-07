@@ -49,7 +49,7 @@ exports.loggedIn = function(req, res) {
 	if (req.session.accountId) {
 		db.Account.findById(req.session.accountId).populate('friends').exec(function(err, account) {
 			if (!err && account) {
-				res.render('logged-in', {email: account.email, friends: account.friends});
+				res.render('logged-in', {email: account.email, friends: account.friends, accountId: account._id});
 			} else {
 				req.session.accountId = null;
 				res.redirect('/login');
@@ -113,5 +113,18 @@ exports.uploadPhoto = function (req, res) {
 		});
 	} else {
 		res.send("not done");
+	}
+};
+
+exports.getProfilePhoto = function (req, res) {
+	res.setHeader('Content-Type', 'image/jpeg');
+	if (req.params && req.params.accountId) {
+		db.Account.getProfilePhoto(req.params.accountId, function (err, data) {
+			res.setHeader('Content-Length', data.length);
+			console.log(err, data);
+			res.end(data, "binary");
+		});
+	} else {
+		res.end();
 	}
 };
