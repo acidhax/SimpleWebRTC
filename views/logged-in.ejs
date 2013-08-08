@@ -1,35 +1,30 @@
-<html>
-<head>
-	<title>Logged in</title>
-	<script src="/js/jquery.js"></script>
-	<script>
-	$(function() {
-		$('#test').on('submit', function(e) {
-			e.stopPropagation();
-			e.preventDefault();
+<script>
+$(function() {
+	$('#test').on('submit', function(e) {
+		e.stopPropagation();
+		e.preventDefault();
 
-			var email = $('.email').val();
+		var email = $('.email').val();
 
-			if (email && email.length) {
-				$.post('/add-friend', {email: email}, function(data) {
-					if (data.success) {
-						window.location.reload();
-					} else if (data.reason === 'not-yourself-bro') {
-						alert("You can't add yourself, bro");
-					} else if (data.reason === 'no-account') {
-						alert('Nobody found with that email, bro');
-					} else {
-						alert('Something went wrong, bro');
-					}
-				});
-			} else {
-				alert('dude... type an email');
-			}
-		})
-	});
-	</script>
-</head>
-<body>
+		if (email && email.length) {
+			$.post('/add-friend', {email: email}, function(data) {
+				if (data.success) {
+					window.location.reload();
+				} else if (data.reason === 'not-yourself-bro') {
+					alert("You can't add yourself, bro");
+				} else if (data.reason === 'no-account') {
+					alert('Nobody found with that email, bro');
+				} else {
+					alert('Something went wrong, bro');
+				}
+			});
+		} else {
+			alert('dude... type an email');
+		}
+	})
+});
+</script>
+
 	<h1>Welcome to project disco, <%= email %></h1>
 	<img src="/user/profilePhoto/<%= accountId %>">
 	<a href="/logout">Log out</a><br/>
@@ -50,5 +45,3 @@
 		<input type="file" name="displayImage"></input>
 		<input type="submit" value="upload">
 	</form>
-</body>
-</html>

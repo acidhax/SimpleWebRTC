@@ -15,7 +15,7 @@ exports.register = function(req, res) {
 	if (req.session.email) {
 		res.redirect('/logged-in');
 	} else {
-		res.render('register', {message: ''});
+		res.render('register', {message: '', email: ''});
 	}	
 };
 
@@ -46,25 +46,37 @@ exports.registerPost = function(req, res) {
 			db.Account.findByEmail(email, function(err, account) {
 				if (!err && !account) {
 					// Create account, maybe?
-					var account = new db.Account({
-						email: email
-					});
-					account.save(function(err) {
-						if (!err) {
-							// Upload photostuff time!!!
-							req.session.accountId = account._id;
-							fs.readFile(req.files.picture.path, function (err, photo) {
-								db.Account.setPhoto(req.session.accountId, photo, function (err) {
-									if (!err) {
-										res.redirect("/logged-in");
-									} else {
-										message + 'Did you SERIOUSLY upload a strange photo that we couldn\'t process?';
-										done();
-									}
-								});
+					fs.readFile(req.files.picture.path, function (err, photo) {
+						console.log('THIS IS A THING THAT SHOULD FIRE PLZ', err, photo);
+
+						if (!err && photo && photo.length) {
+
+							var account = new db.Account({
+								email: email
 							});
+							account.save(function(err) {
+								if (!err) {
+									// Upload photostuff time!!!
+									req.session.accountId = account._id;
+								
+									db.Account.setPhoto(req.session.accountId, photo, function (err) {
+										if (!err) {
+											res.redirect("/logged-in");
+										} else {
+											message + 'Did you SERIOUSLY upload a strange photo that we couldn\'t process?';
+											done();
+										}
+									});
+									
+								} else {
+									message + "I've made a huge mistake (database problem 2)";
+									done();
+								}
+
+							});
+
 						} else {
-							message + "I've made a huge mistake (database problem 2)";
+							message += 'You need to upload a proper photo.';
 							done();
 						}
 					});
@@ -87,7 +99,7 @@ exports.registerPost = function(req, res) {
 			if (!message) {
 
 			} else {
-				res.render('register', {message: message});
+				res.render('register', {message: message, email:email});
 			}
 		}
 	}
@@ -114,19 +126,8 @@ exports.loginPost = function(req, res) {
 				db.metrics.login(account.email);
 				db.sessions.addSessionToAccount(account._id, req.sessionID);
 			} else if (!err) {
-				account = new db.Account({email: email, loggedInCount: 1});
-				console.log(clc.green('Creating and logging in') + ':', account.email);
-				account.save(function(err) {
-					if (!err) {
-						req.session.accountId = account._id;
-						res.send({success: true});
-						db.metrics.accountCreated(account.email);
-						db.metrics.login(account.email);
-						db.sessions.addSessionToAccount(account._id, req.sessionID);
-					} else {
-						res.send({success: false, reason: 'db-err-2'});
-					}
-				});
+				res.send({success: false, reason: 'db-err-2', message: "That's not an account. Try again?"});
+				
 			} else {
 				res.send({success: false, reason: 'db-err'});
 			}
@@ -164,7 +165,7 @@ exports.logout = function(req, res) {
 	}
 
 	req.session.accountId = null;
-	res.redirect('/login');
+	res.redirect('/welcome');
 };
 
 exports.addFriend = function(req, res) {
