@@ -1,6 +1,7 @@
 var express = require('express'),
 	clc = require('cli-color'),
 	db = require('./db'),
+  index = require('./routes'),
   user = require('./routes/user'),
   fs = require('fs'),
   serviceListenPort = process.env.serviceListenPort || 3003,
@@ -65,14 +66,6 @@ app.get('*', function(req, res, next) {
   next();
 });
 
-app.get('/', function(req, res) {
-	if (!req.session.count) {
-		req.session.count = 0;
-	}
-
-	req.session.count++;
-	res.send('yo: ' + req.session.count);
-});
 
 app.get('/crash-bandicoot', function(req, res) {
   (function(){
@@ -82,6 +75,10 @@ app.get('/crash-bandicoot', function(req, res) {
   })();
 });
 
+
+app.get('/', index.home);
+app.get('/no-chrome', index.noChrome);
+app.get('/extension-get', index.extensionGet);
 app.get('/login', user.login);
 app.post('/login', user.loginPost);
 app.get('/logged-in', user.loggedIn);

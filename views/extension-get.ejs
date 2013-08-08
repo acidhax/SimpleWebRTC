@@ -1,0 +1,18 @@
+<script>
+	if (chrome) {
+		setTimeout(function() {
+
+			if (document.documentElement.getElementsByClassName('disco-identifier').length) {
+				window.location = "/login";
+			} else {
+				
+			}
+
+		}, 300);
+	} else {
+		window.location = '/no-chrome';
+	}
+</script>
+
+Y U NO HAVE EXTENSION?!<br/>
+<a href="google.ca">GET</a>

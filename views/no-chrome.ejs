@@ -1,0 +1,17 @@
+<script>
+	if (chrome) {
+		setTimeout(function() {
+
+			if (document.documentElement.getElementsByClassName('disco-identifier').length) {
+				window.location = "/login";
+			} else {
+				window.location = '/extension-get';
+			}
+
+		}, 300);
+	} else {
+		
+	}
+</script>
+
+Y U NOT HAVE GOOGLE CHROME?!! GO GET!
