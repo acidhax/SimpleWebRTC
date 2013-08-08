@@ -60,10 +60,12 @@ exports.registerPost = function(req, res) {
 									req.session.accountId = account._id;
 								
 									db.Account.setPhoto(req.session.accountId, photo, function (err) {
+										console.log('THIS IS THE CALLBACK FROM CLEANER', err);
 										if (!err) {
 											res.redirect("/logged-in");
 										} else {
-											message + 'Did you SERIOUSLY upload a strange photo that we couldn\'t process?';
+											account.remove();
+											message += 'Did you SERIOUSLY upload a strange file that we couldn\'t process for your picture?';
 											done();
 										}
 									});
