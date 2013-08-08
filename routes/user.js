@@ -1,6 +1,97 @@
 var db = require('../db'),
 	clc = require('cli-color'),
-	fs = require('fs');
+	fs = require('fs'),
+	check = require('validator').check;
+
+exports.welcome = function(req,res) {
+	if (req.session.email) {
+		res.redirect('/logged-in');
+	} else {
+		res.render('welcome');
+	}
+};
+
+exports.register = function(req, res) {
+	if (req.session.email) {
+		res.redirect('/logged-in');
+	} else {
+		res.render('register', {message: ''});
+	}	
+};
+
+exports.registerPost = function(req, res) {
+	if (req.session.email) {
+		// How did they do that?!
+		res.redirect('/logged-in');
+	} else {
+		var email = req.body.email;
+		var message = '';
+		if (!email) {
+			message += 'Yo, you totally need to enter an email.<br/>';
+		} else {
+			try {
+				!check(email).isEmail();
+			} catch(e) {
+				message += 'Yo, that\'s totally not a valid email.<br/>';
+			}
+		}
+
+		if (!req.files || !req.files.picture) {
+			message += 'Ummm... You need to upload a photo, fyi<br/>';
+		}
+
+
+		if (!message) {
+
+			db.Account.findByEmail(email, function(err, account) {
+				if (!err && !account) {
+					// Create account, maybe?
+					var account = new db.Account({
+						email: email
+					});
+					account.save(function(err) {
+						if (!err) {
+							// Upload photostuff time!!!
+							req.session.accountId = account._id;
+							fs.readFile(req.files.picture.path, function (err, photo) {
+								db.Account.setPhoto(req.session.accountId, photo, function (err) {
+									if (!err) {
+										res.redirect("/logged-in");
+									} else {
+										message + 'Did you SERIOUSLY upload a strange photo that we couldn\'t process?';
+										done();
+									}
+								});
+							});
+						} else {
+							message + "I've made a huge mistake (database problem 2)";
+							done();
+						}
+					});
+
+				} else if (!err && account) {
+					message += 'That account already exists, bud. <a href="/login">Go login like a normal person</a>.'
+					done();
+				} else {
+					message += "I've made a huge mistake (database problems)";
+					done();
+				}
+			});
+
+		} else {
+			done();
+		}
+
+
+		function done() {
+			if (!message) {
+
+			} else {
+				res.render('register', {message: message});
+			}
+		}
+	}
+};
 
 exports.login = function(req, res) {
 	if (req.session.email) {

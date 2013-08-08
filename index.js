@@ -81,6 +81,9 @@ app.get('/crash-bandicoot', function(req, res) {
 app.get('/', index.home);
 app.get('/no-chrome', index.noChrome);
 app.get('/extension-get', index.extensionGet);
+app.get('/welcome', user.welcome);
+app.get('/register', user.register);
+app.post('/register', user.registerPost);
 app.get('/login', user.login);
 app.post('/login', user.loginPost);
 app.get('/logged-in', user.loggedIn);

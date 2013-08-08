@@ -1,3 +1,4 @@
+<h1>Log in to Project Disco</h1>
 <div>
 	<form id="login">
 		<input class="email" type="email" placeholder="Email">
@@ -32,6 +33,8 @@
 			}, function(data) {
 				if (data && data.success) {
 					window.location = '/logged-in';
+				} else if (data.message) {
+					alert(data.message);
 				} else {
 					alert('No dice');
 				}

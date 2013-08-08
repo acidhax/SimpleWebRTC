@@ -1,0 +1,35 @@
+<script>
+	if (chrome) {
+		setTimeout(function() {
+
+			if (document.documentElement.getElementsByClassName('disco-identifier').length) {
+
+			} else {
+				window.location = "/extension-get";				
+			}
+
+		}, 300);
+	} else {
+		window.location = '/no-chrome';
+	}
+</script>
+
+<style>
+	h1 small {
+		font-size:11pt;
+		color:#999;
+	}
+
+	a {
+		display:block;
+
+		border:1px solid #666;
+		float:left;
+		padding:10px;
+		margin:10px;
+	}
+</style>
+<h1>This is Project Disco <small>Confidential</small></h1>
+
+<a href="/login">Login!</a>
+<a href="/register">Register!</a>
