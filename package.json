@@ -7,6 +7,7 @@
     "ejs": ">= 0.0.1",
     "disco-database": "git+ssh://git@bitbucket.org:grahamkennery/disco-database.git",
     "cli-color": "~0.2.2",
-    "connect-redis-pubsub": "git+https://github.com/grahamkennery/connect-redis-pubsub.git"
+    "connect-redis-pubsub": "git+https://github.com/grahamkennery/connect-redis-pubsub.git",
+    "express-ejs-layouts": "~0.3.1"
   }
 }

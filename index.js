@@ -1,4 +1,5 @@
 var express = require('express'),
+  expressLayouts = require('express-ejs-layouts'),
 	clc = require('cli-color'),
 	db = require('./db'),
   index = require('./routes'),
@@ -25,7 +26,7 @@ app.configure(function(){
   app.set('trust proxy', true);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
-  app.set('layout', 'layout.ejs');
+  app.set('layout', 'layout');
   app.use(express.bodyParser({ keepExtensions: true}));
   app.use(express.methodOverride());
   app.use(express.cookieParser());
@@ -48,6 +49,7 @@ app.configure(function(){
     console.log('%s %s', clc.yellow(req.method), req.url);
     next();
   });
+  app.use(expressLayouts);
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 });
