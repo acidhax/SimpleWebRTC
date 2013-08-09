@@ -1,7 +1,8 @@
 var db = require('../db'),
 	clc = require('cli-color'),
 	fs = require('fs'),
-	check = require('validator').check;
+	check = require('validator').check,
+	async = require('async');
 
 exports.welcome = function(req,res) {
 	if (req.session.email) {
@@ -143,7 +144,18 @@ exports.loggedIn = function(req, res) {
 	if (req.session.accountId) {
 		db.Account.findById(req.session.accountId).populate('friends').exec(function(err, account) {
 			if (!err && account) {
-				res.render('logged-in', {email: account.email, friends: account.friends, accountId: account._id});
+				var emails = [account.email];
+				for (var n = 0; n < account.friends.length; n++) {
+					emails.push(account.friends[n].email);
+				}
+
+				db.Account.find({email: {$nin: emails}}).sort({email: 1}).exec(function(err, accounts) {
+					if (!err && accounts) {
+						res.render('logged-in', {email: account.email, friends: account.friends, accountId: account._id, accounts: accounts});
+					} else {
+						res.send('db-error');
+					}
+				});
 			} else {
 				req.session.accountId = null;
 				res.redirect('/login');
@@ -173,24 +185,58 @@ exports.logout = function(req, res) {
 exports.addFriend = function(req, res) {
 	var email = req.body.email;
 	if (req.session.accountId) {
-		db.Account.findById(req.session.accountId, function(err, myAccount) {
-			if (!err && myAccount) {
-				if (myAccount.email === email) {
-					res.send({success: false, reason:'not-yourself-bro'});
+		var myAccount, theirAccount;
+
+		async.parallel([function(next) {
+			db.Account.findById(req.session.accountId, function(err, _myAccount) {
+				if (!err && _myAccount) {
+					myAccount = _myAccount;
+					next();
 				} else {
-					myAccount.addFriendByEmail(email, function(err, account) {
-						if (!err && account) {
-							res.send({success: true});
-							db.metrics.addFriend(myAccount.email, account.email);
-						} else if (!err) {
-							res.send({success: false, reason:'no-account'});
+					next(err);
+				}
+			});
+		}, function(next) {
+			db.Account.findByEmail(email, function(err, _theirAccount) {
+				if (!err && _theirAccount) {
+					theirAccount = _theirAccount;
+					next();
+				} else {
+					next(err);
+				}
+			});
+		}], function(err) {
+			if (!err) {
+				if (!myAccount) {
+					res.send({success: false, reason: 'wtf2'});
+				} else if (!theirAccount) {
+					res.send({success: false, reason: 'no-account'});
+				} else if (myAccount._id.equals(theirAccount._id)) {
+					res.send({success: false, reason: 'not-yourself-bro'});
+				} else if (myAccount.friends.length >= 7) {
+					res.send({success: false, reason: 'too-many-friends-on-the-dancefloor'});
+				} else if (theirAccount.friends.length >= 7) {
+					res.send({success: false, reason: 'they-are-too-popular'});
+				} else {
+					// Holy shit it works
+					myAccount.friends.addToSet(theirAccount);
+					theirAccount.friends.addToSet(myAccount);
+					myAccount.save(function(err) {
+						if (!err) {
+							theirAccount.save(function(err) {
+								if (!err) {
+									res.send({success: true});
+								} else {
+									res.send({success: false, reason: 'db-error3'});
+								}
+							});
 						} else {
-							res.send({success: false});
+							res.send({success: false, reason: 'db-error2'});
 						}
 					});
 				}
 			} else {
-				res.send({success: false, reason: 'not-logged-in-wtf'});
+				res.send({success: false, reason: 'db-error'});
 			}
 		});
 	} else {

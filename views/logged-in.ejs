@@ -1,47 +1,122 @@
-<script>
-$(function() {
-	$('#test').on('submit', function(e) {
-		e.stopPropagation();
-		e.preventDefault();
+<style>
 
-		var email = $('.email').val();
+	.person {
+		width:300px;
+		border:2px solid #fff;
+		box-shadow: 0 0 5px #666;
+		background-color:#ccc;
+		border-radius:10px;
+		padding:5px;
+	}
+	.person-picture {
+		float:left;
+		max-width:50px;
+		width:50px;
+		height:50px;
+		border-radius:50px;
+		border:2px solid #fff;
+		box-shadow: 0 0 5px #666;
+	}
+	.person-name {
+		float:left;
+		line-height:50px;
+		margin-left:10px;
+	}
+	.clear {
+		clear:both;
+	}
 
-		if (email && email.length) {
-			$.post('/add-friend', {email: email}, function(data) {
-				if (data.success) {
-					window.location.reload();
-				} else if (data.reason === 'not-yourself-bro') {
-					alert("You can't add yourself, bro");
-				} else if (data.reason === 'no-account') {
-					alert('Nobody found with that email, bro');
-				} else {
-					alert('Something went wrong, bro');
-				}
-			});
-		} else {
-			alert('dude... type an email');
-		}
-	})
-});
-</script>
+</style>
 
-	<h1>Welcome to project disco, <%= email %></h1>
-	<img src="/user/profilePhoto/<%= accountId %>">
-	<a href="/logout">Log out</a><br/>
-	<a href="/fixed-position-tests.html">Fixed Position Tests</a>
-	<h2>Friends:</h2>
-	<ul>
+	<a style="display:block;border:1px solid #666;position:absolute;top:0;left:0;padding:2px 5px" href="/logout">
+		Log out
+	</a>
+
+	<h1 style="margin-top:25px">Welcome to Project Disco</h1>
+
+	<p>
+		<h2>This is you:</h2>
+		<div class="person">
+			<img class="person-picture" src="/user/profilePhoto/<%= accountId %>">
+			<div class="person-name">
+				<%= email %>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</p>
+
+
+
+
+
+
+
+	<h2>These are your friends:</h2>
 	<% for (var n = 0; n < friends.length; n++) { %>
-		<li><%= friends[n].email %></li>
+		<div class="person">
+			<img class="person-picture" src="/user/profilePhoto/<%= friends[n]._id %>">
+			<div class="person-name"><%= friends[n].email %></div>
+			<div class="clear"></div>
+		</div>
 	<% } %>
-	</ul>
 
+
+
+
+	<h2>Add a friend:</h2>
 	<form id="test">
 		<input type="email" class="email" placeholder="Friend's email">
 		<input type="submit">
 	</form>
 
+
+
+
+	<% for (var n = 0; n < accounts.length; n++) { %>
+		<div class="person">
+			<img class="person-picture" src="/user/profilePhoto/<%= accounts[n]._id %>" style="cursor:pointer" onclick="$('.email').val('<%= accounts[n].email %>').focus()">
+			<div class="person-name"><%= accounts[n].email %></div>
+			<div class="clear"></div>
+		</div>
+	<% } %>
+
+
+
+	<h2>Change your picture:</h2>
 	<form method="POST" action="/uploadPhoto" enctype="multipart/form-data">
 		<input type="file" name="displayImage"></input>
 		<input type="submit" value="upload">
 	</form>
+
+
+<!-- Friend adding -->
+<script>
+	$(function() {
+		$('#test').on('submit', function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+
+			var email = $('.email').val();
+
+			if (email && email.length) {
+				$.post('/add-friend', {email: email}, function(data) {
+					if (data.success) {
+						window.location.reload();
+					} else if (data.reason === 'not-yourself-bro') {
+						alert("You can't add yourself, bro");
+					} else if (data.reason === 'no-account') {
+						alert('Nobody found with that email, bro');
+					} else if (data.reason === 'too-many-friends-on-the-dancefloor') {
+						alert('You have too many friends, no more, sorry!');
+					} else if (data.reason === 'they-are-too-popular') {
+						alert('They have too many friends, sorry!');
+					} else {
+						alert('Something went wrong, bro');
+					}
+				});
+			} else {
+				alert('dude... type an email');
+			}
+		})
+	});
+</script>
