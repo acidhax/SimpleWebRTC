@@ -30,6 +30,7 @@ exports.registerPost = function(req, res) {
 		if (!email) {
 			message += 'Yo, you totally need to enter an email.<br/>';
 		} else {
+			email = email.toLowerCase();
 			try {
 				!check(email).isEmail();
 			} catch(e) {
@@ -118,7 +119,7 @@ exports.login = function(req, res) {
 
 exports.loginPost = function(req, res) {
 	if (req.body.email) {
-		var email = req.body.email;
+		var email = req.body.email.toLowerCase();
 		db.Account.findByEmail(req.body.email, function(err, account) {
 			if (!err && account) {
 				console.log(clc.green('Logging in') + ':', account.email, account.loggedInCount);
