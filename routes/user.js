@@ -214,10 +214,10 @@ exports.addFriend = function(req, res) {
 					res.send({success: false, reason: 'no-account'});
 				} else if (myAccount._id.equals(theirAccount._id)) {
 					res.send({success: false, reason: 'not-yourself-bro'});
-				} else if (myAccount.friends.length >= 7) {
-					res.send({success: false, reason: 'too-many-friends-on-the-dancefloor'});
-				} else if (theirAccount.friends.length >= 7) {
-					res.send({success: false, reason: 'they-are-too-popular'});
+				// } else if (myAccount.friends.length >= 7) {
+				// 	res.send({success: false, reason: 'too-many-friends-on-the-dancefloor'});
+				// } else if (theirAccount.friends.length >= 7) {
+				// 	res.send({success: false, reason: 'they-are-too-popular'});
 				} else {
 					// Holy shit it works
 					myAccount.friends.addToSet(theirAccount);
