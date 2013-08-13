@@ -64,6 +64,7 @@ exports.registerPost = function(req, res) {
 									db.Account.setPhoto(req.session.accountId, photo, function (err) {
 										console.log('THIS IS THE CALLBACK FROM CLEANER', err);
 										if (!err) {
+											db.sessions.addSessionToAccount(account._id, req.sessionID);
 											res.redirect("/logged-in");
 										} else {
 											account.remove();
@@ -222,6 +223,8 @@ exports.addFriend = function(req, res) {
 					// Holy shit it works
 					myAccount.friends.addToSet(theirAccount);
 					theirAccount.friends.addToSet(myAccount);
+					db.actionList.friendAdded(myAccount._id, {accountId: theirAccount._id});
+					db.actionList.friendAdded(theirAccount._id, {accountId: myAccount._id});
 					myAccount.save(function(err) {
 						if (!err) {
 							theirAccount.save(function(err) {
