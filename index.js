@@ -90,6 +90,13 @@ app.get('/logged-in', user.loggedIn);
 app.get('/logout', user.logout);
 app.post('/add-friend', user.addFriend);
 
+app.get('/thing', function(req, res) {
+  if (!req.session.somenum) {
+    req.session.somenum = 0;
+  }
+  res.send({num: ++req.session.somenum});
+});
+
 app.post('/uploadPhoto', user.uploadPhoto);
 app.get('/user/profilePhoto/:accountId', user.getProfilePhoto);
 
