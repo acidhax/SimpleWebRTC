@@ -10,6 +10,7 @@
     "connect-redis-pubsub": "git+https://github.com/grahamkennery/connect-redis-pubsub.git",
     "express-ejs-layouts": "~0.3.1",
     "validator": "~1.4.0",
-    "async": "~0.2.9"
+    "async": "~0.2.9",
+    "redis-sub": "~0.1.7"
   }
 }

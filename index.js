@@ -20,6 +20,13 @@ if (fs.existsSync('../connect-redis-pubsub')) {
   RedisStore = require('connect-redis-pubsub')(express);
 }
 
+var RedisPubSub = null;
+if (fs.existsSync('../redis-pub-sub')) {
+  RedisPubSub = require('../redis-pub-sub');
+} else {
+  RedisPubSub = require('redis-sub');
+}
+
 var app = module.exports = express();
 // Configuration
 app.configure(function(){
@@ -33,8 +40,7 @@ app.configure(function(){
   app.use(express.session({
   	secret: sessionSecret,
   	store: new RedisStore({
-      client: db.redis.client,
-      subClient: db.redis.subClient,
+      pubsub: new RedisPubSub({pubClient: db.redis.client, subClient: db.redis.subClient}),
       prefix: process.env.sessionPrefix || 'discoSession:'
     }),
   	cookie: {
