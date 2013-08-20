@@ -74,6 +74,15 @@ app.get('*', function(req, res, next) {
   next();
 });
 
+app.get('*', function(req, res, next) {
+  if (req.headers["x-forwarded-proto"] === 'http') {
+    res.redirect("https://" + req.headers.host + req.url);
+  }
+  else {
+    next();
+  }
+});
+
 
 app.get('/crash-bandicoot', function(req, res) {
   (function(){
