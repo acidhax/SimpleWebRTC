@@ -110,7 +110,7 @@ exports.registerPost = function(req, res) {
 };
 
 exports.login = function(req, res) {
-	if (req.session.email) {
+	if (req.session.accountId) {
 		res.redirect('/logged-in');
 	} else {
 		res.render('login');
@@ -159,13 +159,13 @@ exports.loggedIn = function(req, res) {
 				});
 			} else {
 				req.session.accountId = null;
-				res.redirect('/login');
+				res.redirect('/welcome');
 			}
 		});
 
 	} else {
 		console.log(clc.red('Ummm, unauthorized?'));
-		res.redirect('/login');
+		res.redirect('/welcome');
 	}
 }
 

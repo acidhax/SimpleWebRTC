@@ -305,3 +305,19 @@
 		}		
 	});
 </script>
+
+<script>
+	if (chrome) {
+		setTimeout(function() {
+
+			if (document.documentElement.getElementsByClassName('disco-identifier').length) {
+				
+			} else {
+				window.location = '/';
+			}
+
+		}, 300);
+	} else {
+		window.location = '/';
+	}
+</script>
