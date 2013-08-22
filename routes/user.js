@@ -28,20 +28,19 @@ exports.registerPost = function(req, res) {
 		var email = req.body.email;
 		var message = '';
 		if (!email) {
-			message += 'Yo, you totally need to enter an email.<br/>';
+			message += 'You need to enter an valid email address<br/>';
 		} else {
 			email = email.toLowerCase();
 			try {
 				!check(email).isEmail();
 			} catch(e) {
-				message += 'Yo, that\'s totally not a valid email.<br/>';
+				message += 'Please enter a valid email address,<br>Emails need to be in the format xxx@yyy.zz<br/>';
 			}
 		}
 
 		if (!req.files || !req.files.picture) {
-			message += 'Ummm... You need to upload a photo, fyi<br/>';
+			message += 'Common bro, that\'s not a photo!<br>We accept .png .jpg or .pdf<br/>';
 		}
-
 
 		if (!message) {
 
