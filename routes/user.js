@@ -5,7 +5,7 @@ var db = require('../db'),
 	async = require('async');
 
 exports.welcome = function(req,res) {
-	if (req.session.email) {
+	if (req.session.accountId) {
 		res.redirect('/logged-in');
 	} else {
 		res.render('welcome');
@@ -13,7 +13,7 @@ exports.welcome = function(req,res) {
 };
 
 exports.register = function(req, res) {
-	if (req.session.email) {
+	if (req.session.accountId) {
 		res.redirect('/logged-in');
 	} else {
 		res.render('register', {message: '', email: ''});
@@ -21,7 +21,7 @@ exports.register = function(req, res) {
 };
 
 exports.registerPost = function(req, res) {
-	if (req.session.email) {
+	if (req.session.accountId) {
 		// How did they do that?!
 		res.redirect('/logged-in');
 	} else {
@@ -110,7 +110,7 @@ exports.registerPost = function(req, res) {
 };
 
 exports.login = function(req, res) {
-	if (req.session.email) {
+	if (req.session.accountId) {
 		res.redirect('/logged-in');
 	} else {
 		res.render('login');
@@ -159,13 +159,13 @@ exports.loggedIn = function(req, res) {
 				});
 			} else {
 				req.session.accountId = null;
-				res.redirect('/login');
+				res.redirect('/welcome');
 			}
 		});
 
 	} else {
 		console.log(clc.red('Ummm, unauthorized?'));
-		res.redirect('/login');
+		res.redirect('/welcome');
 	}
 }
 

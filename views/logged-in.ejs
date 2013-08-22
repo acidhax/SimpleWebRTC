@@ -345,8 +345,25 @@
 </script>
 
 <script>
+<<<<<<< HEAD
 	$('.btn_friendless').on('click', function(e) {
 		e.stopPropagation();
 		e.preventDefault();		
 	});
+</script>
+
+<script>
+	if (chrome) {
+		setTimeout(function() {
+
+			if (document.documentElement.getElementsByClassName('disco-identifier').length) {
+				
+			} else {
+				window.location = '/extension-get';
+			}
+
+		}, 300);
+	} else {
+		window.location = '/no-chrome';
+	}
 </script>

@@ -1,15 +1,16 @@
 <script>
-	if (chrome) {
-		setTimeout(function() {
+	// if (chrome) {
+	// 	setTimeout(function() {
 
-			if (document.documentElement.getElementsByClassName('disco-identifier').length) {
-				window.location = "/welcome";
-			} else {
-				window.location = "/extension-get";
-			}
+	// 		if (document.documentElement.getElementsByClassName('disco-identifier').length) {
+	// 			window.location = "/welcome";
+	// 		} else {
+	// 			window.location = "/extension-get";
+	// 		}
 
-		}, 300);
-	} else {
-		window.location = '/no-chrome';
-	}
+	// 	}, 300);
+	// } else {
+	// 	window.location = '/no-chrome';
+	// }
+	window.location = '/welcome';
 </script>
