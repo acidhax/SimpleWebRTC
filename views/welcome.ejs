@@ -15,21 +15,50 @@
 </script>
 
 <style>
-	h1 small {
-		font-size:11pt;
-		color:#999;
+	.wrapper {
+		width:500px;
+		padding-top: 85px;
+		margin: 0 auto;
 	}
 
+	.button_wrapper {
+		padding-top: 48px;
+		padding-left: 164px;
+	}
+
+	.btn-custom {
+		background-color: hsl(0, 0%, 23%) !important;
+		background-repeat: repeat-x;
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#494949", endColorstr="#3a3a3a");
+		background-image: -khtml-gradient(linear, left top, left bottom, from(#494949), to(#3a3a3a));
+		background-image: -moz-linear-gradient(top, #494949, #3a3a3a);
+		background-image: -ms-linear-gradient(top, #494949, #3a3a3a);
+		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #494949), color-stop(100%, #3a3a3a));
+		background-image: -webkit-linear-gradient(top, #494949, #3a3a3a);
+		background-image: -o-linear-gradient(top, #494949, #3a3a3a);
+		background-image: linear-gradient(#494949, #3a3a3a);
+		border-color: #3a3a3a #3a3a3a hsl(0, 0%, 21.5%);
+		color: #fff !important;
+		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.09);
+		-webkit-font-smoothing: antialiased;
+	}
+	
 	a {
-		display:block;
-
-		border:1px solid #666;
-		float:left;
-		padding:10px;
-		margin:10px;
+		margin-right: 10px;
 	}
-</style>
-<h1>This is Project Disco <small>Confidential</small></h1>
 
-<a href="/login">Login!</a>
-<a href="/register">Register!</a>
+	a:hover {
+		text-decoration:none !important;
+	}
+
+
+</style>
+
+<div class="wrapper">
+	<div class="disco_logo"><img src="/img/DiscoLogoBeta.png"></div>
+	<div class="button_wrapper">
+		<a href="/login"> <button class="btn btn-inverse btn-large btn_custom">Log In</button> </a>
+		<a href="/register"> <button class="btn btn-inverse btn-large btn_custom">Sign Up</button> </a>
+	</div>
+</div>
+

@@ -1,4 +1,67 @@
-<h1 style="margin-top:25px">Log in to Project Disco</h1>
+<style>
+
+	.wrapper {
+		width:500px;
+		padding-top: 85px;
+		margin: 0 auto;
+	}
+
+	h3 {
+		padding-top: 48px;
+		padding-left: 80px;
+	}
+
+	a:hover {
+		text-decoration:none !important;
+	}
+
+	.btn_login {
+		margin-bottom: 10px;
+	}
+
+	.btn_back{
+		margin-top: 35px;
+		margin-left: 220px;
+	}
+
+	.txt_email {
+		margin-left: 120px;
+
+	}
+
+	.btn_help {
+		width: 31px;
+		color: black;
+		opacity: 0.6;
+		margin-left: 235px;
+		margin-top:7px;
+		font-size: 0.9em;
+	}
+
+	.btn_help:hover {
+		opacity: 0.9;
+		cursor: pointer;
+	}
+
+</style>
+
+<div class="wrapper">
+	<div class="disco_logo"><img src="/img/DiscoLogoBeta.png"></div>
+	<div class="disco_content">
+		<h3> Login with your account email: </h3>
+		<input class="txt_email" type="email" placeholder="Email">
+		<button class="btn btn-inverse btn_custom btn_login">Login</button>
+		<div> <a href="/welcome"> <button class="btn btn-inverse btn_custom btn_back">Back</button> </a> </div>
+		<div class="btn_help" onclick="window.alert('Enter the email you first used to sign up with. If you can\'t remeber your email, contact us at jason@groupnotes.ca')"> Help </div>
+	</div>
+</div>
+
+
+
+
+
+
+<!-- <h1 style="margin-top:25px">Log in to Project Disco</h1>
 <div>
 	<form id="login">
 		<input class="email" type="email" placeholder="Email">
@@ -8,7 +71,7 @@
 
 <a style="display:block;border:1px solid #666;position:absolute;top:0;left:0;padding:2px 5px" href="/welcome">
 	Back
-</a>
+</a> -->
 
 <script>
 	if (chrome) {
@@ -27,9 +90,9 @@
 </script>
 
 <script>
-	$('form').on('submit', function(e) {
+	$('.btn_login').on('click', function(e) {
 		e.preventDefault();
-		var email = $('.email').val();
+		var email = $('.txt_email').val();
 
 		if (email && email.length) {
 			$.post('/login', {
@@ -40,9 +103,12 @@
 				} else if (data.message) {
 					alert(data.message);
 				} else {
-					alert('No dice');
+					alert('Data did not return from server in an expected manner, please email jason@groupnotes.ca to alert us of the error. We\'ll love you forever');
 				}
 			});
+		}
+		else {
+			alert("Alright we'll do the hard work here, but how about you help us out by atleast entering some text :)")
 		}
 	});
 </script>
