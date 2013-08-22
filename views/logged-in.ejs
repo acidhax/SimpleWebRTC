@@ -15,14 +15,15 @@
 	}
 	.top-right-container{
 		width: 1100px; 
-		height: 120px;		
+		height: 120px;	
+		margin-top: 10px;	
 	}
 	.homepage-link {
 		font-family: arial;
 		font-weight: bold;
 		font-size: 18px;
-		color: rgb(22,22,22);
-		text-decoration:none;
+		color: rgb(22,22,22) !important;
+		text-decoration:none !important;
 		opacity: .4;		
 		margin-left: 25px;
 		float: right;
@@ -46,28 +47,46 @@
 	}
 	.me .person-name {		
 		line-height:63px;
+		width: auto;
 	}
 
 	.left-column{
-		width:550px;
+		width:548px;
 		height: 100%;
-		float:left;
+		float:left;		
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
 	}
 	.right-column{
-		width:550px;
+		width:548px;
 		height: 100%;
-		float:right;		
+		float:right;				
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
 	}
 	.main-text {		
 		text-align: center;
 		font-family: arial;
 		font-weight: bold;
 		font-size: 36px;
-		color: rgb(22,22,22);
+		color: rgb(22,22,22);		
+	}
+	.main-text.right {		
+		float:right;					
 	}
 	.sub-heading{
 		font-size: 18px;
 		margin-top: 24px;
+		height: 20px;
+	}
+	.btn_friendless {
+		float: right;	
+		margin-top: -5px;
+		margin-left: 25px;
+		margin-right:45px;
+	}
+	.friend-heading-container{
+		height:18px;	
 	}
 	.friend-container {		
 		margin-top:25px;
@@ -78,6 +97,7 @@
 	.friend-picture {				
 		max-width:50px;
 		margin-left: 5px;
+		margin-top: 5px;
 		width:50px;
 		height:50px;
 		border-radius:50px;
@@ -91,13 +111,26 @@
 		height: 500px;
 	}
 	.person {
-		width:508px;
+		width:494px;
 		margin-top: 10px;
-		margin-left:20px;		
-		border-radius: 25px;
+		margin-left:40px;		
+		border-radius: 25px;		
 	}
 	.person:hover{
-		background-color:#eee;
+		background-color:#eee;				
+	}
+	.person:active{
+		background-color:#ddd;
+	}
+	.person:active .person-picture{
+		box-shadow:none;
+		-webkit-transform: scale(.95);
+	}
+	.person.selected{
+		background-color:#ddd;
+	}	
+	.person.selected .person-picture{
+		box-shadow:none;
 	}
 	.person-picture {
 		float:left;
@@ -114,14 +147,49 @@
 		margin-left:20px;
 		font-family: arial;
 		font-weight: bold;
-		font-size: 18px;
+		font-size: 16px;
 		color: rgb(22,22,22) !important;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		width: 400px;
+		width: 305px;
+	}
+	.btn-confirm{
+		margin-top:12px;
+		margin-right: 5px;
+		float:right;
+		-webkit-transform: scale(0);
+		-webkit-transition: -webkit-transform .1s linear 0s;
+	}
+	.show-button{
+		-webkit-transform: scale(1);
 	}
 	.clear {
 		clear:both;
+	}
+
+	#style-1::-webkit-scrollbar-track
+	{
+		/*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);*/
+		border-radius: 10px;
+		background-color: #e6e6e6;
+	}
+
+	#style-1::-webkit-scrollbar
+	{
+		width: 10px;
+		background-color: #F5F5F5;
+	}
+
+	#style-1::-webkit-scrollbar-thumb
+	{
+		border-radius: 8px;
+		-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+		background-color: #161616;
+	}
+	.vertical-line{
+		border-left: solid #e6e6e6;
+		height:620px;
+		float:right;
 	}
 
 </style>
@@ -146,30 +214,39 @@
 
 
 	<div class="left-column">
-		<div class="main-text">These are your Friends!</div>
+		<div class="friend-heading-container">
+			<div class="main-text">These are your Friends!</div>
+		</div>
 		<div class="main-text sub-heading">(You can only add up to seven in beta!)</div>
 		<div class="friend-container">
 			<% for (var n = 0; n < friends.length; n++) { %>				
 					<img class="friend-picture" src="/user/profilePhoto/<%= friends[n]._id %>">
 			<% } %>
 		</div>
-	</div>
-
+	</div>	
 
 	<div class="right-column">
-		<div class="main-text">Add Friends Here!</div>
-		<div class="main-text sub-heading">All Disco Users (click to add)</div>
+		<div class="friend-heading-container">			
+			<div class="btn btn-inverse btn_custom btn_friendless">Friend not Here?</div>
+			<div class="main-text right">Add Friends Here!</div>
+		</div>
+		
+		<div class="main-text sub-heading">All Disco Users (click to add):</div>		
 
-		<div class="person-container">
+		<div class="person-container" id="style-1">
 			<% for (var n = 0; n < accounts.length; n++) { %>
-				<div class="person">
-					<img class="person-picture" src="/user/profilePhoto/<%= accounts[n]._id %>" style="cursor:pointer" onclick="$('.email').val('<%= accounts[n].email %>').focus()">
-					<div class="person-name"><span><%= accounts[n].email %></span></div>
+				<div class="person" style="cursor:pointer" onclick="$('.email').val('<%= accounts[n].email %>').focus()">
+					<img class="person-picture" src="/user/profilePhoto/<%= accounts[n]._id %>">
+					<div class="person-name" style="cursor:pointer"><span><%= accounts[n].email %></span></div>
+					<div class="btn btn-danger btn-small btn-confirm">Cancel</div>
+					<div class="btn btn-success btn-small btn-confirm">OK!</div>					
 					<div class="clear"></div>
 				</div>
 			<% } %>
 		</div>
 	</div>
+
+	<div class="vertical-line"></div>
 
 
 			<!-- <form id="test">
