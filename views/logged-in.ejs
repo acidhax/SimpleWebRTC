@@ -1,12 +1,103 @@
 <style>
 
-	.person {
-		width:300px;
+	.homepage-container {
+		margin: auto auto;		
+		width: 1100px;
+		height: 100%;
+	}
+	.small-logo {		
+		background-image: url("/img/discoSmallLogo.png");				
+		background-size:180px;
+		background-repeat: none;
+		height:63px;
+		width:180px;
+		float:left;
+	}
+	.top-right-container{
+		width: 1100px; 
+		height: 120px;		
+	}
+	.homepage-link {
+		font-family: arial;
+		font-weight: bold;
+		font-size: 18px;
+		color: rgb(22,22,22);
+		text-decoration:none;
+		opacity: .4;		
+		margin-left: 25px;
+		float: right;
+		line-height:63px;	
+	}
+	a:hover {		
+		opacity: .9;
+	}
+	.me {
+		float:right;					
+		margin-top: auto;
+		margin-bottom: auto;
+	}
+	.me .person-picture {
+		width: 30px;
+		height: 30px;
+		border-radius: 15px;
+		margin-top: 16px;
+		margin-right:10px;
+		border: 1px solid #fff;
+	}
+	.me .person-name {		
+		line-height:63px;
+	}
+
+	.left-column{
+		width:550px;
+		height: 100%;
+		float:left;
+	}
+	.right-column{
+		width:550px;
+		height: 100%;
+		float:right;		
+	}
+	.main-text {		
+		text-align: center;
+		font-family: arial;
+		font-weight: bold;
+		font-size: 36px;
+		color: rgb(22,22,22);
+	}
+	.sub-heading{
+		font-size: 18px;
+		margin-top: 24px;
+	}
+	.friend-container {		
+		margin-top:25px;
+		margin-left: auto;
+		margin-right: auto;
+		width:320px;
+	}
+	.friend-picture {				
+		max-width:50px;
+		margin-left: 5px;
+		width:50px;
+		height:50px;
+		border-radius:50px;
 		border:2px solid #fff;
-		box-shadow: 0 0 5px #666;
-		background-color:#ccc;
-		border-radius:10px;
-		padding:5px;
+		box-shadow: 1px 1px 3px rgba(0,0,0,.5)
+	}
+
+	.person-container{
+		margin-top:25px;
+		overflow-y: scroll;
+		height: 500px;
+	}
+	.person {
+		width:508px;
+		margin-top: 10px;
+		margin-left:20px;		
+		border-radius: 25px;
+	}
+	.person:hover{
+		background-color:#eee;
 	}
 	.person-picture {
 		float:left;
@@ -15,12 +106,19 @@
 		height:50px;
 		border-radius:50px;
 		border:2px solid #fff;
-		box-shadow: 0 0 5px #666;
+		box-shadow: 1px 1px 3px rgba(0,0,0,.5)
 	}
 	.person-name {
 		float:left;
 		line-height:50px;
-		margin-left:10px;
+		margin-left:20px;
+		font-family: arial;
+		font-weight: bold;
+		font-size: 18px;
+		color: rgb(22,22,22) !important;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		width: 400px;
 	}
 	.clear {
 		clear:both;
@@ -28,65 +126,64 @@
 
 </style>
 
-	<a style="display:block;border:1px solid #666;position:absolute;top:0;left:0;padding:2px 5px" href="/logout">
-		Log out
-	</a>
-
-	<h1 style="margin-top:25px">Welcome to Project Disco</h1>
-
-	<p>
-		<h2>This is you:</h2>
-		<div class="person">
+<div class = "homepage-container">
+	<div class = "top-right-container">
+		<div class="small-logo"></div>
+		<a class="homepage-link" href="/logout">
+			log out
+		</a>
+		<a class="homepage-link" href="/logout">
+			help
+		</a>
+		<div class="me">
 			<img class="person-picture" src="/user/profilePhoto/<%= accountId %>">
 			<div class="person-name">
 				<%= email %>
 			</div>
 			<div class="clear"></div>
+		</div>			
+	</div>
+
+
+	<div class="left-column">
+		<div class="main-text">These are your Friends!</div>
+		<div class="main-text sub-heading">(You can only add up to seven in beta!)</div>
+		<div class="friend-container">
+			<% for (var n = 0; n < friends.length; n++) { %>				
+					<img class="friend-picture" src="/user/profilePhoto/<%= friends[n]._id %>">
+			<% } %>
 		</div>
-	</p>
+	</div>
 
 
+	<div class="right-column">
+		<div class="main-text">Add Friends Here!</div>
+		<div class="main-text sub-heading">All Disco Users (click to add)</div>
 
-
-
-
-
-	<h2>These are your friends:</h2>
-	<% for (var n = 0; n < friends.length; n++) { %>
-		<div class="person">
-			<img class="person-picture" src="/user/profilePhoto/<%= friends[n]._id %>">
-			<div class="person-name"><%= friends[n].email %></div>
-			<div class="clear"></div>
+		<div class="person-container">
+			<% for (var n = 0; n < accounts.length; n++) { %>
+				<div class="person">
+					<img class="person-picture" src="/user/profilePhoto/<%= accounts[n]._id %>" style="cursor:pointer" onclick="$('.email').val('<%= accounts[n].email %>').focus()">
+					<div class="person-name"><span><%= accounts[n].email %></span></div>
+					<div class="clear"></div>
+				</div>
+			<% } %>
 		</div>
-	<% } %>
+	</div>
 
 
+			<!-- <form id="test">
+				<input type="email" class="email" placeholder="Friend's email">
+				<input type="submit">
+			</form> -->
 
-
-	<h2>Add a friend:</h2>
-	<form id="test">
-		<input type="email" class="email" placeholder="Friend's email">
-		<input type="submit">
-	</form>
-
-
-
-
-	<% for (var n = 0; n < accounts.length; n++) { %>
-		<div class="person">
-			<img class="person-picture" src="/user/profilePhoto/<%= accounts[n]._id %>" style="cursor:pointer" onclick="$('.email').val('<%= accounts[n].email %>').focus()">
-			<div class="person-name"><%= accounts[n].email %></div>
-			<div class="clear"></div>
-		</div>
-	<% } %>
-
-
-
+<!-- 
 	<h2>Change your picture:</h2>
 	<form method="POST" action="/uploadPhoto" enctype="multipart/form-data">
 		<input type="file" name="displayImage"></input>
 		<input type="submit" value="upload">
-	</form>
+	</form> -->
+</div>
 
 
 <!-- Friend adding -->
