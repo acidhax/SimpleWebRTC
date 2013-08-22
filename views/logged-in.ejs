@@ -151,13 +151,13 @@
 		color: rgb(22,22,22) !important;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		width: 305px;
+		width: 302px;
 	}
 	.btn-confirm{
 		margin-top:12px;
-		margin-right: 5px;
+		margin-right: 8px;
 		float:right;
-		-webkit-transform: scale(0);
+		-webkit-transform: scale(1);
 		-webkit-transition: -webkit-transform .1s linear 0s;
 	}
 	.show-button{
@@ -235,11 +235,11 @@
 
 		<div class="person-container" id="style-1">
 			<% for (var n = 0; n < accounts.length; n++) { %>
-				<div class="person" style="cursor:pointer" onclick="$('.email').val('<%= accounts[n].email %>').focus()">
+				<div class="person" style="cursor:pointer">
 					<img class="person-picture" src="/user/profilePhoto/<%= accounts[n]._id %>">
 					<div class="person-name" style="cursor:pointer"><span><%= accounts[n].email %></span></div>
-					<div class="btn btn-danger btn-small btn-confirm">Cancel</div>
-					<div class="btn btn-success btn-small btn-confirm">OK!</div>					
+					<div class="btn btn-danger btn-small btn-confirm btn-cancel">Cancel</div>
+					<div class="btn btn-success btn-small btn-confirm btn-ok" data-email="<%= accounts[n].email %>">OK!</div>					
 					<div class="clear"></div>
 				</div>
 			<% } %>
@@ -265,32 +265,43 @@
 
 <!-- Friend adding -->
 <script>
-	$(function() {
-		$('#test').on('submit', function(e) {
-			e.stopPropagation();
-			e.preventDefault();
+	$('.btn-cancel').on('click', function(e) {
+		e.preventDefault();
 
-			var email = $('.email').val();
+		
+	});
+</script>
 
-			if (email && email.length) {
-				$.post('/add-friend', {email: email}, function(data) {
-					if (data.success) {
-						window.location.reload();
-					} else if (data.reason === 'not-yourself-bro') {
-						alert("You can't add yourself, bro");
-					} else if (data.reason === 'no-account') {
-						alert('Nobody found with that email, bro');
-					} else if (data.reason === 'too-many-friends-on-the-dancefloor') {
-						alert('You have too many friends, no more, sorry!');
-					} else if (data.reason === 'they-are-too-popular') {
-						alert('They have too many friends, sorry!');
-					} else {
-						alert('Something went wrong, bro');
-					}
-				});
-			} else {
-				alert('dude... type an email');
+<script>
+	$('.btn-ok').on('click', function(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		var email="";
+
+		for (i in e.target.attributes) {
+			if (e.target.attributes[i].name == "data-email") {
+				var email = e.target.attributes[1].value
 			}
-		})
+		}		
+
+		if (email && email.length) {
+			$.post('/add-friend', {email: email}, function(data) {
+				if (data.success) {
+					window.location.reload();
+				} else if (data.reason === 'not-yourself-bro') {
+					alert("You can't add yourself, bro");
+				} else if (data.reason === 'no-account') {
+					alert('Nobody found with that email, bro');
+				} else if (data.reason === 'too-many-friends-on-the-dancefloor') {
+					alert('You have too many friends, no more, sorry!');
+				} else if (data.reason === 'they-are-too-popular') {
+					alert('They have too many friends, sorry!');
+				} else {
+					alert('Something went wrong, bro');
+				}
+			});
+		} else {
+			alert('dude... type an email');
+		}		
 	});
 </script>
