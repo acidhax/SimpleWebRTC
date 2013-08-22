@@ -139,7 +139,7 @@
 		height:50px;
 		border-radius:50px;
 		border:2px solid #fff;
-		box-shadow: 1px 1px 3px rgba(0,0,0,.5)
+		box-shadow: 1px 1px 3px rgba(0,0,0,.5);		
 	}
 	.person-name {
 		float:left;
@@ -155,13 +155,13 @@
 	}
 	.btn-confirm{
 		margin-top:12px;
-		margin-right: 8px;
+		margin-right: 7px;
 		float:right;
-		-webkit-transform: scale(1);
+		-webkit-transform: scale(0);
 		-webkit-transition: -webkit-transform .1s linear 0s;
 	}
 	.show-button{
-		-webkit-transform: scale(1);
+		-webkit-transform: scale(1);		
 	}
 	.clear {
 		clear:both;
@@ -169,7 +169,6 @@
 
 	#style-1::-webkit-scrollbar-track
 	{
-		/*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);*/
 		border-radius: 10px;
 		background-color: #e6e6e6;
 	}
@@ -191,8 +190,41 @@
 		height:620px;
 		float:right;
 	}
+	.modal-bg{	
+		position: fixed;
+		width:100%;
+		height: 100%;
+		background-color: #FFF;		
+		opacity: .6;
+		-webkit-transition: opacity .2s linear 0s;
+	}
+	.modal-bg.hide{
+		opacity: 0;
+	}
+	.popup{
+		position: fixed;
+		width:550px;
+		height:300px;
+		background-color: #161616;
+		opacity: .92;
+		border-radius: 20px;
+		margin-top: -250px;
+		margin-left: -275px; /*half div width!*/
+		left: 50%;
+		top: 50%;
+		-webkit-transform: scale(0);
+		-webkit-transition: -webkit-transform .2s linear .1s;
+	}
+	.popup.hide{
+		-webkit-transform: scale(0);
+	}
 
 </style>
+
+<div class="modal-bg hide"></div>
+<div class="popup hide">
+	<div class="popup-btn"></div>
+</div>
 
 <div class = "homepage-container">
 	<div class = "top-right-container">
@@ -200,7 +232,7 @@
 		<a class="homepage-link" href="/logout">
 			log out
 		</a>
-		<a class="homepage-link" href="/logout">
+		<a class="homepage-link" href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Ftwitter.com%2Fabout%2Fresources%2Fbuttons&related=DiscoBeta&screen_name=DiscoBeta&text=Help!&tw_p=tweetbutton" target="_blank">
 			help
 		</a>
 		<div class="me">
@@ -235,11 +267,11 @@
 
 		<div class="person-container" id="style-1">
 			<% for (var n = 0; n < accounts.length; n++) { %>
-				<div class="person" style="cursor:pointer">
+				<div class="person" style="cursor:pointer">					
 					<img class="person-picture" src="/user/profilePhoto/<%= accounts[n]._id %>">
 					<div class="person-name" style="cursor:pointer"><span><%= accounts[n].email %></span></div>
 					<div class="btn btn-danger btn-small btn-confirm btn-cancel">Cancel</div>
-					<div class="btn btn-success btn-small btn-confirm btn-ok" data-email="<%= accounts[n].email %>">OK!</div>					
+					<div class="btn btn-success btn-small btn-confirm btn-ok" data-email="<%= accounts[n].email %>">Add</div>										
 					<div class="clear"></div>
 				</div>
 			<% } %>
@@ -247,13 +279,6 @@
 	</div>
 
 	<div class="vertical-line"></div>
-
-
-			<!-- <form id="test">
-				<input type="email" class="email" placeholder="Friend's email">
-				<input type="submit">
-			</form> -->
-
 <!-- 
 	<h2>Change your picture:</h2>
 	<form method="POST" action="/uploadPhoto" enctype="multipart/form-data">
@@ -263,12 +288,25 @@
 </div>
 
 
+
 <!-- Friend adding -->
 <script>
 	$('.btn-cancel').on('click', function(e) {
+		e.stopPropagation();
 		e.preventDefault();
 
-		
+		$(this).parent().children(".btn-ok").removeClass('show-button');			
+		$(this).removeClass('show-button');	
+	});
+</script>
+
+<script>
+	$('.person').on('click', function(e) {
+		e.preventDefault();
+		$(this).parent().find(".btn-ok").removeClass('show-button');
+		$(this).parent().find(".btn-cancel").removeClass('show-button');
+		$(this).children(".btn-ok").addClass('show-button');			
+		$(this).children(".btn-cancel").addClass('show-button');			
 	});
 </script>
 
@@ -303,5 +341,12 @@
 		} else {
 			alert('dude... type an email');
 		}		
+	});
+</script>
+
+<script>
+	$('.btn_friendless').on('click', function(e) {
+		e.stopPropagation();
+		e.preventDefault();		
 	});
 </script>
