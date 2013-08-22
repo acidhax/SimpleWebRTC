@@ -1,5 +1,7 @@
 <style>
-
+	html, html a {
+	    -webkit-font-smoothing: antialiased !important;
+	}
 	.homepage-container {
 		margin: auto auto;		
 		width: 1100px;
@@ -15,7 +17,7 @@
 	}
 	.top-right-container{
 		width: 1100px; 
-		height: 120px;	
+		height: 110px;	
 		margin-top: 10px;	
 	}
 	.homepage-link {
@@ -108,7 +110,7 @@
 	.person-container{
 		margin-top:25px;
 		overflow-y: scroll;
-		height: 500px;
+		height: 420px;
 	}
 	.person {
 		width:494px;
@@ -158,7 +160,7 @@
 		margin-right: 7px;
 		float:right;
 		-webkit-transform: scale(0);
-		-webkit-transition: -webkit-transform .1s linear 0s;
+		-webkit-transition: -webkit-transform .1s linear 0s !important;
 	}
 	.show-button{
 		-webkit-transform: scale(1);		
@@ -187,7 +189,7 @@
 	}
 	.vertical-line{
 		border-left: solid #e6e6e6;
-		height:620px;
+		height:530px;
 		float:right;
 	}
 	.modal-bg{	
@@ -195,11 +197,13 @@
 		width:100%;
 		height: 100%;
 		background-color: #FFF;		
-		opacity: .6;
-		-webkit-transition: opacity .2s linear 0s;
+		opacity: .8;
+		-webkit-transition: opacity .1s linear 0s;
+		z-index: 99;
 	}
-	.modal-bg.hide{
+	.modal-bg.disco-hide{
 		opacity: 0;
+		pointer-events:none;
 	}
 	.popup{
 		position: fixed;
@@ -213,14 +217,15 @@
 		left: 50%;
 		top: 50%;
 		-webkit-transform: scale(1);
-		-webkit-transition: -webkit-transform .2s linear .2s;
+		-webkit-transition: -webkit-transform .1s linear 0s;
+		z-index: 999;
 	}
-	.popup.hide{
+	.popup.disco-hide{
 		-webkit-transform: scale(0);
 	}
 	.popup-text{
 		width:400px;
-		margin: 40px auto;	
+		margin: 40px auto 0px auto;	
 		text-align: center;
 		font-family: arial;		
 		font-size: 26px;
@@ -229,7 +234,8 @@
 	}
 	.btn-popup{
 		display: inline-block;
-		
+		margin-left: 236px;
+		margin-top: 20px;
 	}
 	.btn-custom {
 		background-color: hsl(0, 0%, 23%) !important;
@@ -247,33 +253,70 @@
 		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.09);
 		-webkit-font-smoothing: antialiased;
 	}
-	.btn-custom-2 {
-		background-color: hsl(29, 100%, 46%) !important;
-		background-repeat: repeat-x;
-		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff7b00", endColorstr="#ea7100");
-		background-image: -khtml-gradient(linear, left top, left bottom, from(#ff7b00), to(#ea7100));
-		background-image: -moz-linear-gradient(top, #ff7b00, #ea7100);
-		background-image: -ms-linear-gradient(top, #ff7b00, #ea7100);
-		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ff7b00), color-stop(100%, #ea7100));
-		background-image: -webkit-linear-gradient(top, #ff7b00, #ea7100);
-		background-image: -o-linear-gradient(top, #ff7b00, #ea7100);
-		background-image: linear-gradient(#ff7b00, #ea7100);
-		border-color: #ea7100 #ea7100 hsl(29, 100%, 45%);
-		color: #fff !important;
-		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.06);
-		-webkit-font-smoothing: antialiased;
+	.btn-custom-3 {
+	  background-color: hsl(34, 93%, 36%) !important;
+	  background-repeat: repeat-x;
+	  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f79c26", endColorstr="#b16706");
+	  background-image: -khtml-gradient(linear, left top, left bottom, from(#f79c26), to(#b16706));
+	  background-image: -moz-linear-gradient(top, #f79c26, #b16706);
+	  background-image: -ms-linear-gradient(top, #f79c26, #b16706);
+	  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f79c26), color-stop(100%, #b16706));
+	  background-image: -webkit-linear-gradient(top, #f79c26, #b16706);
+	  background-image: -o-linear-gradient(top, #f79c26, #b16706);
+	  background-image: linear-gradient(#f79c26, #b16706);
+	  border-color: #b16706 #b16706 hsl(34, 93%, 31%);
+	  color: #fff !important;
+	  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.33);
+	  -webkit-font-smoothing: antialiased;
+	}
+	.secret {
+		-webkit-animation: secretAni 3s linear;
+	}
+	@-webkit-keyframes secretAni{
+		0% {
+			-webkit-transform: rotate(0);
+			margin-left: 5px;		
+		}
+		4% {
+			-webkit-transform: rotate(-15deg);
+			margin-left: 5px;		
+		}
+		19% {
+			-webkit-transform: rotate(360deg);
+			margin-left: 9px;			
+		}		
+		35% {
+			-webkit-transform: rotate(720deg);
+			margin-left: 13px;			
+		}
+		51% {
+			-webkit-transform: rotate(1080deg);
+			margin-left: 17px;			
+		}
+		67% {
+			-webkit-transform: rotate(720deg);
+			margin-left: 13px;			
+		}
+		83% {
+			-webkit-transform: rotate(360deg);
+			margin-left: 9px;			
+		}
+		100% {
+			-webkit-transform: rotate(0deg);
+			margin-left: 5px;			
+		}
 	}
 
 </style>
 
-<div class="modal-bg hide"></div>
-<div class="popup hide">
+<div class="modal-bg disco-hide"></div>
+<div class="popup disco-hide">
 	<div class="popup-text">
 		<span>
-			You can only add friends who have already signed up for Project Disco, tell your friends to sign up at DiscoBeta.com.
+			You can only add friends who have already signed up for Project Disco, tell your friends to sign up at DiscoBeta.com :) <br/><br/> We love you! <3
 		</span>
 	</div>
-	<div class="btn btn-inverse btn-custom-2 btn-popup">Close</div>
+	<div class="btn btn-custom-3 btn-large btn-popup">Close</div>
 </div>
 
 <div class = "homepage-container">
@@ -400,8 +443,8 @@
 		e.stopPropagation();
 		e.preventDefault();		
 
-		$(this).parent().parent().parent().parent().find(".modal-bg").removeClass("hide");
-		$(this).parent().parent().parent().parent().find(".popup").removeClass("hide");
+		$(this).parent().parent().parent().parent().find(".modal-bg").removeClass("disco-hide");
+		$(this).parent().parent().parent().parent().find(".popup").removeClass("disco-hide");
 	});
 </script>
 <script>
@@ -409,8 +452,25 @@
 		e.stopPropagation();
 		e.preventDefault();		
 
-		$(this).parent().addClass("hide");
-		$(this).parent().parent().find(".modal-bg").addClass("hide");
+		$(this).parent().addClass("disco-hide");
+		$(this).parent().parent().find(".modal-bg").addClass("disco-hide");
+	});
+</script>
+<script>
+	$('.modal-bg').on('click', function(e) {
+		e.stopPropagation();
+		e.preventDefault();		
+
+		$(this).addClass("disco-hide");
+		$(this).parent().find(".popup").addClass("disco-hide");
+	});
+</script>
+
+<!-- shh -->
+<script>
+	$('.small-logo').on('click', function(e) {
+		e.preventDefault();		
+		$(this).parent().parent().find(".friend-picture").addClass('secret');				
 	});
 </script>
 
