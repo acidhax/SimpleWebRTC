@@ -274,3 +274,12 @@ exports.getProfilePhoto = function (req, res) {
 		res.end();
 	}
 };
+
+
+exports.updatePhoto = function (req, res) {
+	if (req.session.accountId) {
+		res.render('update-photo', { accountId: req.session.accountId });
+	} else {
+		res.redirect('/welcome');
+	}
+};
