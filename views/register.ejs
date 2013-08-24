@@ -41,7 +41,7 @@
 	}
 
 	.signup_nativation {
-		margin-top: 35px;
+		margin-top: 30px;
 	}
 
 	.disco_content {
@@ -80,6 +80,26 @@
 		color: #fff !important;
 		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.06);
 		-webkit-font-smoothing: antialiased;
+		margin-left: 25px;
+	}
+
+	.btn-cancel {
+		width: 220px;
+		color: black;			
+		font-size: 0.9em;
+		text-align: center;
+		margin-top:5px;
+		text-decoration: none;
+	}
+
+	.btn-cancel span {
+		opacity: 0.6;
+	}
+
+	.btn-cancel span:hover {
+		opacity: 0.9;
+		cursor: pointer;
+		text-decoration: none;
 	}
 
 	select, input[type="file"] {
@@ -112,7 +132,8 @@
 					</p>
 				<% } %>
 				<input value = "Create Account" type="submit" class="btn btn-large btn-custom-2"></input>
-				<a href="/welcome"> <button class="btn btn-large btn-custom" onclick="window.location = '/welcome'; return false">Cancel</button></a>
+				<!-- <a href="/welcome"> <button class="btn btn-large btn-custom" onclick="window.location = '/welcome'; return false">Cancel</button></a> -->
+				<div class="btn-cancel"><span onclick="window.location = '/welcome'; return false">or Cancel</span></div>
 	 		</div>
 		</div>
 	</div>
