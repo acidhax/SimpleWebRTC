@@ -46,6 +46,15 @@
 		margin-top: 16px;
 		margin-right:10px;
 		border: 1px solid #fff;
+		cursor: pointer;
+		-webkit-transform: scale(1);
+		-webkit-transition: -webkit-transform .1s ease-in-out 0s;
+	}
+	.me .person-picture:hover {
+		-webkit-transform: scale(1.1);
+	}
+	.me .person-picture:active {
+		-webkit-transform: scale(.9);
 	}
 	.me .person-name {		
 		line-height:63px;
@@ -237,6 +246,31 @@
 		margin-left: 236px;
 		margin-top: 20px;
 	}
+	.change-pic{
+		position: fixed;
+		width:550px;
+		height:300px;
+		background-color: #161616;
+		opacity: .95;
+		border-radius: 20px;
+		margin-top: -250px;
+		margin-left: -275px; /*half div width!*/
+		left: 50%;
+		top: 50%;
+		-webkit-transform: scale(1);
+		-webkit-transition: -webkit-transform .1s linear 0s;
+		z-index: 999;
+	}
+	.change-pic.disco-hide{
+		-webkit-transform: scale(0);
+	}
+	.change-pic .popup-text{
+		margin: 92px auto 0px auto;	
+	}
+	.change-pic .popup-text form{
+		margin-top: 20px;
+		margin-bottom: 32px;
+	}
 	.btn-custom {
 		background-color: hsl(0, 0%, 23%) !important;
 		background-repeat: repeat-x;
@@ -395,6 +429,18 @@
 	</div>
 	<div class="btn btn-large disco-button disco-button-highlight btn-popup">Close</div>
 </div>
+<div class="change-pic disco-hide">
+	<div class="popup-text">
+		<span>
+			Change to a prettier picture?
+		</span>
+		<form method="POST" action="/uploadPhoto" enctype="multipart/form-data">
+			<input type="file" name="displayImage"></input>
+			<input type="submit" class="btn btn-inverse btn_custom" value="Update!">
+		</form>
+	</div>
+	<div class="btn btn-large disco-button disco-button-highlight btn-popup">Close</div>
+</div>
 
 <div class = "homepage-container">
 	<div class = "top-right-container">
@@ -407,7 +453,7 @@
 		</a>
 		<div class="me">
 			<img class="person-picture" src="/user/profilePhoto/<%= accountId %>">
-			<div class="person-name">
+			<div class="person-name">				
 				<%= email %>
 			</div>
 			<div class="clear"></div>
@@ -540,8 +586,19 @@
 
 		$(this).addClass("disco-hide");
 		$(this).parent().find(".popup").addClass("disco-hide");
+		$(this).parent().find(".change-pic").addClass("disco-hide");
 	});
 </script>
+<script>
+	$('.me .person-picture').on('click', function(e) {
+		e.stopPropagation();
+		e.preventDefault();		
+
+		$(this).parent().parent().parent().parent().find(".modal-bg").removeClass("disco-hide");
+		$(this).parent().parent().parent().parent().find(".change-pic").removeClass("disco-hide");
+	});
+</script>
+
 
 <!-- shh -->
 <script>
