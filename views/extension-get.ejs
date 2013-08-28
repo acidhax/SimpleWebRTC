@@ -1,19 +1,7 @@
 
 
  <script>
-	if (chrome) {
-		setTimeout(function() {
-
-			if (document.documentElement.getElementsByClassName('disco-identifier').length) {
-				window.location = "/welcome";
-			} else {
-				
-			}
-
-		}, 300);
-	} else {
-		window.location = '/no-chrome';
-	}
+	discoDetect('/welcome', null, '/no-chrome');
 </script>
 
 <style>

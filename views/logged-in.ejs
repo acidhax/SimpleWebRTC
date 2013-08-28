@@ -610,17 +610,5 @@
 
 <!-- chrome detect -->
 <script>
-	if (chrome) {
-		setTimeout(function() {
-
-			if (document.documentElement.getElementsByClassName('disco-identifier').length) {
-				
-			} else {
-				window.location = '/extension-get';
-			}
-
-		}, 300);
-	} else {
-		window.location = '/no-chrome';
-	}
+	discoDetect(null, '/extension-get', '/no-chrome');
 </script>
