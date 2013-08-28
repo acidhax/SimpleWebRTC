@@ -10,7 +10,7 @@
 	<script>
 		var discoDetect = function(hasExtension, noExtension, noChrome) {
 			$(function() {
-				if (chrome) {
+				if (window.chrome) {
 					setTimeout(function() {
 
 						if (document.documentElement.getElementsByClassName('disco-identifier').length) {
