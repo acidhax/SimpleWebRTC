@@ -9,25 +9,27 @@
 	<!-- chrome detect -->
 	<script>
 		var discoDetect = function(hasExtension, noExtension, noChrome) {
-			if (chrome) {
-				setTimeout(function() {
+			$(function() {
+				if (chrome) {
+					setTimeout(function() {
 
-					if (document.documentElement.getElementsByClassName('disco-identifier').length) {
-						if (hasExtension) {
-							window.location = hasExtension;
+						if (document.documentElement.getElementsByClassName('disco-identifier').length) {
+							if (hasExtension) {
+								window.location = hasExtension;
+							}
+						} else {
+							if (noExtension) {
+								window.location = noExtension;
+							}
 						}
-					} else {
-						if (noExtension) {
-							window.location = noExtension;
-						}
+
+					}, 300);
+				} else {
+					if (noChrome) {
+						window.location = noChrome;
 					}
-
-				}, 300);
-			} else {
-				if (noChrome) {
-					window.location = noChrome;
 				}
-			}
+			});
 		}
 	</script>
 </head>
