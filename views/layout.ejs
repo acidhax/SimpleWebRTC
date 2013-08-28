@@ -10,9 +10,8 @@
 	<script>
 		var discoDetect = function(hasExtension, noExtension, noChrome) {
 			$(function() {
-				if (window.chrome) {
-					setTimeout(function() {
-
+				setTimeout(function() {
+					if (window.chrome != null) {
 						if (document.documentElement.getElementsByClassName('disco-identifier').length) {
 							if (hasExtension) {
 								window.location = hasExtension;
@@ -22,13 +21,12 @@
 								window.location = noExtension;
 							}
 						}
-
-					}, 300);
-				} else {
-					if (noChrome) {
-						window.location = noChrome;
-					}
-				}
+					} else {
+						if (noChrome) {
+							window.location = noChrome;
+						}
+					}	
+				}, 500);
 			});
 		}
 	</script>
