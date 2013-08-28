@@ -64,8 +64,8 @@ exports.registerPost = function(req, res) {
 										console.log('THIS IS THE CALLBACK FROM CLEANER', err);
 										if (!err) {
 											db.sessions.addSessionToAccount(account._id, req.sessionID);
-											db.metrics.accountCreated(account.email);
-											db.metrics.login(account.email);
+											db.metrics.accountCreated(account._id, req.ip);
+											db.metrics.login(account._id);
 											res.redirect("/logged-in");
 										} else {
 											account.remove();
