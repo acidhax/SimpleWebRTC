@@ -64,6 +64,8 @@ exports.registerPost = function(req, res) {
 										console.log('THIS IS THE CALLBACK FROM CLEANER', err);
 										if (!err) {
 											db.sessions.addSessionToAccount(account._id, req.sessionID);
+											db.metrics.accountCreated(account._id, req.ip);
+											db.metrics.login(account._id);
 											res.redirect("/logged-in");
 										} else {
 											account.remove();
@@ -229,6 +231,7 @@ exports.addFriend = function(req, res) {
 							theirAccount.save(function(err) {
 								if (!err) {
 									res.send({success: true});
+									db.metrics.addFriend(myAccount.email, theirAccount.email);
 								} else {
 									res.send({success: false, reason: 'db-error3'});
 								}
