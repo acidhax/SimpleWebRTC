@@ -2,7 +2,8 @@ var db = require('../db'),
 	clc = require('cli-color'),
 	fs = require('fs'),
 	check = require('validator').check,
-	async = require('async');
+	async = require('async'),
+	os = require('os');
 
 exports.welcome = function(req,res) {
 	if (req.session.accountId) {
@@ -154,7 +155,13 @@ exports.loggedIn = function(req, res) {
 
 				db.Account.find({email: {$nin: emails}}).sort({email: 1}).exec(function(err, accounts) {
 					if (!err && accounts) {
-						res.render('logged-in', {email: account.email, friends: account.friends, accountId: account._id, accounts: accounts});
+						res.render('logged-in', {
+							email: account.email, 
+							friends: account.friends, 
+							accountId: account._id, 
+							accounts: accounts, 
+							serviceUrl: (process.env.serviceExternalProtocol || 'http') + '://' + os.hostname()
+						});
 					} else {
 						res.send('db-error');
 					}
