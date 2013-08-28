@@ -155,12 +155,17 @@ exports.loggedIn = function(req, res) {
 
 				db.Account.find({email: {$nin: emails}}).sort({email: 1}).exec(function(err, accounts) {
 					if (!err && accounts) {
+
+						var serviceUrl = (process.env.serviceExternalProtocol || 'http') + '://' + os.hostname();
+						if (process.env.serviceExternalUrl) {
+							serviceUrl = process.env.serviceExternalUrl;
+						}
 						res.render('logged-in', {
 							email: account.email, 
 							friends: account.friends, 
 							accountId: account._id, 
 							accounts: accounts, 
-							serviceUrl: (process.env.serviceExternalProtocol || 'http') + '://' + os.hostname()
+							serviceUrl: serviceUrl
 						});
 					} else {
 						res.send('db-error');
