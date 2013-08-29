@@ -46,15 +46,15 @@
 		margin-top: 16px;
 		margin-right:10px;
 		border: 1px solid #fff;
-		cursor: pointer;
+		/*cursor: pointer;*/
 		-webkit-transform: scale(1);
 		-webkit-transition: -webkit-transform .1s ease-in-out 0s;
 	}
 	.me .person-picture:hover {
-		-webkit-transform: scale(1.1);
+		/*-webkit-transform: scale(1.1);*/
 	}
 	.me .person-picture:active {
-		-webkit-transform: scale(.9);
+		/*-webkit-transform: scale(.9);*/
 	}
 	.me .person-name {		
 		line-height:63px;
@@ -423,7 +423,7 @@
 <div class="popup disco-hide">
 	<div class="popup-text">
 		<span>
-			You can only add friends who have already signed up for Project Disco, tell your friends to sign up at DiscoBeta.com :) <br/><br/> We love you! <3
+			You can only add friends who have already signed up for Project Disco, tell your friends to sign up at <p><%= serviceUrl %></p> <br/> We love you! <3
 		</span>
 	</div>
 	<div class="btn btn-large disco-button-homepage disco-button-homepage-highlight btn-popup">Close</div>
@@ -494,12 +494,6 @@
 	</div>
 
 	<div class="vertical-line"></div>
-<!-- 
-	<h2>Change your picture:</h2>
-	<form method="POST" action="/uploadPhoto" enctype="multipart/form-data">
-		<input type="file" name="displayImage"></input>
-		<input type="submit" value="upload">
-	</form> -->
 </div>
 
 
@@ -588,14 +582,16 @@
 		$(this).parent().find(".change-pic").addClass("disco-hide");
 	});
 </script>
+
+<!-- change profile picture -->
 <script>
-	$('.me .person-picture').on('click', function(e) {
+	/*$('.me .person-picture').on('click', function(e) {
 		e.stopPropagation();
 		e.preventDefault();		
 
 		$(this).parent().parent().parent().parent().find(".modal-bg").removeClass("disco-hide");
 		$(this).parent().parent().parent().parent().find(".change-pic").removeClass("disco-hide");
-	});
+	});*/
 </script>
 
 
@@ -604,22 +600,11 @@
 	$('.small-logo').on('click', function(e) {
 		e.preventDefault();		
 		$(this).parent().parent().find(".friend-picture").addClass('secret');				
+		$(this).parent().parent().parent().find(".person-picture").addClass('secret');			
 	});
 </script>
 
 <!-- chrome detect -->
 <script>
-	if (chrome) {
-		setTimeout(function() {
-
-			if (document.documentElement.getElementsByClassName('disco-identifier').length) {
-				
-			} else {
-				window.location = '/extension-get';
-			}
-
-		}, 300);
-	} else {
-		window.location = '/no-chrome';
-	}
+	discoDetect(null, '/extension-get', '/no-chrome');
 </script>

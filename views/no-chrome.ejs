@@ -1,17 +1,5 @@
 <script>
-	if (chrome) {
-		setTimeout(function() {
-
-			if (document.documentElement.getElementsByClassName('disco-identifier').length) {
-				window.location = "/welcome";
-			} else {
-				window.location = '/extension-get';
-			}
-
-		}, 300);
-	} else {
-		
-	}
+	discoDetect('/welcome', '/extension-get', null);
 </script>
 
 <style>
