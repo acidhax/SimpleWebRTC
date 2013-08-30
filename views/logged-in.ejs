@@ -2,6 +2,9 @@
 	html, html a {
 	    -webkit-font-smoothing: antialiased !important;
 	}
+	body {
+		font-family: 'Lato', sans-serif !important;
+	}
 	.homepage-container {
 		margin: auto auto;		
 		width: 1100px;
@@ -21,8 +24,6 @@
 		margin-top: 10px;	
 	}
 	.homepage-link {
-		font-family: arial;
-		font-weight: bold;
 		font-size: 18px;
 		color: rgb(22,22,22) !important;
 		text-decoration:none !important;
@@ -77,8 +78,8 @@
 	}
 	.main-text {		
 		text-align: center;
-		font-family: arial;
-		font-weight: bold;
+		font-family: 'Lato', sans-serif;
+		font-weight:300;
 		font-size: 36px;
 		color: rgb(22,22,22);		
 	}
@@ -155,8 +156,6 @@
 		float:left;
 		line-height:50px;
 		margin-left:20px;
-		font-family: arial;
-		font-weight: bold;
 		font-size: 16px;
 		color: rgb(22,22,22) !important;
 		text-overflow: ellipsis;
@@ -220,10 +219,8 @@
 		background-color: #161616;
 		opacity: .95;
 		border-radius: 20px;
-		margin-top: -250px;
-		margin-left: -275px; /*half div width!*/
-		left: 50%;
-		top: 50%;
+		left: calc(50% - 225px);
+		top: calc(50% - 150px);
 		-webkit-transform: scale(1);
 		-webkit-transition: -webkit-transform .1s linear 0s;
 		z-index: 999;
@@ -233,17 +230,18 @@
 	}
 	.popup-text{
 		width:400px;
-		margin: 50px auto 0px auto;	
+		margin: 35px auto 0px auto;	
 		text-align: center;
-		font-family: arial;		
 		font-size: 26px;
 		color: rgb(250,250,250);
 		line-height: 110%;	
+		font-weight:300;
 	}
 	.btn-popup{
 		display: inline-block;
 		margin-left: 236px;
 		margin-top: 20px;
+		font-weight:normal !important;
 	}
 	.change-pic{
 		position: fixed;
@@ -325,7 +323,6 @@
 	  padding: 0px 25.6px;
 	  font-weight: 300;
 	  font-size: 14px;
-	  font-family: arial;
 	  color: #666666;
 	  text-shadow: 0 1px 1px white;	  
 	  text-decoration: none;
