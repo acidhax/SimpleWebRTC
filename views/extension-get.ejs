@@ -105,10 +105,9 @@
 	<h4 class="started"> To get started, you'll need to give us a home in your web browser </h4>
 	<h5 class="dontworry"> (Don't worry, we like it in there ..it's cosy) </h5>
 	<div> 
-		<a href="http://www.youtube.com/watch?v=dQw4w9WgXcQ">
-		<button class="btn btn-inverse btn-large btn-custom-2 btn_install">Install Disco</button>
-		</a> 
+		<button class="btn btn-inverse btn-large btn-custom-2 btn_install" onclick="chrome.webstore.install('', function(){ window.location='/welcome' } )">Install Disco</button> 
 	</div>
-	<img class="chrome_browser" src="/img/chromeSmallLogo.png">
-	<img class="chrome_store" src="/img/ChromeStore.png">
+
+	<a href="http://chrome.google.com" <img class="chrome_browser" src="/img/chromeSmallLogo.png"></a>
+	<a href="https://chrome.google.com/webstore/detail/edpngmdlbbfkmjhmoelpbhdalhmmjfap" <img class="chrome_store" src="/img/ChromeStore.png"></a>
 </div>
