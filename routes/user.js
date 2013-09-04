@@ -14,11 +14,15 @@ exports.welcome = function(req,res) {
 };
 
 exports.register = function(req, res) {
-	if (req.session.accountId) {
-		res.redirect('/logged-in');
+	if (req.hasExtension) {
+		if (req.session.accountId) {
+			res.redirect('/logged-in');
+		} else {
+			res.render('register', {message: '', email: ''});
+		}
 	} else {
-		res.render('register', {message: '', email: ''});
-	}	
+		res.redirect('/extension-get');
+	}
 };
 
 exports.registerPost = function(req, res) {
@@ -113,10 +117,14 @@ exports.registerPost = function(req, res) {
 };
 
 exports.login = function(req, res) {
-	if (req.session.accountId) {
-		res.redirect('/logged-in');
+	if (req.hasExtension) {
+		if (req.session.accountId) {
+			res.redirect('/logged-in');
+		} else {
+			res.render('login');
+		}
 	} else {
-		res.render('login');
+		res.redirect('/extension-get');
 	}
 };
 
@@ -145,41 +153,45 @@ exports.loginPost = function(req, res) {
 };
 
 exports.loggedIn = function(req, res) {
-	if (req.session.accountId) {
-		db.Account.findById(req.session.accountId).populate('friends').exec(function(err, account) {
-			if (!err && account) {
-				var emails = [account.email];
-				for (var n = 0; n < account.friends.length; n++) {
-					emails.push(account.friends[n].email);
-				}
-
-				db.Account.find({email: {$nin: emails}}).sort({email: 1}).exec(function(err, accounts) {
-					if (!err && accounts) {
-
-						var serviceUrl = (process.env.serviceExternalProtocol || 'http') + '://' + os.hostname();
-						if (process.env.serviceExternalUrl) {
-							serviceUrl = process.env.serviceExternalUrl;
-						}
-						res.render('logged-in', {
-							email: account.email, 
-							friends: account.friends, 
-							accountId: account._id, 
-							accounts: accounts, 
-							serviceUrl: serviceUrl
-						});
-					} else {
-						res.send('db-error');
+	if (req.hasExtension) {
+		if (req.session.accountId) {
+			db.Account.findById(req.session.accountId).populate('friends').exec(function(err, account) {
+				if (!err && account) {
+					var emails = [account.email];
+					for (var n = 0; n < account.friends.length; n++) {
+						emails.push(account.friends[n].email);
 					}
-				});
-			} else {
-				req.session.accountId = null;
-				res.redirect('/welcome');
-			}
-		});
 
+					db.Account.find({email: {$nin: emails}}).sort({email: 1}).exec(function(err, accounts) {
+						if (!err && accounts) {
+
+							var serviceUrl = (process.env.serviceExternalProtocol || 'http') + '://' + os.hostname();
+							if (process.env.serviceExternalUrl) {
+								serviceUrl = process.env.serviceExternalUrl;
+							}
+							res.render('logged-in', {
+								email: account.email, 
+								friends: account.friends, 
+								accountId: account._id, 
+								accounts: accounts, 
+								serviceUrl: serviceUrl
+							});
+						} else {
+							res.send('db-error');
+						}
+					});
+				} else {
+					req.session.accountId = null;
+					res.redirect('/welcome');
+				}
+			});
+
+		} else {
+			console.log(clc.red('Ummm, unauthorized?'));
+			res.redirect('/welcome');
+		}
 	} else {
-		console.log(clc.red('Ummm, unauthorized?'));
-		res.redirect('/welcome');
+		res.redirect('/extension-get');
 	}
 }
 

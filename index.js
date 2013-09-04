@@ -55,6 +55,15 @@ app.configure(function(){
     console.log('%s %s', clc.yellow(req.method), req.url);
     next();
   });
+  app.use(function(req, res, next) {
+    if (req.headers['x-partyon'] && req.headers['x-partyon'] == 'Garth') {
+      res.set('X-PartyOn', 'Wayne');
+      req.hasExtension = true;
+    } else {
+      req.hasExtension = false;
+    }
+    next();
+  });
   app.use(expressLayouts);
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
@@ -66,12 +75,6 @@ app.configure('development', function(){
 
 app.configure('production', function(){
   app.use(express.errorHandler());
-});
-
-// Routes
-app.get('*', function(req, res, next) {
-  res.set('X-PartyOn', 'Garth');
-  next();
 });
 
 app.get('*', function(req, res, next) {
