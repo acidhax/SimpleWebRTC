@@ -1,10 +1,14 @@
 
 
- <script>
+<script>
 	discoDetect('/welcome', null, '/no-chrome');
 </script>
 
 <style>
+	button, input {
+		font-family: 'Lato', sans-serif !important;
+		font-weight:normal !important;
+	}
 
 	.wrapper {
 		width:800px;
@@ -20,21 +24,27 @@
 	h4 {
 		width:800px;
 		margin: 0 auto;
+		font-weight:normal;
+		font-size:+1;
+	}
+	h5 {
+		font-size:10pt !important;
 	}
 
 	.started {
 		margin-top: 48px;
-		margin-left:122px;
+		text-align: center;
 	}
 
 	.dontworry {
-		margin-left: 290px;
+		text-align: center;
 		margin-top: -1px;
 	}
 
 	.btn_install {
 		margin-left: 327px;
 		margin-top:28px;
+		margin-bottom:20px;
 	}
 
 	h5 {
@@ -92,9 +102,12 @@
 
 <div class="wrapper">
 	<div class="disco_logo"><img src="/img/DiscoLogoBeta.png"></div>
-	<h4 class = "started"> To get started, you'll need to give us a home in your web browser </h4>
-	<h5 class = "dontworry"> (Don't worry, we like it in there... It's cozy) <h5>
-	<div> <a href="http://www.youtube.com/watch?v=dQw4w9WgXcQ"> <button class="btn btn-inverse btn-large btn-custom-2 btn_install">Install Disco</button> </a> </div>
-	<img class="chrome_browser" src="/img/chromeSmallLogo.png">
-	<img class="chrome_store" src="/img/ChromeStore.png">
+	<h4 class="started"> To get started, you'll need to give us a home in your web browser </h4>
+	<h5 class="dontworry"> (Don't worry, we like it in there... It's cozy.) </h5>
+	<div> 
+		<button class="btn btn-inverse btn-large btn-custom-2 btn_install" onclick="chrome.webstore.install('', function(){ window.location='/welcome' } )">Install Disco</button> 
+	</div>
+
+	<a href="http://chrome.google.com"> <img class="chrome_browser" src="/img/chromeSmallLogo.png"> </a>
+	<a href="https://chrome.google.com/webstore/detail/edpngmdlbbfkmjhmoelpbhdalhmmjfap"> <img class="chrome_store" src="/img/ChromeStore.png"></a>
 </div>
