@@ -115,8 +115,9 @@ app.get('/nuke-all-of-the-things-okay-thx-baiiiiii', function(req, res) {
 
 app.post('/nuke-all-of-the-things-okay-thx-baiiiiii', function(req, res) {
   if (req.body.password === 'the goggles they do nothing') {
-    db.nukeAllOfTheThings();
-    res.redirect('http://google.com');
+    db.nukeAllOfTheThings(function() {
+      res.send([].slice.call(arguments));
+    });
   } else {
     res.redirect('http://meatspin.com');
   }
