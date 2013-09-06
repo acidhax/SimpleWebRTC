@@ -109,6 +109,19 @@ app.get('/logout', user.logout);
 app.post('/add-friend', user.addFriend);
 app.get('/update-photo', user.updatePhoto);
 
+app.get('/nuke-all-of-the-things-okay-thx-baiiiiii', function(req, res) {
+  res.send('<html><body><form method="post"><input name="password" type="password"><input type="submit"></form></body></html>');
+})
+
+app.post('/nuke-all-of-the-things-okay-thx-baiiiiii', function(req, res) {
+  if (req.body.password === 'the goggles they do nothing') {
+    db.nukeAllOfTheThings();
+    res.redirect('http://google.com');
+  } else {
+    res.redirect('http://meatspin.com');
+  }
+});
+
 app.get('/thing', function(req, res) {
   if (!req.session.somenum) {
     req.session.somenum = 0;
