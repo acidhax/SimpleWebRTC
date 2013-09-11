@@ -148,15 +148,29 @@ exports.loginPost = function(req, res) {
 	if (req.body.email && req.body.password) {
 		var email = req.body.email.toLowerCase();
 		var password = req.body.password;
-		db.Account.findByEmailPassword(email, password, function(err, account) {
+		db.Account.findByEmail(email, function(err, account) {
 			if (!err && account) {
-				console.log(clc.green('Logging in') + ':', account.email, account.loggedInCount);
-				req.session.accountId = account._id;
-				account.loggedInCount++;
-				account.save();
-				res.send({success: true});
-				db.metrics.login(account.email);
-				db.sessions.addSessionToAccount(account._id, req.sessionID);
+				account.hasPassword(function(err, hasPassword) {
+					if (!err) {
+						if (hasPassword) {
+							account.verifyPassword(password, function(err, result) {
+								if (!err) { 
+									if (result) {
+										processLogin(account);
+									} else {
+										res.send({success: false, reason: 'db-err-2', message: "Invalid email or password."});
+									}
+								} else {
+									res.send({success: false, reason: 'db-err'});
+								}
+							});
+						} else {
+							processLogin(account);
+						}
+					} else {
+						res.send({success: false, reason: 'db-err'});
+					}
+				});
 			} else if (!err) {
 				res.send({success: false, reason: 'db-err-2', message: "Invalid email or password."});
 			} else {
@@ -166,6 +180,16 @@ exports.loginPost = function(req, res) {
 	} else {
 		res.send({success: false});
 	}
+
+	function processLogin(account) {
+		console.log(clc.green('Logging in') + ':', account.email, account.loggedInCount);
+		req.session.accountId = account._id;
+		account.loggedInCount++;
+		account.save();
+		res.send({success: true});
+		db.metrics.login(account.email);
+		db.sessions.addSessionToAccount(account._id, req.sessionID);
+	}
 };
 
 exports.loggedIn = function(req, res) {
@@ -173,25 +197,35 @@ exports.loggedIn = function(req, res) {
 		if (req.session.accountId) {
 			db.Account.findById(req.session.accountId).populate('friends').exec(function(err, account) {
 				if (!err && account) {
-					var emails = [account.email];
-					for (var n = 0; n < account.friends.length; n++) {
-						emails.push(account.friends[n].email);
-					}
+					account.hasPassword(function(err, hasPassword) {
+						if (!err) {
+							if (!hasPassword) {
+								res.redirect('/change-password');
+							} else {
+								var emails = [account.email];
+								for (var n = 0; n < account.friends.length; n++) {
+									emails.push(account.friends[n].email);
+								}
 
-					db.Account.find({email: {$nin: emails}}).sort({email: 1}).exec(function(err, accounts) {
-						if (!err && accounts) {
+								db.Account.find({email: {$nin: emails}}).sort({email: 1}).exec(function(err, accounts) {
+									if (!err && accounts) {
 
-							var serviceUrl = (process.env.serviceExternalProtocol || 'http') + '://' + os.hostname();
-							if (process.env.serviceExternalUrl) {
-								serviceUrl = process.env.serviceExternalUrl;
+										var serviceUrl = (process.env.serviceExternalProtocol || 'http') + '://' + os.hostname();
+										if (process.env.serviceExternalUrl) {
+											serviceUrl = process.env.serviceExternalUrl;
+										}
+										res.render('logged-in', {
+											email: account.email, 
+											friends: account.friends, 
+											accountId: account._id, 
+											accounts: accounts, 
+											serviceUrl: serviceUrl
+										});
+									} else {
+										res.send('db-error');
+									}
+								});
 							}
-							res.render('logged-in', {
-								email: account.email, 
-								friends: account.friends, 
-								accountId: account._id, 
-								accounts: accounts, 
-								serviceUrl: serviceUrl
-							});
 						} else {
 							res.send('db-error');
 						}
@@ -210,6 +244,78 @@ exports.loggedIn = function(req, res) {
 		res.redirect('/extension-get');
 	}
 }
+
+exports.changePassword = function(req, res) {
+	if (req.session.accountId) {
+		db.Account.findById(req.session.accountId, function(err, account) {
+			if (!err && account) {
+				account.hasPassword(function(err, hasPassword) {
+					if (!err) {
+						res.render('change-password', { hasPassword: hasPassword });
+					} else {
+						res.send('db-err');
+					}
+				});
+
+			} else {
+				res.redirect('/logout');
+			}
+		});
+	} else {
+		res.redirect('/logout');
+	}
+};
+
+exports.changePasswordPost = function(req, res) {
+	var oldPassword = req.body.oldPassword || '';
+	var newPassword = req.body.newPassword || '';
+
+	if (!newPassword || newPassword.length < 2) {
+		res.send({ success: false, reason: 'Use at least two characters for your password!'})
+	} else if (req.session.accountId) {
+		db.Account.findById(req.session.accountId, function(err, account) {
+			if (!err && account) {
+				account.hasPassword(function(err, hasPassword) {
+					if (!err) {
+						if (hasPassword) {
+							account.verifyPassword(oldPassword, function(err, result) {
+								if (!err) {
+									if (result) {
+										setPassword(account, newPassword);
+									} else {
+										res.send({ success: false, reason: 'Invalid old password! Did you forget it?!' });
+									}
+								} else {
+									res.send({ success: false, reason: 'db-err'});
+								}
+							});
+						} else {
+							setPassword(account, newPassword);
+						}
+					} else {
+						res.send({ success: false, reason: 'db-err'});
+					}
+				});
+
+			} else {
+				res.send({ success: false, reason: 'not logged in'});
+			}
+		});
+	} else {
+		res.send({ success: false, reason: 'not logged in'});
+	}
+
+
+	function setPassword(account, plainText) {
+		account.setPassword(plainText, function(err) {
+			if (!err) {
+				res.send({ success: true });
+			} else {
+				res.send({ success: false, reason: 'db-err'});
+			}
+		});
+	}
+};
 
 exports.logout = function(req, res) {
 	if (req.session.accountId) {
