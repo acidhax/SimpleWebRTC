@@ -29,9 +29,8 @@
 		margin-left: 220px;
 	}
 
-	.txt_email {
+	.txt_email, .txt_password {
 		margin-left: 120px;
-
 	}
 
 	.btn_help {
@@ -88,7 +87,8 @@
 	<div class="disco_logo"><img src="/img/DiscoLogoBeta.png"></div>
 	<div class="disco_content">
 		<h3> Login with your account email: </h3>
-		<input class="txt_email" type="email" placeholder="Email">
+		<input class="txt_email" type="email" placeholder="Email" name="email">
+		<input class="txt_password" type="password" placeholder="Password" name="password">
 		<button class="btn btn-inverse btn-custom btn_login">Login</button>
 		<div> <a href="/welcome"> <button class="btn btn-inverse btn-custom btn_back">Back</button> </a> </div>
 		<div class="btn_help" onclick="window.alert('Enter the email you first used to sign up with. If you can\'t remeber your email, contact us at jason@groupnotes.ca')"> Help </div>
@@ -103,7 +103,7 @@
 	$(".txt_email").focus();
 	
 
-	$(".txt_email").on("keypress", function(e) {
+	$("input").on("keypress", function(e) {
 		if (e.keyCode == 13){
 			$('.btn_login').click();
 		}
@@ -114,10 +114,14 @@
 	$('.btn_login').on('click', function(e) {
 		e.preventDefault();
 		var email = $('.txt_email').val();
+		var password = $('.txt_password').val();
 
-		if (email && email.length) {
+		if (!email || !email.length || !password || !password.length) {
+			alert('Please enter an email and password');
+		} else {
 			$.post('/login', {
-				email:email
+				email:email,
+				password: password
 			}, function(data) {
 				if (data && data.success) {
 					window.location = '/logged-in';
@@ -127,9 +131,6 @@
 					alert('Data did not return from server in an expected manner, please email jason@groupnotes.ca to alert us of the error. We\'ll love you forever');
 				}
 			});
-		}
-		else {
-			alert("Alright we'll do the hard work here, but you help to help us out a little bit by entering some text :)")
 		}
 	});
 </script>

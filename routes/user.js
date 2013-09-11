@@ -31,6 +31,7 @@ exports.registerPost = function(req, res) {
 		res.redirect('/logged-in');
 	} else {
 		var email = req.body.email;
+		var password = req.body.password;
 		var message = '';
 		if (!email) {
 			message += 'You need to enter an valid email address<br/>';
@@ -41,6 +42,12 @@ exports.registerPost = function(req, res) {
 			} catch(e) {
 				message += 'Please enter a valid email address,<br>Emails need to be in the format xxx@yyy.zz<br/>';
 			}
+		}
+
+		if (!password) {
+			message += 'Please enter a password';
+		} else if (password.length < 2) {
+			message += 'Use at least two characters for your password!';
 		}
 
 		if (!req.files || !req.files.picture) {
@@ -60,30 +67,39 @@ exports.registerPost = function(req, res) {
 							var account = new db.Account({
 								email: email
 							});
-							account.save(function(err) {
+							account.setPassword(password, function(err) {
 								if (!err) {
-									// Upload photostuff time!!!
-									req.session.accountId = account._id;
-								
-									db.Account.setPhoto(req.session.accountId, photo, function (err) {
-										console.log('THIS IS THE CALLBACK FROM CLEANER', err);
+
+									account.save(function(err) {
 										if (!err) {
-											db.sessions.addSessionToAccount(account._id, req.sessionID);
-											db.metrics.accountCreated(account._id, req.ip);
-											db.metrics.login(account._id);
-											res.redirect("/logged-in");
+											// Upload photostuff time!!!
+											req.session.accountId = account._id;
+										
+											db.Account.setPhoto(req.session.accountId, photo, function (err) {
+												console.log('THIS IS THE CALLBACK FROM CLEANER', err);
+												if (!err) {
+													db.sessions.addSessionToAccount(account._id, req.sessionID);
+													db.metrics.accountCreated(account._id, req.ip);
+													db.metrics.login(account._id);
+													res.redirect("/logged-in");
+												} else {
+													account.remove();
+													message += 'Did you SERIOUSLY upload a strange file that we couldn\'t process for your picture?';
+													done();
+												}
+											});
+											
 										} else {
-											account.remove();
-											message += 'Did you SERIOUSLY upload a strange file that we couldn\'t process for your picture?';
+											message + "I've made a huge mistake (database problem 2)";
 											done();
 										}
+
 									});
-									
+
 								} else {
-									message + "I've made a huge mistake (database problem 2)";
+									message += 'An error occured with something... if it happens again, let us know.';
 									done();
 								}
-
 							});
 
 						} else {
@@ -129,9 +145,10 @@ exports.login = function(req, res) {
 };
 
 exports.loginPost = function(req, res) {
-	if (req.body.email) {
+	if (req.body.email && req.body.password) {
 		var email = req.body.email.toLowerCase();
-		db.Account.findByEmail(req.body.email, function(err, account) {
+		var password = req.body.password;
+		db.Account.findByEmailPassword(email, password, function(err, account) {
 			if (!err && account) {
 				console.log(clc.green('Logging in') + ':', account.email, account.loggedInCount);
 				req.session.accountId = account._id;
@@ -141,8 +158,7 @@ exports.loginPost = function(req, res) {
 				db.metrics.login(account.email);
 				db.sessions.addSessionToAccount(account._id, req.sessionID);
 			} else if (!err) {
-				res.send({success: false, reason: 'db-err-2', message: "That's not an account. Try again?"});
-				
+				res.send({success: false, reason: 'db-err-2', message: "Invalid email or password."});
 			} else {
 				res.send({success: false, reason: 'db-err'});
 			}
