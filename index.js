@@ -217,6 +217,12 @@ var server = http.createServer(app);
 server.listen(serviceListenPort, function(){
   console.log("Service listening on port " + clc.yellow(serviceListenPort + ' ' +serviceExternalPort)  + " in " + app.settings.env + " mode");
   io = require('socket.io').listen(server);
+  io.set('transports', [
+    'flashsocket'
+    , 'htmlfile'
+    , 'xhr-polling'
+    , 'jsonp-polling'
+  ]);
   io.set('log level', process.env.socketioLogLevel || 0);
   wh.start({
     io: io,
