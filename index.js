@@ -203,6 +203,7 @@ wh.setPath(wormholeExternalProtocol + "://"+os.hostname()+":"+wormholeExternalPo
 wh.on("live", function (cb) {
   var self = this;
   var commentDone = db.vanity.comments.subscribe(function (count) {
+    console.log("Sending comment count to client.");
     self.rpc.setCommentCount(null, count);
   });
 
