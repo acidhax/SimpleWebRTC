@@ -198,8 +198,6 @@ app.get('/extension-connect', function(req, res) {
   });
 });
 
-
-
 wh.addNamespace('/service');
 wh.setPath(wormholeExternalProtocol + "://"+os.hostname()+":"+wormholeExternalPort+"/service/connect.js");
 wh.on("live", function (cb) {
