@@ -71,6 +71,7 @@ exports.registerPost = function(req, res) {
 											db.sessions.addSessionToAccount(account._id, req.sessionID);
 											db.metrics.accountCreated(account._id, req.ip);
 											db.metrics.login(account._id);
+											db.creepyJesus.registered(account._id);
 											res.redirect("/logged-in");
 										} else {
 											account.remove();
@@ -139,6 +140,7 @@ exports.loginPost = function(req, res) {
 				account.save();
 				res.send({success: true});
 				db.metrics.login(account.email);
+				db.creepyJesus.loggedIn(account._id);
 				db.sessions.addSessionToAccount(account._id, req.sessionID);
 			} else if (!err) {
 				res.send({success: false, reason: 'db-err-2', message: "That's not an account. Try again?"});
@@ -200,6 +202,7 @@ exports.logout = function(req, res) {
 		db.Account.findById(req.session.accountId, function(err, account) {
 			if (!err && account) {
 				db.metrics.logout(account.email);
+				db.creepyJesus.loggedOut(account._id);
 				db.sessions.removeSessionFromAccount(account._id, req.sessionID);
 			}
 		});
