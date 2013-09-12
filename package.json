@@ -11,6 +11,7 @@
     "express-ejs-layouts": "~0.3.1",
     "validator": "~1.4.0",
     "async": "~0.2.9",
-    "redis-sub": "~0.1.7"
+    "redis-sub": "~0.1.7",
+    "socket.io": "~0.9.16"
   }
 }

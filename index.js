@@ -1,17 +1,23 @@
 var express = require('express'),
+  http = require('http'),
+  io,
   expressLayouts = require('express-ejs-layouts'),
 	clc = require('cli-color'),
 	db = require('./db'),
   index = require('./routes'),
   user = require('./routes/user'),
   fs = require('fs'),
+  os = require('os'),
   serviceListenPort = process.env.serviceListenPort || 3003,
   serviceListenProtocol = process.env.serviceListenProtocol || 'http',
   serviceExternalPort = process.env.serviceExternalPort || 443,
   serviceExternalProtocol = process.env.serviceExternalProtocol || 'https',
   sessionSecret = process.env.sessionSecret || 'TIZZZ A PARTAAAY UP IN THE HIZZOOOO',
   sessionKey = process.env.sessionKey || 'disco.sid',
-  cookieParser = express.cookieParser(sessionSecret);
+  cookieParser = express.cookieParser(sessionSecret),
+  wormholeListenPort = process.env.serviceListenPort || 3003,
+  wormholeExternalPort = process.env.serviceExternalPort || 443,
+  wormholeExternalProtocol = process.env.serviceExternalProtocol || 'https';
 
 var RedisStore = null;
 if (fs.existsSync('../connect-redis-pubsub')) {
@@ -26,6 +32,26 @@ if (fs.existsSync('../redis-pub-sub')) {
 } else {
   RedisPubSub = require('redis-sub');
 }
+var sessionStore = new RedisStore({
+    pubsub: new RedisPubSub({pubClient: db.redis.client, subClient: db.redis.subClient}),
+    prefix: process.env.sessionPrefix || 'discoSession:'
+});
+
+if (fs.existsSync('../wormhole-remix')) {
+  wormholeServer = require('../wormhole-remix');
+} else {
+  wormholeServer = require('wormhole-remix');
+}
+
+
+wh = new wormholeServer({
+  protocol: wormholeExternalProtocol,
+  hostname: os.hostname(),
+  port: wormholeExternalPort,
+  sessionStore: sessionStore,
+  cookieParser: cookieParser,
+  sessionKey: sessionKey
+});
 
 var app = module.exports = express();
 // Configuration
@@ -39,10 +65,7 @@ app.configure(function(){
   app.use(express.cookieParser());
   app.use(express.session({
   	secret: sessionSecret,
-  	store: new RedisStore({
-      pubsub: new RedisPubSub({pubClient: db.redis.client, subClient: db.redis.subClient}),
-      prefix: process.env.sessionPrefix || 'discoSession:'
-    }),
+  	store: sessionStore,
   	cookie: {
       path: '/',
       httpOnly: false,
@@ -144,6 +167,24 @@ app.get('/extension-connect', function(req, res) {
   });
 });
 
-app.listen(serviceListenPort, function(){
+
+
+wh.addNamespace('/service');
+wh.setPath(wormholeExternalProtocol + "://"+os.hostname()+":"+wormholeExternalPort+"/service/connect.js");
+
+
+var server = http.createServer(app);
+server.listen(serviceListenPort, function(){
   console.log("Service listening on port " + clc.yellow(serviceListenPort + ' ' +serviceExternalPort)  + " in " + app.settings.env + " mode");
+  io = require('socket.io').listen(server);
+  io.set('log level', process.env.socketioLogLevel || 0);
+  wh.start({
+    io: io,
+    express: app,
+    report: false
+  }, function (err) {
+    wh.on("connection", function (traveller) {
+      // Do it.
+    });
+  });
 });
