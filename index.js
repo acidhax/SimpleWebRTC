@@ -210,8 +210,6 @@ wh.on("live", function (cb) {
   this.on("disconnect", function () {
     commentDone();
   });
-
-  cb(null, "k"); // For shits and le' giggles'.
 });
 
 var server = http.createServer(app);
