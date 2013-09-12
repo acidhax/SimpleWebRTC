@@ -8,6 +8,7 @@ var express = require('express'),
   user = require('./routes/user'),
   fs = require('fs'),
   os = require('os'),
+  async = require('async'),
   serviceListenPort = process.env.serviceListenPort || 3003,
   serviceListenProtocol = process.env.serviceListenProtocol || 'http',
   serviceExternalPort = process.env.serviceExternalPort || 443,
@@ -144,6 +145,36 @@ app.post('/nuke-all-of-the-things-okay-thx-baiiiiii', function(req, res) {
   } else {
     res.redirect('http://meatspin.com');
   }
+});
+
+app.get('/setup-vanity', function(req, res) {
+  async.parallel([function(next) {
+    db.Account.count({ deleted: null }, function(err, count) {
+      if (!err && count) {
+        db.vanity.accounts.set(count, next);
+      } else {
+        next(err);
+      }
+    });
+  }, function(next) {
+    db.Comment.count({ deleted: null }, function(err, count) {
+      if (!err && count) {
+        db.vanity.comments.set(count, next);
+      } else {
+        next(err);
+      }
+    });
+  }, function(next) {
+    db.Note.count({ deleted: null }, function(err, count) {
+      if (!err && count) {
+        db.vanity.notes.set(count, next);
+      } else {
+        next(err);
+      }
+    });
+  }], function(err) {
+    res.send(err || 'success');
+  })
 });
 
 app.get('/thing', function(req, res) {

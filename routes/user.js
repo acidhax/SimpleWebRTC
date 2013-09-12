@@ -64,7 +64,7 @@ exports.registerPost = function(req, res) {
 								if (!err) {
 									// Upload photostuff time!!!
 									req.session.accountId = account._id;
-								
+									db.vanity.accounts.incr();
 									db.Account.setPhoto(req.session.accountId, photo, function (err) {
 										console.log('THIS IS THE CALLBACK FROM CLEANER', err);
 										if (!err) {
@@ -72,6 +72,7 @@ exports.registerPost = function(req, res) {
 											db.metrics.accountCreated(account._id, req.ip);
 											db.metrics.login(account._id);
 											db.creepyJesus.registered(account._id);
+											db.vanity.accounts.decr();
 											res.redirect("/logged-in");
 										} else {
 											account.remove();
