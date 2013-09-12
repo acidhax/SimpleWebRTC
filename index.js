@@ -174,7 +174,7 @@ app.get('/setup-vanity', function(req, res) {
     });
   }], function(err) {
     res.send(err || 'success');
-  })
+  });
 });
 
 app.get('/thing', function(req, res) {
