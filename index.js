@@ -171,8 +171,18 @@ app.get('/extension-connect', function(req, res) {
 
 wh.addNamespace('/service');
 wh.setPath(wormholeExternalProtocol + "://"+os.hostname()+":"+wormholeExternalPort+"/service/connect.js");
+wh.on("live", function (cb) {
+  var self = this;
+  var commentDone = db.vanity.comment.subscribe(function (count) {
+    self.rpc.setCommentCount(null, count);
+  });
 
+  this.on("disconnect", function () {
+    commentDone();
+  });
 
+  cb(null, "k"); // For shits and le' giggles'.
+});
 var server = http.createServer(app);
 server.listen(serviceListenPort, function(){
   console.log("Service listening on port " + clc.yellow(serviceListenPort + ' ' +serviceExternalPort)  + " in " + app.settings.env + " mode");
