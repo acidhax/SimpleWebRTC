@@ -37,6 +37,17 @@
 			});
 		}
 	</script>
+	<script src="/wormhole/service/connect.js"></script>
+	<script>
+		wh.ready(function () {
+			if ($('.activity-count').length) {
+				wh.rpc.live();
+			}
+		});
+		wh.on("setCommentCount", function (err, count) {
+			$('.activity-count').text(count);
+		});
+	</script>
 </head>
 <body>
 	<%- body %>
