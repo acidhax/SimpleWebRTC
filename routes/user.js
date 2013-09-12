@@ -72,10 +72,10 @@ exports.registerPost = function(req, res) {
 											db.metrics.accountCreated(account._id, req.ip);
 											db.metrics.login(account._id);
 											db.creepyJesus.registered(account._id);
-											db.vanity.accounts.decr();
 											res.redirect("/logged-in");
 										} else {
 											account.remove();
+											db.vanity.accounts.decr();
 											message += 'Did you SERIOUSLY upload a strange file that we couldn\'t process for your picture?';
 											done();
 										}
