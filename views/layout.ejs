@@ -39,16 +39,27 @@
 	</script>
 	<script src="/wormhole/service/connect.js"></script>
 	<script>
+		var sinceDate = new Date("2013-09-10T20:30:24.890Z");
+
 		wh.ready(function () {
 			$(function () {
 				if ($('.activity-count').length) {
 					wh.rpc.live();
+					setInterval(setupDate, 60000);
+					setupDate();
 				}
 			});
 		});
 		wh.on("setTotalCount", function (err, count) {
 			$('.activity-count').text(count);
 		});
+
+		var setupDate = function() {
+			var currentDate = new Date();
+
+			var diff = currentDate - sinceDate;
+			$('.vanity-days').text(Math.floor(diff / 1000 / 60 / 60 / 24))
+		}
 	</script>
 </head>
 <body>
