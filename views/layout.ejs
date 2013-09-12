@@ -46,8 +46,7 @@
 				}
 			});
 		});
-		wh.on("setCommentCount", function (err, count) {
-			console.log("setCommentCount", err, count);
+		wh.on("setTotalCount", function (err, count) {
 			$('.activity-count').text(count);
 		});
 	</script>

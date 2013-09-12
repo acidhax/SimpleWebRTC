@@ -202,9 +202,16 @@ wh.addNamespace('/service');
 wh.setPath(wormholeExternalProtocol + "://"+os.hostname()+":"+wormholeExternalPort+"/service/connect.js");
 wh.on("live", function (cb) {
   var self = this;
+  var commentCount = 0;
+  var noteCount = 0;
   var commentDone = db.vanity.comments.subscribe(function (count) {
-    console.log("Sending comment count to client.");
-    self.rpc.setCommentCount(null, count);
+    commentCount = count;
+    self.rpc.setTotalCount(null, commentCount + noteCount);
+  });
+
+  var noteDone = db.vanity.notes.subscribe(function (count) {
+    noteCount = count;
+    self.rpc.setTotalCount(null, commentCount + noteCount);
   });
 
   this.on("disconnect", function () {
