@@ -216,6 +216,7 @@ wh.on("live", function (cb) {
 
   this.on("disconnect", function () {
     commentDone();
+    noteDone();
   });
 });
 
