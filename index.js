@@ -202,7 +202,7 @@ wh.addNamespace('/service');
 wh.setPath(wormholeExternalProtocol + "://"+os.hostname()+":"+wormholeExternalPort+"/service/connect.js");
 wh.on("live", function (cb) {
   var self = this;
-  var commentDone = db.vanity.comment.subscribe(function (count) {
+  var commentDone = db.vanity.comments.subscribe(function (count) {
     self.rpc.setCommentCount(null, count);
   });
 
