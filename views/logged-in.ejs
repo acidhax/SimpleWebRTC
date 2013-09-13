@@ -413,14 +413,16 @@
 
 	.vanity-wrapper {
 		float:left;
-		margin-top:27px;
+		margin-top:26px;
 		margin-left:0;
 		font-size:13pt;
 		font-weight:300;
 		font-weight:300;
 		line-height:18px;		
-		color:#444;
+		color:#666;
+		opacity: 1;
 		min-width:250px;
+		-webkit-animation: fadeIn 2.2s linear 0s;
 	}
 
 	.vanity-line {
@@ -438,6 +440,12 @@
 		min-width:137px;
 		float:right;
 		clear:none;
+	}
+
+	@-webkit-keyframes fadeIn {
+		0%{opacity:0;}
+		40%{opacity:0;}
+		100%{opacity:1;}
 	}
 
 </style>
