@@ -95,7 +95,7 @@ exports.registerPost = function(req, res) {
 					});
 
 				} else if (!err && account) {
-					message += 'That account already exists, bud. <a href="/login">Go login like a normal person</a>.'
+					message += 'That account already exists, bud.<br/><a href="/login">Go login like a normal person</a>.'
 					done();
 				} else {
 					message += "I've made a huge mistake (database problems)";
