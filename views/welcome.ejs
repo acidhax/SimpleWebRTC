@@ -36,7 +36,7 @@
 		width:100px;
 	}
 	
-	a {
+	a:nth-of-type(1) {
 		margin-right: 10px;
 	}
 
@@ -44,13 +44,36 @@
 		text-decoration:none !important;
 	}
 
+	.vanity-wrapper-wrapper {
+		min-width:10px;
+		text-align: center;
+		margin-top: 30px;
+	}
 	.vanity-wrapper {
 		margin-top:24px;
 		font-size:18pt;
 		font-weight:300;
 		line-height:25px;
-		text-align: center;
-		color:#aaa;
+		color:#555;
+		min-width:100px;
+		display:inline-block;
+		margin:0 auto;
+		text-align: left;
+	}
+
+	.vanity-caption {
+		display:inline-block;
+		width:159px;
+		text-align: right;
+		margin-right: 10px;
+	}
+	.vanity-days, .activity-count {
+		-webkit-transition: color 0.3s ease-in-out;
+		font-weight: 400;
+		display: inline-block;
+		min-width:20px;
+		clear:none;
+		font-family: monospace !important;
 	}
 
 
@@ -62,9 +85,11 @@
 		<a href="/login"> <button class="btn btn-inverse btn-large btn-custom">Log In</button> </a>
 		<a href="/register"> <button class="btn btn-inverse btn-large btn-custom">Sign Up</button> </a>
 	</div>
+	<div class="vanity-wrapper-wrapper">
 	<div class="vanity-wrapper">
-		<div class="vanity-line"><span class="vanity-days"></span> days in beta</div>
-		<div class="vanity-line"><span class="activity-count"></span> messages sent</div>
+		<div class="vanity-line"><div class="vanity-caption">days in beta: </div><span class="vanity-days"></span></div>
+		<div class="vanity-line"><div class="vanity-caption">messages sent: </div><span class="activity-count"></span></div>
+	</div>
 	</div>
 </div>
 

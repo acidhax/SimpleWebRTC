@@ -50,15 +50,35 @@
 				}
 			});
 		});
+
+		var colorTimeout = null;
+		var colorTimeout2 = null;
 		wh.on("setTotalCount", function (err, count) {
-			$('.activity-count').text(count);
+			clearTimeout(colorTimeout);
+			$('.activity-count').text(count).css('color', '#f18d05');
+			colorTimeout = setTimeout(function() {
+				$('.activity-count').css('color', '');
+			}, 1000);
 		});
+
 
 		var setupDate = function() {
 			var currentDate = new Date();
 
 			var diff = currentDate - sinceDate;
-			$('.vanity-days').text(Math.floor(diff / 1000 / 60 / 60 / 24))
+
+			var oldOne = $('.vanity-days').text();
+			var newOne = Math.floor(diff / 1000 / 60 / 60 / 24).toString();
+
+			if (oldOne && oldOne != newOne) {
+				$('.vanity-days').text(newOne).css('color', '#f18d05');
+				clearTimeout(colorTimeout2);
+				colorTimeout2 = setTimeout(function() {
+					$('.vanity-days').css('color', '');
+				}, 1000);
+			} else {
+				$('.vanity-days').text(newOne);
+			}
 		}
 	</script>
 </head>

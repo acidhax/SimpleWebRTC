@@ -205,12 +205,12 @@ wh.on("live", function (cb) {
   var commentCount = 0;
   var noteCount = 0;
   var commentDone = db.vanity.comments.subscribe(function (count) {
-    commentCount = count;
+    commentCount = parseInt(count, 10);
     self.rpc.setTotalCount(null, commentCount + noteCount);
   });
 
   var noteDone = db.vanity.notes.subscribe(function (count) {
-    noteCount = count;
+    noteCount = parseInt(count, 10);
     self.rpc.setTotalCount(null, commentCount + noteCount);
   });
 

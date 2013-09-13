@@ -413,17 +413,32 @@
 
 	.vanity-wrapper {
 		float:left;
-		margin-top:29px;
-		margin-left:22px;
-		font-size:12pt;
+		margin-top:27px;
+		margin-left:0;
+		font-size:13pt;
 		font-weight:300;
 		font-weight:300;
-		line-height:17px;		
-		color:#999;
+		line-height:18px;		
+		color:#444;
+		min-width:250px;
 	}
 
 	.vanity-line {
-
+	}
+	.vanity-caption {
+		display:inline-block;
+		width:159px;
+		text-align: right;
+		margin-right: 10px;
+	}
+	.vanity-days, .activity-count {
+		-webkit-transition: color 0.3s ease-in-out;
+		font-weight: 400;
+		display: inline-block;
+		min-width:137px;
+		float:right;
+		clear:none;
+		font-family: monospace !important;
 	}
 
 </style>
@@ -454,8 +469,8 @@
 	<div class = "top-right-container">
 		<div class="small-logo"></div>
 		<div class="vanity-wrapper">
-			<div class="vanity-line"><span class="vanity-days"></span> days in beta</div>
-			<div class="vanity-line"><span class="activity-count"></span> messages sent</div>
+			<div class="vanity-line"><div class="vanity-caption">days in beta: </div><span class="vanity-days"></span></div>
+			<div class="vanity-line"><div class="vanity-caption">messages sent: </div><span class="activity-count"></span></div>
 		</div>
 		<a class="homepage-link" href="/logout">
 			log out
