@@ -48,13 +48,14 @@
 		min-width:10px;
 		text-align: center;
 		margin-top: 30px;
+		-webkit-animation: fadeIn 1.6s linear 0s;
 	}
 	.vanity-wrapper {
 		margin-top:24px;
 		font-size:18pt;
 		font-weight:300;
 		line-height:25px;
-		color:#555;
+		color:#666;
 		min-width:100px;
 		display:inline-block;
 		margin:0 auto;
@@ -69,11 +70,17 @@
 	}
 	.vanity-days, .activity-count {
 		-webkit-transition: color 0.3s ease-in-out;
-		font-weight: 400;
+		font-weight: 300;
 		display: inline-block;
 		min-width:20px;
 		clear:none;
 		font-family: monospace !important;
+	}
+
+	@-webkit-keyframes fadeIn {
+		0%{opacity:0;}
+		38%{opacity:0;}
+		100%{opacity:100;}
 	}
 
 
