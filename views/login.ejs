@@ -18,29 +18,39 @@
 
 	a:hover {
 		text-decoration:none !important;
+		color:black;
+		opacity:1;
 	}
 
 	.btn_login {
+		margin-top: 16px;
 		margin-bottom: 10px;
+		margin-left: 169px;
+		width: 110px;
 	}
 
-	.btn_back{
-		margin-top: 25px;
-		margin-left: 220px;
+	a {
+		color: black;
+		opacity: 0.6;
+	}
+
+	.btn_back {
+		margin-top: -4px;
+		margin-left: 208px;
 	}
 
 	.txt_email, .txt_password {
 		margin-left: 120px;
 	}
 
-	.btn_help {
-		width: 31px;
-		color: black;
-		opacity: 0.6;
-		margin-left: 235px;
-		margin-top:7px;
-		font-size: 0.9em;
-	}
+	/*	.btn_help {
+			width: 31px;
+			color: black;
+			opacity: 0.6;
+			margin-left: 235px;
+			margin-top:7px;
+			font-size: 0.9em;
+	}*/
 
 	.btn_help:hover {
 		opacity: 0.9;
@@ -89,9 +99,8 @@
 		<h3> Login with your account email: </h3>
 		<input class="txt_email" type="email" placeholder="Email" name="email">
 		<input class="txt_password" type="password" placeholder="Password" name="password">
-		<button class="btn btn-inverse btn-custom btn_login">Login</button>
-		<div> <a href="/welcome"> <button class="btn btn-inverse btn-custom btn_back">Back</button> </a> </div>
-		<div class="btn_help" onclick="window.alert('Enter the email you first used to sign up with. If you can\'t remeber your email, contact us at jason@groupnotes.ca')"> Help </div>
+		<div><button class="btn btn-inverse btn-custom btn_login">Login</button><div>
+		<div class="btn_back"> <a href="/welcome"> Back </a> </div>
 	</div>
 </div>
 
