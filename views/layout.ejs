@@ -53,12 +53,18 @@
 
 		var colorTimeout = null;
 		var colorTimeout2 = null;
+		var didTheThing = false;
 		wh.on("setTotalCount", function (err, count) {
-			clearTimeout(colorTimeout);
-			$('.activity-count').text(count).css('color', '#f18d05');
-			colorTimeout = setTimeout(function() {
-				$('.activity-count').css('color', '');
-			}, 1000);
+			if (didTheThing && count.toString() !== $('.activity-count').text()) {
+				clearTimeout(colorTimeout);
+				$('.activity-count').text(count).css('color', '#f18d05');
+				colorTimeout = setTimeout(function() {
+					$('.activity-count').css('color', '');
+				}, 1000);
+			} else {
+				didTheThing = true;
+				$('.activity-count').text(count)
+			}
 		});
 
 
