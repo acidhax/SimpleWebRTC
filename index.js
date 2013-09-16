@@ -102,6 +102,9 @@ app.configure('production', function(){
 });
 
 app.get('*', function(req, res, next) {
+  if (req.headers['user-agent'] && req.headers['user-agent'].indexOf('ELB-HealthChecker') > -1) {
+    req.session.destroy();
+  }
   if (req.headers["x-forwarded-proto"] === 'http') {
     res.redirect("https://" + req.headers.host + req.url);
   }
