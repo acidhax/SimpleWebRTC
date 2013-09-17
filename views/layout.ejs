@@ -57,7 +57,15 @@
 		var colorTimeout2 = null;
 		var didTheThing = false;
 		wh.on("setTotalCount", function (err, count) {
+			try {
+				count = parseInt(count, 10);
+				count = count.toLocaleString();
+			} catch(ex) {
+
+			}
+			
 			if (didTheThing && count.toString() !== $('.activity-count').text()) {
+
 				clearTimeout(colorTimeout);
 				$('.activity-count').text(count).css('color', '#f18d05');
 				colorTimeout = setTimeout(function() {
