@@ -119,7 +119,7 @@
 		}
 	}); 
 
-	$('.txt_email').keyup(function() {
+	var checkPassword = function() {
 		var email = $('.txt_email').val();
 		if (email && email.indexOf('@') > -1 && email.indexOf('.') > -1) {
 			$.post('/has-password', { email: email }, function(data) {
@@ -132,7 +132,9 @@
 		} else {
 			noPassword();
 		}
-	});
+	};
+
+	$('.txt_email').keyup(checkPassword).blur(checkPassword).change(checkPassword);
 
 	var noPassword = function() {
 		$('.txt_password').hide();
