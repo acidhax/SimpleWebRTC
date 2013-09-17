@@ -114,9 +114,9 @@
 	}
 
 	.person-container{
-		margin-top:25px;
+		margin-top: 5px;
 		overflow-y: scroll;
-		height: 420px;
+		height: 370px;
 	}
 	.person {
 		width:495px;
@@ -448,6 +448,15 @@
 		100%{opacity:1;}
 	}
 
+	.search-field{
+		text-align: center;
+		margin-top: 38px;
+	}
+
+	.search-field-input{
+		width:230px;
+	}
+
 </style>
 
 <div class="modal-bg disco-hide"></div>
@@ -514,7 +523,7 @@
 		</div>
 		
 		<div class="main-text sub-heading">Some people you might know (click to add):</div>		
-		<div class="search-field"><input type="text" class="search-field-input" placeholder="Type your friends name"></input></div>
+		<div class="search-field"><input type="text" class="search-field-input" placeholder="Search by name or email"></input></div>
 		<div class="person-container" id="style-1">
 			<% for (var n = 0; n < accounts.length; n++) { %>
 				<div class="person" data-accountid="<%=accounts[n]._id%>" style="cursor:pointer">					
