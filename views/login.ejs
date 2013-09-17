@@ -110,7 +110,6 @@
 </script>
 
 <script>
-	$(".txt_email").focus();
 	
 
 	$("input").on("keypress", function(e) {
@@ -134,7 +133,24 @@
 		}
 	};
 
-	$('.txt_email').keyup(checkPassword).blur(checkPassword).change(checkPassword);
+	var trackChanges = null;
+	var lastVal = '';
+	var startTrackChanges = function() {
+		trackChanges = setInterval(function() {
+			var val = $('.txt_email').val();
+
+			if (val !== lastVal) {
+				lastVal = val;
+				checkPassword();
+			}
+		}, 50);
+	};
+
+	var stopTrackChanges = function() {
+		clearInterval(trackChanges);
+	};
+
+	$('.txt_email').focus(startTrackChanges).blur(stopTrackChanges).focus();
 
 	var noPassword = function() {
 		$('.txt_password').hide();
