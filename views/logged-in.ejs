@@ -114,9 +114,9 @@
 	}
 
 	.person-container{
-		margin-top:25px;
+		margin-top: 5px;
 		overflow-y: scroll;
-		height: 420px;
+		height: 370px;
 	}
 	.person {
 		width:495px;
@@ -448,6 +448,15 @@
 		100%{opacity:1;}
 	}
 
+	.search-field{
+		text-align: center;
+		margin-top: 36px;
+	}
+
+	.search-field-input{
+		width:230px;
+	}
+
 </style>
 
 <div class="modal-bg disco-hide"></div>
@@ -514,10 +523,10 @@
 		</div>
 		
 		<div class="main-text sub-heading">Some people you might know (click to add):</div>		
-
+		<div class="search-field"><input type="text" class="search-field-input" placeholder="Search by name or email"></input></div>
 		<div class="person-container" id="style-1">
 			<% for (var n = 0; n < accounts.length; n++) { %>
-				<div class="person" style="cursor:pointer">					
+				<div class="person" data-accountid="<%=accounts[n]._id%>" style="cursor:pointer">					
 					<img class="person-picture" src="/user/profilePhoto/<%= accounts[n]._id %>">
 					<div class="person-name" style="cursor:pointer"><span><%= accounts[n].displayName %></span></div>
 					<div class="btn btn-danger btn-small btn-confirm btn-cancel">Cancel</div>
@@ -531,7 +540,48 @@
 	<div class="vertical-line"></div>
 </div>
 
+<script src="/js/AccountSearch.js"></script>
 
+<script>
+	var accounts = <%- JSON.stringify(accounts) %>;
+	var accountSearcher = new AccountSearch(accounts);
+	var applySearchResults = function (list) {
+		$('.person-container .person').hide();
+		list = list.splice(0, 10);
+		async.forEach(list, function (account, next) {
+			var parent = account._el.parentElement;
+			parent.removeChild(account._el);
+			parent.appendChild(account._el);
+			$(account._el).show();
+		});
+	}
+	var searchTimeout;
+	var looker = function (ev) {
+		var self = this;
+		if (searchTimeout) {
+			clearTimeout(searchTimeout);
+		}
+		searchTimeout = setTimeout(function () {
+			if ($(self).val().trim() != "") {
+				accountSearcher.search($(self).val(), applySearchResults);
+			} else {
+				async.forEach(accountSearcher.accounts, function (account, next) {
+					if (account._el.parentElement) {
+						account._el.parentElement.removeChild(account._el);
+					}
+					$('.person-container').append(account._el);
+					$(account._el).show();
+				});
+			}
+			$('.person-container').scrollTop(0);
+		}, 300);
+	}
+	$('.search-field-input').keypress(looker).keyup(function (ev) {
+		if (ev.keyCode == 8) {
+			looker.call(this, ev);
+		}
+	});
+</script>
 
 <!-- Friend adding -->
 <script>
