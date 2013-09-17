@@ -143,6 +143,19 @@ exports.registerPost = function(req, res) {
 	}
 };
 
+exports.hasPassword = function(req, res) {
+	var email = req.body.email;
+	db.Account.findByEmail(email, function(err, account) {
+		if (!err && account) {
+			account.hasPassword(function(err, hasPassword) {
+				res.send({ hasPassword: hasPassword });
+			});
+		} else {
+			res.send({ hasPassword: false });
+		}
+	});
+};
+
 exports.login = function(req, res) {
 	if (req.hasExtension) {
 		if (req.session.accountId) {
@@ -156,7 +169,7 @@ exports.login = function(req, res) {
 };
 
 exports.loginPost = function(req, res) {
-	if (req.body.email && req.body.password) {
+	if (req.body.email) {
 		var email = req.body.email.toLowerCase();
 		var password = req.body.password;
 		db.Account.findByEmail(email, function(err, account) {
