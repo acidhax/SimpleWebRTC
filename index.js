@@ -129,6 +129,7 @@ app.get('/extension-get', index.extensionGet);
 app.get('/welcome', user.welcome);
 app.get('/register', user.register);
 app.post('/register', user.registerPost);
+app.post('/has-password', user.hasPassword);
 app.get('/login', user.login);
 app.post('/login', user.loginPost);
 app.get('/logged-in', user.loggedIn);
