@@ -360,6 +360,7 @@ exports.changePasswordPost = function(req, res) {
 		account.setPassword(plainText, function(err) {
 			if (!err) {
 				res.send({ success: true });
+				db.metrics.changePassword(account.email);
 			} else {
 				res.send({ success: false, reason: 'db-err'});
 			}
