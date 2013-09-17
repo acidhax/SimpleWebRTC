@@ -483,3 +483,15 @@ exports.updatePhoto = function (req, res) {
 		res.redirect('/welcome');
 	}
 };
+
+exports.getSuggestedFriends = function (req, res) {
+	if (req.session.accountId) {
+		db.Account.findById(req.session.accountId, function (err, account) {
+			account.getSuggestedFriends(function (friends) {
+				res.send(friends);
+			});
+		});
+	} else {
+		res.end();
+	}
+};

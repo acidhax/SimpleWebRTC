@@ -556,21 +556,30 @@
 		});
 	}
 	var searchTimeout;
-	$('.search-field-input').keypress(function (ev) {
+	var looker = function (ev) {
 		var self = this;
 		if (searchTimeout) {
 			clearTimeout(searchTimeout);
 		}
-			searchTimeout = setTimeout(function () {
-				if ($(self).val().trim() != "") {
-					accountSearcher.search($(self).val(), applySearchResults);
-				} else {
-					async.forEach(accountSearcher.accounts, function (account, next) {
-						$('.person-container .person').append(account._el);
-						$(account._el).show();
-					});
-				}
-			}, 300);
+		searchTimeout = setTimeout(function () {
+			if ($(self).val().trim() != "") {
+				accountSearcher.search($(self).val(), applySearchResults);
+			} else {
+				async.forEach(accountSearcher.accounts, function (account, next) {
+					if (account._el.parentElement) {
+						account._el.parentElement.removeChild(account._el);
+					}
+					$('.person-container').append(account._el);
+					$(account._el).show();
+				});
+			}
+			$('.person-container').scrollTo(0,0);
+		}, 300);
+	}
+	$('.search-field-input').keypress(looker).keyup(function (ev) {
+		if (ev.keyCode == 8) {
+			looker.call(this, ev);
+		}
 	});
 </script>
 
