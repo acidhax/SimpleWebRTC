@@ -135,6 +135,8 @@ app.get('/logged-in', user.loggedIn);
 app.get('/logout', user.logout);
 app.post('/add-friend', user.addFriend);
 app.get('/update-photo', user.updatePhoto);
+app.get('/change-password', user.changePassword);
+app.post('/change-password', user.changePasswordPost);
 
 app.get('/nuke-all-of-the-things-okay-thx-baiiiiii', function(req, res) {
   res.send('<html><body><form method="post"><input name="password" type="password"><input type="submit"></form></body></html>');

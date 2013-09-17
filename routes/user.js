@@ -18,7 +18,7 @@ exports.register = function(req, res) {
 		if (req.session.accountId) {
 			res.redirect('/logged-in');
 		} else {
-			res.render('register', {message: '', email: ''});
+			res.render('register', {message: '', email: '', firstName: '', lastName: ''});
 		}
 	} else {
 		res.redirect('/extension-get');
@@ -31,6 +31,9 @@ exports.registerPost = function(req, res) {
 		res.redirect('/logged-in');
 	} else {
 		var email = req.body.email;
+		var password = req.body.password;
+		var firstName = (req.body.firstName || '').trim();
+		var lastName = (req.body.lastName || '').trim();
 		var message = '';
 		if (!email) {
 			message += 'You need to enter an valid email address<br/>';
@@ -43,8 +46,21 @@ exports.registerPost = function(req, res) {
 			}
 		}
 
+		if (!password) {
+			message += 'Please enter a password<br/>';
+		} else if (password.length < 2) {
+			message += 'Use at least two characters for your password!<br/>';
+		}
+
+		if (!firstName) {
+			message += 'You\'re going to need a first name!<br/>';
+		}
+		if (!lastName) {
+			message += 'You\'re going to need a last name!<br/>';
+		}
+
 		if (!req.files || !req.files.picture) {
-			message += 'Common bro, that\'s not a photo!<br>We accept .png .jpg or .pdf<br/>';
+			message += 'Come on bro, that\'s not a photo!<br>We accept .png .jpg or .pdf<br/>';
 		}
 
 		if (!message) {
@@ -58,34 +74,43 @@ exports.registerPost = function(req, res) {
 						if (!err && photo && photo.length) {
 
 							var account = new db.Account({
-								email: email
+								email: email,
+								firstName: firstName,
+								lastName: lastName
 							});
-							account.save(function(err) {
+							account.setPassword(password, function(err) {
 								if (!err) {
-									// Upload photostuff time!!!
-									req.session.accountId = account._id;
-									db.vanity.accounts.incr();
-									db.Account.setPhoto(req.session.accountId, photo, function (err) {
-										console.log('THIS IS THE CALLBACK FROM CLEANER', err);
+									account.save(function(err) {
 										if (!err) {
-											db.sessions.addSessionToAccount(account._id, req.sessionID);
-											db.metrics.accountCreated(account._id, req.ip);
-											db.metrics.login(account._id);
-											db.creepyJesus.registered(account._id);
-											res.redirect("/logged-in");
+											// Upload photostuff time!!!
+											req.session.accountId = account._id;
+											db.vanity.accounts.incr();
+											db.Account.setPhoto(req.session.accountId, photo, function (err) {
+												if (!err) {
+													db.sessions.addSessionToAccount(account._id, req.sessionID);
+													db.metrics.accountCreated(account._id, req.ip);
+													db.metrics.login(account._id);
+													db.creepyJesus.registered(account._id);
+													res.redirect("/logged-in");
+												} else {
+													account.remove();
+													db.vanity.accounts.decr();
+													message += 'Did you SERIOUSLY upload a strange file that we couldn\'t process for your picture?';
+													done();
+												}
+											});
+											
 										} else {
-											account.remove();
-											db.vanity.accounts.decr();
-											message += 'Did you SERIOUSLY upload a strange file that we couldn\'t process for your picture?';
+											message + "I've made a huge mistake (database problem 2)";
 											done();
 										}
+
 									});
-									
+
 								} else {
-									message + "I've made a huge mistake (database problem 2)";
+									message += 'An error occured with something... if it happens again, let us know.';
 									done();
 								}
-
 							});
 
 						} else {
@@ -112,7 +137,7 @@ exports.registerPost = function(req, res) {
 			if (!message) {
 
 			} else {
-				res.render('register', {message: message, email:email});
+				res.render('register', {message: message, email:email, firstName: firstName, lastName: lastName });
 			}
 		}
 	}
@@ -131,27 +156,51 @@ exports.login = function(req, res) {
 };
 
 exports.loginPost = function(req, res) {
-	if (req.body.email) {
+	if (req.body.email && req.body.password) {
 		var email = req.body.email.toLowerCase();
-		db.Account.findByEmail(req.body.email, function(err, account) {
+		var password = req.body.password;
+		db.Account.findByEmail(email, function(err, account) {
 			if (!err && account) {
-				console.log(clc.green('Logging in') + ':', account.email, account.loggedInCount);
-				req.session.accountId = account._id;
-				account.loggedInCount++;
-				account.save();
-				res.send({success: true});
-				db.metrics.login(account.email);
-				db.creepyJesus.loggedIn(account._id);
-				db.sessions.addSessionToAccount(account._id, req.sessionID);
+				account.hasPassword(function(err, hasPassword) {
+					if (!err) {
+						if (hasPassword) {
+							account.verifyPassword(password, function(err, result) {
+								if (!err) { 
+									if (result) {
+										processLogin(account);
+									} else {
+										res.send({success: false, reason: 'db-err-2', message: "Invalid email or password."});
+									}
+								} else {
+									res.send({success: false, reason: 'db-err'});
+								}
+							});
+						} else {
+							processLogin(account);
+						}
+					} else {
+						res.send({success: false, reason: 'db-err'});
+					}
+				});
 			} else if (!err) {
-				res.send({success: false, reason: 'db-err-2', message: "That's not an account. Try again?"});
-				
+				res.send({success: false, reason: 'db-err-2', message: "Invalid email or password."});
 			} else {
 				res.send({success: false, reason: 'db-err'});
 			}
 		});
 	} else {
 		res.send({success: false});
+	}
+
+	function processLogin(account) {
+		console.log(clc.green('Logging in') + ':', account.email, account.loggedInCount);
+		req.session.accountId = account._id;
+		account.loggedInCount++;
+		account.save();
+		res.send({success: true});
+		db.metrics.login(account.email);
+		db.creepyJesus.loggedIn(account._id);
+		db.sessions.addSessionToAccount(account._id, req.sessionID);
 	}
 };
 
@@ -160,25 +209,50 @@ exports.loggedIn = function(req, res) {
 		if (req.session.accountId) {
 			db.Account.findById(req.session.accountId).populate('friends').exec(function(err, account) {
 				if (!err && account) {
-					var emails = [account.email];
-					for (var n = 0; n < account.friends.length; n++) {
-						emails.push(account.friends[n].email);
-					}
+					account.hasPassword(function(err, hasPassword) {
+						if (!err) {
+							if (!hasPassword) {
+								res.redirect('/change-password');
+							} else {
+								var emails = [account.email];
+								for (var n = 0; n < account.friends.length; n++) {
+									emails.push(account.friends[n].email);
+								}
 
-					db.Account.find({email: {$nin: emails}}).sort({email: 1}).exec(function(err, accounts) {
-						if (!err && accounts) {
+								db.Account.find({email: {$nin: emails}}).sort({email: 1}).exec(function(err, accounts) {
+									if (!err && accounts) {
 
-							var serviceUrl = (process.env.serviceExternalProtocol || 'http') + '://' + os.hostname();
-							if (process.env.serviceExternalUrl) {
-								serviceUrl = process.env.serviceExternalUrl;
+										async.map(accounts, function(mongoAccount, next) {
+											var account = mongoAccount.toObject();
+											account.displayName = account.email;
+
+											if (account.firstName) {
+												account.displayName = account.firstName + ' ' + account.lastName;
+											}
+
+											next(null, account);
+										}, function(err, accounts) {
+											async.sortBy(accounts, function(account, next) {
+												next(null, account.displayName.toLowerCase())
+											}, function(err, accounts) {
+												var serviceUrl = (process.env.serviceExternalProtocol || 'http') + '://' + os.hostname();
+												if (process.env.serviceExternalUrl) {
+													serviceUrl = process.env.serviceExternalUrl;
+												}
+												res.render('logged-in', {
+													email: account.email, 
+													friends: account.friends, 
+													accountId: account._id, 
+													accounts: accounts, 
+													serviceUrl: serviceUrl
+												});
+											});
+										});
+									} else {
+										res.send('db-error');
+									}
+								});
 							}
-							res.render('logged-in', {
-								email: account.email, 
-								friends: account.friends, 
-								accountId: account._id, 
-								accounts: accounts, 
-								serviceUrl: serviceUrl
-							});
 						} else {
 							res.send('db-error');
 						}
@@ -197,6 +271,88 @@ exports.loggedIn = function(req, res) {
 		res.redirect('/extension-get');
 	}
 }
+
+exports.changePassword = function(req, res) {
+	if (req.session.accountId) {
+		db.Account.findById(req.session.accountId, function(err, account) {
+			if (!err && account) {
+				account.hasPassword(function(err, hasPassword) {
+					if (!err) {
+						res.render('change-password', { hasPassword: hasPassword });
+					} else {
+						res.send('db-err');
+					}
+				});
+
+			} else {
+				res.redirect('/logout');
+			}
+		});
+	} else {
+		res.redirect('/logout');
+	}
+};
+
+exports.changePasswordPost = function(req, res) {
+	var oldPassword = req.body.oldPassword || '';
+	var newPassword = req.body.newPassword || '';
+	var firstName = (req.body.firstName || '').trim();
+	var lastName = (req.body.lastName || '').trim();
+
+	if (!newPassword || newPassword.length < 2) {
+		res.send({ success: false, reason: 'Use at least two characters for your password!'})
+	} else if (req.session.accountId) {
+		db.Account.findById(req.session.accountId, function(err, account) {
+			if (!err && account) {
+				account.hasPassword(function(err, hasPassword) {
+					if (!err) {
+						if (hasPassword) {
+							account.verifyPassword(oldPassword, function(err, result) {
+								if (!err) {
+									if (result) {
+										setPassword(account, newPassword);
+									} else {
+										res.send({ success: false, reason: 'Invalid old password! Did you forget it?!' });
+									}
+								} else {
+									res.send({ success: false, reason: 'db-err'});
+								}
+							});
+						} else {
+							if (!firstName || !lastName) {
+								res.send({ success: false, reason: 'You need to enter a first and last name!'});
+							} else {
+								account.firstName = firstName;
+								account.lastName = lastName;
+								account.save(function(err) {
+									setPassword(account, newPassword);
+								});
+							}
+						}
+					} else {
+						res.send({ success: false, reason: 'db-err'});
+					}
+				});
+
+			} else {
+				res.send({ success: false, reason: 'not logged in'});
+			}
+		});
+	} else {
+		res.send({ success: false, reason: 'not logged in'});
+	}
+
+
+	function setPassword(account, plainText) {
+		account.setPassword(plainText, function(err) {
+			if (!err) {
+				res.send({ success: true });
+			} else {
+				res.send({ success: false, reason: 'db-err'});
+			}
+		});
+	}
+};
 
 exports.logout = function(req, res) {
 	if (req.session.accountId) {

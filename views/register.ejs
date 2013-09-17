@@ -19,7 +19,6 @@
 	.enter_email {
 		display: inline-block !important;
 		height: 10px !important;
-		margin-left: 63px !important;
 	}
 
 	.collect_email {
@@ -39,7 +38,8 @@
 	}
 
 	.disco_content {
-		margin-left:88px;
+		text-align: center;
+		padding-bottom:50px;
 	}
 
 	.btn-custom {
@@ -74,11 +74,9 @@
 		color: #fff !important;
 		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.06);
 		-webkit-font-smoothing: antialiased;
-		margin-left: 25px;
 	}
 
 	.btn-cancel {
-		width: 220px;
 		color: black;			
 		font-size: 0.9em;
 		text-align: center;
@@ -99,6 +97,9 @@
 	select, input[type="file"] {
 		line-height: 8px !important;
 	}
+	.file_uploader {
+		padding-left:85px;
+	}
 
 
 </style>
@@ -108,10 +109,22 @@
 	<div class="wrapper">
 		<div class="disco_logo"><img src="/img/DiscoLogoBeta.png"></div>
 		<div class="disco_content">
+			<h4> Setup your account: </h4> 
 			<div class="collect_email"> 
-				 <div class="enter_email"> <h4> Enter Your Email: </h4> <div> 
 				 <input class="txt_email" id="email" name="email" type="email" placeholder="Email" value="<%= email %>">
 			</div>
+
+			<div class="collect_names">
+				<input class="txt_name" id="firstName" name="firstName" type="text" placeholder="First Name" value="<%= firstName %>"><br/>
+				<input class="txt_name" id="lastName" name="lastName" type="text" placeholder="Last Name" value="<%= lastName %>">
+			</div>
+
+
+			<div class="collect_password"> 
+				 <input class="txt_pasword" id="password" name="password" type="password" placeholder="Password" value="">
+			</div>
+
+
 			<div class="photo_upload">
 				<div class = "enter_pic"> <h4> Upload a profile photo:</h4></div>
 				<!-- <button class="btn btn-inverse btn_custom btn_upload">Choose Photo</button> -->
