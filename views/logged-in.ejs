@@ -546,15 +546,22 @@
 			$(account._el).show();
 		});
 	}
-	$('.search-field-input').change(function (ev) {
-		if ($(this).val().trim() != "") {
-			accountSearcher.search($(this).val(), applySearchResults);
-		} else {
-			async.forEach(accountSearcher.accounts, function (account, next) {
-				$('.person-container .person').append(account._el);
-				$(account._el).show();
-			});
+	var searchTimeout;
+	$('.search-field-input').keypress(function (ev) {
+		var self = this;
+		if (searchTimeout) {
+			clearTimeout(searchTimeout);
 		}
+			searchTimeout = setTimeout(function () {
+				if ($(self).val().trim() != "") {
+					accountSearcher.search($(self).val(), applySearchResults);
+				} else {
+					async.forEach(accountSearcher.accounts, function (account, next) {
+						$('.person-container .person').append(account._el);
+						$(account._el).show();
+					});
+				}
+			}, 300);
 	});
 </script>
 
