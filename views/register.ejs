@@ -42,6 +42,19 @@
 		padding-bottom:50px;
 	}
 
+	.collect_email input, .collect_password input{
+		width: 218px;
+	}	
+
+	#firstName{
+		width: 100px;
+		margin-right: 2px;
+	}
+
+	#lastName{
+		width: 100px;		
+	}
+
 	.btn-custom {
 		background-color: hsl(0, 0%, 23%) !important;
 		background-repeat: repeat-x;
@@ -109,13 +122,13 @@
 	<div class="wrapper">
 		<div class="disco_logo"><img src="/img/DiscoLogoBeta.png"></div>
 		<div class="disco_content">
-			<h4> Setup your account: </h4> 
+			<h4 style="margin-top: 32px;"> Set up your account: </h4> 
 			<div class="collect_email"> 
 				 <input class="txt_email" id="email" name="email" type="email" placeholder="Email" value="<%= email %>">
 			</div>
 
 			<div class="collect_names">
-				<input class="txt_name" id="firstName" name="firstName" type="text" placeholder="First Name" value="<%= firstName %>"><br/>
+				<input class="txt_name" id="firstName" name="firstName" type="text" placeholder="First Name" value="<%= firstName %>">
 				<input class="txt_name" id="lastName" name="lastName" type="text" placeholder="Last Name" value="<%= lastName %>">
 			</div>
 
