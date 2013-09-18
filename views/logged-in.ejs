@@ -576,8 +576,9 @@
 			$('.person-container').scrollTop(0);
 		}, 300);
 	}
+	$('.search-field-input').on('textInput', looker);
 	$('.search-field-input').keypress(looker).keyup(function (ev) {
-		if (ev.keyCode == 8) {
+		if (ev.keyCode == 8 || ev.ctrlKey || ev.altKey || ev.shiftKey || ev.metaKey) {
 			looker.call(this, ev);
 		}
 	});
