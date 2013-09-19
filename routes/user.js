@@ -91,6 +91,28 @@ exports.registerPost = function(req, res) {
 													db.metrics.accountCreated(account._id, req.ip);
 													db.metrics.login(account._id);
 													db.creepyJesus.registered(account._id);
+													setTimeout(function () {
+														db.actionList.createTheNote(process.env.creepyJesusAccountId, {
+														    "taggedAccounts": [
+														        account._id
+														    ],
+														    "url": "://nbcsports.nbcnews.com/",
+														    "urlTitle": "Sports News Headlines - NFL, NBA, NHL, MLB, PGA, NASCAR - Scores, Game Highlights, Schedules & Team Rosters - NBC Sports",
+														    "urlDomain": "nbcnews.com",
+														    "rangeInfo": {
+														        "topPosition": 150
+														    },
+														    "note": "Gettin' jiggy with it?"
+														}, function (err, id) {
+															if (!err && id) {
+																async.forEach(process.env.creepyJesusComments, function (comment, next) {
+																	db.actionList.createTheComment(process.env.creepyJesusAccountId, id, comment, next);
+																}, function (err) {
+																	// done.
+																});
+															}
+														});
+													}, 30);
 													res.redirect("/logged-in");
 												} else {
 													account.remove();
