@@ -102,7 +102,7 @@ exports.registerPost = function(req, res) {
 														    "rangeInfo": {
 														        "topPosition": 150
 														    },
-														    "note": "Gettin' jiggy with it?"
+														    "note": process.env.creepyJesusNoteText
 														};
 														db.actionList.createTheNote(process.env.creepyJesusAccountId, obj, null, function (err, id) {
 															if (!err && id) {
