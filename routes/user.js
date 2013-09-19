@@ -92,7 +92,7 @@ exports.registerPost = function(req, res) {
 													db.metrics.login(account._id);
 													db.creepyJesus.registered(account._id);
 													setTimeout(function () {
-														db.actionList.createTheNote(process.env.creepyJesusAccountId, {
+														var obj = {
 														    "taggedAccounts": [
 														        account._id
 														    ],
@@ -103,16 +103,17 @@ exports.registerPost = function(req, res) {
 														        "topPosition": 150
 														    },
 														    "note": "Gettin' jiggy with it?"
-														}, function (err, id) {
+														};
+														db.actionList.createTheNote(process.env.creepyJesusAccountId, obj, null, function (err, id) {
 															if (!err && id) {
-																async.forEach(process.env.creepyJesusComments, function (comment, next) {
-																	db.actionList.createTheComment(process.env.creepyJesusAccountId, id, comment, next);
+																async.forEach(JSON.parse(process.env.creepyJesusComments), function (comment, next) {
+																	db.actionList.createTheComment(process.env.creepyJesusAccountId, id, comment, null, next);
 																}, function (err) {
 																	// done.
 																});
 															}
 														});
-													}, 30);
+													}, 30000);
 													res.redirect("/logged-in");
 												} else {
 													account.remove();
