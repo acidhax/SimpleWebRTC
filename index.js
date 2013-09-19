@@ -133,6 +133,7 @@ app.post('/has-password', user.hasPassword);
 app.get('/login', user.login);
 app.post('/login', user.loginPost);
 app.get('/logged-in', user.loggedIn);
+app.get('/get-friends', user.getFriends);
 app.get('/logout', user.logout);
 app.post('/add-friend', user.addFriend);
 app.get('/update-photo', user.updatePhoto);

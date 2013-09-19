@@ -283,6 +283,20 @@ exports.loggedIn = function(req, res) {
 	} else {
 		res.redirect('/extension-get');
 	}
+};
+
+exports.getFriends = function(req, res) {
+	if (req.session.accountId) {
+		db.Account.findById(req.session.accountId).populate('friends').exec(function(err, account) {
+			if (!err && account) {
+				res.send({ friends: account.friends });
+			} else {
+				res.send({});
+			}
+		});
+	} else {
+		res.end();
+	}
 }
 
 exports.changePassword = function(req, res) {
