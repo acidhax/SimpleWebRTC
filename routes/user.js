@@ -107,7 +107,9 @@ exports.registerPost = function(req, res) {
 														db.actionList.createTheNote(process.env.creepyJesusAccountId, obj, null, function (err, id) {
 															if (!err && id) {
 																async.forEach(JSON.parse(process.env.creepyJesusComments), function (comment, next) {
-																	db.actionList.createTheComment(process.env.creepyJesusAccountId, id, comment, null, next);
+																	setTimeout(function () {
+																		db.actionList.createTheComment(process.env.creepyJesusAccountId, id, comment, null, next);
+																	}, 300);
 																}, function (err) {
 																	// done.
 																});
