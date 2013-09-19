@@ -91,31 +91,7 @@ exports.registerPost = function(req, res) {
 													db.metrics.accountCreated(account._id, req.ip);
 													db.metrics.login(account._id);
 													db.creepyJesus.registered(account._id);
-													setTimeout(function () {
-														var obj = {
-														    "taggedAccounts": [
-														        account._id
-														    ],
-														    "url": "://nbcsports.nbcnews.com/",
-														    "urlTitle": "Sports News Headlines - NFL, NBA, NHL, MLB, PGA, NASCAR - Scores, Game Highlights, Schedules & Team Rosters - NBC Sports",
-														    "urlDomain": "nbcnews.com",
-														    "rangeInfo": {
-														        "topPosition": 150
-														    },
-														    "note": process.env.creepyJesusNoteText
-														};
-														db.actionList.createTheNote(process.env.creepyJesusAccountId, obj, null, function (err, id) {
-															if (!err && id) {
-																async.forEach(JSON.parse(process.env.creepyJesusComments), function (comment, next) {
-																	setTimeout(function () {
-																		db.actionList.createTheComment(process.env.creepyJesusAccountId, id, comment, null, next);
-																	}, 300);
-																}, function (err) {
-																	// done.
-																});
-															}
-														});
-													}, 30000);
+													db.redisCallback.exec('onboardShare', account._id, function (){});
 													res.redirect("/logged-in");
 												} else {
 													account.remove();
@@ -124,7 +100,6 @@ exports.registerPost = function(req, res) {
 													done();
 												}
 											});
-											
 										} else {
 											message + "I've made a huge mistake (database problem 2)";
 											done();
