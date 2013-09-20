@@ -134,9 +134,11 @@
 	};
 
 	var trackChanges = null;
+	var delayStopTrackChanges = null;
 	var lastVal = '';
 	var startTrackChanges = function() {
 		trackChanges = setInterval(function() {
+			clearTimeout(delayStopTrackChanges);
 			var val = $('.txt_email').val();
 
 			if (val !== lastVal) {
@@ -147,7 +149,12 @@
 	};
 
 	var stopTrackChanges = function() {
-		clearInterval(trackChanges);
+		delayStopTrackChanges = setTimeout(function() {
+			if ($('.txt_password').is(':visible')) {
+				$('.txt_password').focus();
+			}
+			clearInterval(trackChanges);
+		}, 30);
 	};
 
 	$('.txt_email').focus(startTrackChanges).blur(stopTrackChanges).focus();
@@ -158,6 +165,9 @@
 
 	var yesPassword = function() {
 		$('.txt_password').show();
+		if (!$('.txt_email').is(':focus')) {
+			$('.txt_password').focus();
+		}
 	}
 
 
