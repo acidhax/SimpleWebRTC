@@ -599,7 +599,7 @@
 
 <!-- Friend adding -->
 <script>
-	$('.btn-cancel').on('click', function(e) {
+	$('body').on('click', '.btn-cancel', function(e) {
 		e.stopPropagation();
 		e.preventDefault();
 
@@ -609,7 +609,7 @@
 </script>
 
 <script>
-	$('.person').on('click', function(e) {
+	$('body').on('click', '.person', function(e) {
 		e.preventDefault();
 		$(this).parent().find(".btn-ok").removeClass('show-button');
 		$(this).parent().find(".btn-cancel").removeClass('show-button');
@@ -619,7 +619,7 @@
 </script>
 
 <script>
-	$('.btn-ok').on('click', function(e) {
+	$('body').on('click', '.btn-ok', function(e) {
 		e.stopPropagation();
 		e.preventDefault();
 		var email="";
