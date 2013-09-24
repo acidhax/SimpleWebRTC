@@ -1,5 +1,5 @@
 <script>
-	//BLAH
+	//Get out ma source!
 </script>
 
 <style>
@@ -9,12 +9,12 @@
 	}
 	.wrapper {
 		width:500px;
-		padding-top: 85px;
+		padding-top: 130px;
 		margin: 0 auto;
 	}
 
 	.button_wrapper {
-		margin-top:37px;
+		margin-top:24px;
 		text-align: center;
 	}
 
@@ -34,7 +34,7 @@
 	.vanity-wrapper-wrapper {
 		min-width:10px;
 		text-align: center;
-		margin-top: 30px;
+		margin-top: 15px;
 		-webkit-animation: fadeIn 1.6s linear 0s;
 	}
 	.vanity-wrapper {
@@ -47,11 +47,15 @@
 		display:inline-block;
 		margin:0 auto;
 		text-align: left;
+		width:400px;
+	}
+	.vanity-line {
+		width:400px;
 	}
 
 	.vanity-caption {
 		display:inline-block;
-		width:159px;
+		width:175px;
 		text-align: right;
 		margin-right: 1px;
 	}
@@ -132,18 +136,19 @@
 	<div class = "login-wrapper"> <span> Already have an account? </span> <a href="/login"> <button class="btn btn-inverse btn-custom btn-login">Log In</button> </a> </div>
 <div class="wrapper">
 	<div class="disco_logo"><img src="/img/DiscoLogoBeta.png"></div>
+	
+	<div class="vanity-wrapper-wrapper">
+	<div class="vanity-wrapper">
+		<div class="vanity-line"><div class="vanity-caption">days in beta: </div><span class="vanity-days"></span>
+		<div class="vanity-caption">messages sent: </div><span class="activity-count"></span></div>
+	</div>
+	</div>
+
 	<div class="button_wrapper">
 		<a href="/register"> <button class="btn btn-inverse btn-large btn-custom-2 btn-signup">Sign Up</button></a>
 		<div class="btn-cancel"><span onclick="window.alert('Welcome to Disco!\nClick the orange button to get started, if you have any questions or concerns get in touch with us at: team@groupnotes.ca')">Help!</span></div>
 		
 	</div>
-
-	<!-- <div class="vanity-wrapper-wrapper">
-	<div class="vanity-wrapper">
-		<div class="vanity-line"><div class="vanity-caption">days in beta: </div><span class="vanity-days"></span>
-		<div class="vanity-caption">messages sent: </div><span class="activity-count"></span></div>
-	</div>
-	</div> -->
 </div>
 
 
