@@ -9,7 +9,7 @@ exports.welcome = function(req,res) {
 	if (req.session.accountId) {
 		res.redirect('/logged-in');
 	} else {
-		res.render('welcome');
+		res.render('welcome', {hasExtension: req.hasExtension});
 	}
 };
 
@@ -21,7 +21,7 @@ exports.register = function(req, res) {
 			res.render('register', {message: '', email: '', firstName: '', lastName: ''});
 		}
 	} else {
-		res.redirect('/extension-get');
+		res.redirect('/extension-get-register');
 	}
 };
 
@@ -164,7 +164,7 @@ exports.login = function(req, res) {
 			res.render('login');
 		}
 	} else {
-		res.redirect('/extension-get');
+		res.redirect('/extension-get-login');
 	}
 };
 

@@ -1,11 +1,19 @@
 
 exports.home = function (req, res) {
-	res.render('home', {title: 'loading'});
+	res.render('home', {title: 'loading', hasExtension: req.hasExtension});
 };
 
-exports.extensionGet = function (req, res) {
+exports.extensionGetLogin = function (req, res) {
 	if (req.hasExtension) {
-		res.redirect('/welcome');
+		res.redirect('/login');
+	} else {
+		res.render('extension-get', {title: 'Extension Get'});
+	}
+};
+
+exports.extensionGetRegister = function (req, res) {
+	if (req.hasExtension) {
+		res.redirect('/register');
 	} else {
 		res.render('extension-get', {title: 'Extension Get'});
 	}
