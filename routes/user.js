@@ -161,7 +161,7 @@ exports.login = function(req, res) {
 		if (req.session.accountId) {
 			res.redirect('/logged-in');
 		} else {
-			res.render('login');
+			res.render('login')
 		}
 	} else {
 		res.redirect('/extension-get-login');
@@ -281,7 +281,7 @@ exports.loggedIn = function(req, res) {
 			res.redirect('/welcome');
 		}
 	} else {
-		res.redirect('/extension-get');
+		res.redirect('/extension-get-login');
 	}
 };
 
