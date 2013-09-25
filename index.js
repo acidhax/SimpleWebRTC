@@ -125,7 +125,8 @@ app.get('/crash-bandicoot', function(req, res) {
 
 app.get('/', index.home);
 app.get('/no-chrome', index.noChrome);
-app.get('/extension-get', index.extensionGet);
+app.get('/extension-get-login', index.extensionGetLogin);
+app.get('/extension-get-register', index.extensionGetRegister);
 app.get('/welcome', user.welcome);
 app.get('/register', user.register);
 app.post('/register', user.registerPost);

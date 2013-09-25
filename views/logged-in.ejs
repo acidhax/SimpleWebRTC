@@ -92,7 +92,6 @@
 		float: right;	
 		margin-top: -5px;
 		margin-left: 25px;
-		margin-right:45px;
 	}
 	.friend-heading-container{
 		height:18px;	
@@ -103,6 +102,7 @@
 		margin-right: auto;
 		width:320px;
 	}
+	
 	.friend-picture {				
 		max-width:50px;
 		margin-left: 5px;
@@ -222,7 +222,24 @@
 		-webkit-transition: -webkit-transform .1s linear 0s;
 		z-index: 999;
 	}
+	.faq {
+		position: fixed;
+		width:900px;
+		height:365px;
+		background-color: #161616;
+		opacity: .95;
+		border-radius: 20px;
+		left: calc(50% - 450px);
+		top: calc(50% - 175px);
+		-webkit-transform: scale(1);
+		-webkit-transition: -webkit-transform .2s linear 0s;
+		z-index: 999;
+	}
+
 	.popup.disco-hide{
+		-webkit-transform: scale(0);
+	}
+	.faq.disco-hide{
 		-webkit-transform: scale(0);
 	}
 	.popup-text{
@@ -234,12 +251,35 @@
 		line-height: 110%;	
 		font-weight:300;
 	}
-	.btn-popup{
+
+	.faq .popup-text{
+		width:800px;
+		font-size: 24px;
+	}
+
+	.btn-popup {
 		display: inline-block;
 		margin-left: 236px;
 		margin-top: 20px;
 		font-weight:normal !important;
 	}
+
+	.faq .btn-popup {
+		margin-left: 409px;
+	}
+
+	.faq .faq-nl {
+		display: inline-block;
+		margin-bottom: 20px;
+	}
+
+	.faq .faq-title {
+		display: inline-block;
+		font-size:23pt; 
+		font-weight:400;
+		margin-bottom: 35px;
+	}
+
 	.change-pic{
 		position: fixed;
 		width:550px;
@@ -325,6 +365,25 @@
 	  text-decoration: none;
 	  text-align: center;
 	}
+
+	.btn-custom-2 {
+		background-color: hsl(29, 100%, 46%) !important;
+		background-repeat: repeat-x;
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff7b00", endColorstr="#ea7100");
+		background-image: -khtml-gradient(linear, left top, left bottom, from(#ff7b00), to(#ea7100));
+		background-image: -moz-linear-gradient(top, #ff7b00, #ea7100);
+		background-image: -ms-linear-gradient(top, #ff7b00, #ea7100);
+		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ff7b00), color-stop(100%, #ea7100));
+		background-image: -webkit-linear-gradient(top, #ff7b00, #ea7100);
+		background-image: -o-linear-gradient(top, #ff7b00, #ea7100);
+		background-image: linear-gradient(#ff7b00, #ea7100);
+		border-color: #ea7100 #ea7100 hsl(29, 100%, 45%);
+		color: #fff !important;
+		font-weight: normal !important;
+		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.06);
+		-webkit-font-smoothing: antialiased;
+	}
+
 	/* line 43, ../scss/partials/_buttons.scss */
 	.disco-button-homepage:hover {
 	  background-color: #eeeeee;
@@ -457,17 +516,36 @@
 		width:230px;
 	}
 
+	.faq-link {
+		cursor: pointer;
+	}
+
 </style>
 
 <div class="modal-bg disco-hide"></div>
+
 <div class="popup disco-hide">
-	<div class="popup-text">
+	<div class="popup-text add-friends">
 		<span>
 			You can only add friends who have already signed up for Project Disco, tell your friends to sign up at <p><%= serviceUrl %></p> <br/> We love you! <3
 		</span>
 	</div>
 	<div class="btn btn-large disco-button-homepage disco-button-homepage-highlight btn-popup">Close</div>
 </div>
+
+<div class="faq disco-hide">
+	<div class="popup-text add-friends">
+		<span>
+			<span class='faq-title'>Disco is for Sharing the Web with Friends!</span>
+			<span class='faq-nl'>You can make micro-chats on any webpage and share them with your friends</span>
+			<span class='faq-nl'>As your browsing <strong>click and hold</strong> your mouse down on any webpage to share</span>
+			<span class='faq-nl'>Add friends on this page, or invite them to signup below</span>
+			<span class='faq-nl'>Get out there and start sharing!!</span>
+		</span>
+	</div>
+	<div class="btn btn-large disco-button-homepage disco-button-homepage-highlight btn-popup">Close</div>
+</div>
+
 <div class="change-pic disco-hide">
 	<div class="popup-text">
 		<span>
@@ -490,6 +568,9 @@
 		</div>
 		<a class="homepage-link" href="/logout">
 			log out
+		</a>
+		<a class="homepage-link faq-link">
+			FAQ
 		</a>
 		<a class="homepage-link" href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Ftwitter.com%2Fabout%2Fresources%2Fbuttons&related=DiscoBeta&screen_name=DiscoBeta&text=Help!&tw_p=tweetbutton" target="_blank">
 			help
@@ -515,7 +596,7 @@
 
 	<div class="right-column">
 		<div class="friend-heading-container">			
-			<div class="btn btn-inverse btn_custom btn_friendless">Friend not Here?</div>
+			<div class="btn btn-inverse btn-custom-2 btn_friendless">Invite Friends to Disco!</div>
 			<div class="main-text right">Add Friends Here!</div>
 		</div>
 		
@@ -600,7 +681,7 @@
 
 <!-- Friend adding -->
 <script>
-	$('.btn-cancel').on('click', function(e) {
+	$('body').on('click', '.btn-cancel', function(e) {
 		e.stopPropagation();
 		e.preventDefault();
 
@@ -610,7 +691,7 @@
 </script>
 
 <script>
-	$('.person').on('click', function(e) {
+	$('body').on('click', '.person', function(e) {
 		e.preventDefault();
 		$(this).parent().find(".btn-ok").removeClass('show-button');
 		$(this).parent().find(".btn-cancel").removeClass('show-button');
@@ -619,8 +700,17 @@
 	});
 </script>
 
+
 <script>
-	$('.btn-ok').on('click', function(e) {
+	$('.faq-link').on('click', function(e) {
+		$('.faq').removeClass('disco-hide');
+		$(this).parent().parent().parent().parent().find(".modal-bg").removeClass("disco-hide");
+	});
+</script>
+
+
+<script>
+	$('body').on('click', '.btn-ok', function(e) {
 		e.stopPropagation();
 		e.preventDefault();
 		var email="";
@@ -684,6 +774,7 @@
 
 		$(this).addClass("disco-hide");
 		$(this).parent().find(".popup").addClass("disco-hide");
+		$(this).parent().find(".faq").addClass("disco-hide");
 		$(this).parent().find(".change-pic").addClass("disco-hide");
 	});
 </script>
