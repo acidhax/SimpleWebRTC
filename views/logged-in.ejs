@@ -643,7 +643,7 @@
 		<div class="search-field"><input type="text" class="search-field-input" placeholder="Search by name or email"></input></div>
 		<div class="person-container" id="style-1">
 			<% for (var n = 0; n < accounts.length; n++) { %>
-				<div class="person" data-accountid="<%=accounts[n]._id%>" data-name="<%=(accounts[n].firstName)?(accounts[n].firstName + ' ' + accounts[n].lastName):accounts[n].email %>" style="cursor:pointer;<% if (n > 10) { %> display:none;<% } %>">	
+				<div class="person" data-accountid="<%=accounts[n]._id%>" data-name="<%=(accounts[n].firstName)?(accounts[n].firstName + ' ' + accounts[n].lastName):accounts[n].email %>" style="cursor:pointer;<% if (n > 9) { %> display:none;<% } %>">	
 					<img class="person-picture" src="/user/profilePhoto/<%= accounts[n]._id %>">
 					<div class="person-name" style="cursor:pointer"><span><%= accounts[n].displayName %></span></div>
 					<div class="btn btn-danger btn-small btn-confirm btn-cancel">Cancel</div>
@@ -831,17 +831,6 @@
 	});
 </script>
 
-<!-- change profile picture -->
-<script>
-	/*$('.me .person-picture').on('click', function(e) {
-		e.stopPropagation();
-		e.preventDefault();		
-
-		$(this).parent().parent().parent().parent().find(".modal-bg").removeClass("disco-hide");
-		$(this).parent().parent().parent().parent().find(".change-pic").removeClass("disco-hide");
-	});*/
-</script>
-
 
 <!-- shh -->
 <script>
@@ -849,9 +838,4 @@
 		e.preventDefault();		
 		$(this).parent().parent().find(".friend-picture").addClass('secret');							
 	});
-</script>
-
-<!-- chrome detect -->
-<script>
-	// discoDetect(null, '/extension-get', '/no-chrome');
 </script>
