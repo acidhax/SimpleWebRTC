@@ -36,7 +36,7 @@ exports.registerPost = function(req, res) {
 		var lastName = (req.body.lastName || '').trim();
 		var message = '';
 		if (!email) {
-			message += 'You need to enter an valid email address<br/>';
+			message += 'Please enter a valid email address :)<br/>';
 		} else {
 			email = email.toLowerCase();
 			try {
@@ -49,7 +49,7 @@ exports.registerPost = function(req, res) {
 		if (!password) {
 			message += 'Please enter a password<br/>';
 		} else if (password.length < 2) {
-			message += 'Use at least two characters for your password!<br/>';
+			message += 'Please use at least two characters for your password!<br/>';
 		}
 
 		if (!firstName) {
@@ -60,7 +60,7 @@ exports.registerPost = function(req, res) {
 		}
 
 		if (!req.files || !req.files.picture) {
-			message += 'Come on bro, that\'s not a photo!<br>We accept .png .jpg or .pdf<br/>';
+			message += 'That\'s not a photo!<br>Try a .png .jpg or .pdf please!<br/>';
 		}
 
 		if (!message) {
@@ -96,7 +96,7 @@ exports.registerPost = function(req, res) {
 												} else {
 													account.remove();
 													db.vanity.accounts.decr();
-													message += 'Did you SERIOUSLY upload a strange file that we couldn\'t process for your picture?';
+													message += 'Sorry! We couldn\'t use that file! Try another please :)';
 													done();
 												}
 											});
@@ -120,7 +120,7 @@ exports.registerPost = function(req, res) {
 					});
 
 				} else if (!err && account) {
-					message += 'That account already exists, bud.<br/><a href="/login">Go login like a normal person</a>.'
+					message += 'That account already exists! <br/><a href="/login">Go log in to your account</a>.'
 					done();
 				} else {
 					message += "I've made a huge mistake (database problems)";
