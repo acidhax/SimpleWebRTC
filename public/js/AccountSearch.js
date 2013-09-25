@@ -26,7 +26,7 @@ AccountSearch.prototype.remove = function (el) {
 	for (var i = 0; i < this.accounts.length && !found; i++) {
 		if (this.accounts[i]._el == el) {
 			this.accounts.splice(i,1);
-			found = true;
+			return
 		}
 	}
 };
