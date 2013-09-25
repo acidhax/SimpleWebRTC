@@ -8,7 +8,7 @@
 	}
 	.wrapper {
 		width:500px;
-		padding-top: 85px;
+		padding-top: 50px;
 		margin: 0 auto;
 	}
 
@@ -34,12 +34,12 @@
 	}
 
 	.signup_nativation {
-		margin-top: 30px;
+		margin-top: 25px;
 	}
 
 	.disco_content {
 		text-align: center;
-		padding-bottom:50px;
+		padding-bottom:10px;
 	}
 
 	.collect_email input, .collect_password input{
@@ -84,7 +84,7 @@
 	.file_uploader {
 		margin-right: auto;
 		margin-left: auto;
-		margin-top: 20px;
+		margin-top: 15px;
 		width: 232px;
 	}
 
@@ -107,15 +107,24 @@
 		line-height: 1.3em;
 	}
 
-	.disco_content span {
+	.photo_upload h5 {
+	}
+
+	.disco_content span.error-text {
 		position: absolute;
 		margin-top: 5px;
 		margin-left: 11px;
 		color: red;
 	}
 
-	.photo_upload span {
-		margin-left: 129px !important;
+	.photo_upload span.error-text {
+		position:static;
+		font-weight:normal;
+		text-align: center;
+		display:block;
+	}
+	.photo_upload span.error-text.hide-me {
+		display:none;
 	}
 
 </style>
@@ -130,21 +139,21 @@
 		</div>
 		<div class="disco_logo"><img src="/img/DiscoLogoBeta.png"></div>
 		<div class="disco_content">
-			<h4 style="margin-top: 32px;"> 1) Set up your account: </h4> 
+			<h4 style="margin-top: 32px;"><span style="font-weight:300; padding-right:3px">1)</span> Set up your account: </h4> 
 			<div class="collect_email"> 
-				 <input autocomplete="off" class="txt_email" id="email" name="email" type="text" placeholder="Email" value="<%= email %>"> <span class='hide-me'> Please enter an email! </span>
+				 <input autocomplete="off" class="txt_email" id="email" name="email" type="text" placeholder="Email" value="<%= email %>"> <span class='hide-me error-text'> Please enter an email! </span>
 			</div>
 			<div class="collect_names">
 				<input class="txt_name" autocomplete="off" id="firstName" name="firstName" type="text" placeholder="First Name" value="<%= firstName %>"> 
-				<input class="txt_name" autocomplete="off" id="lastName" name="lastName" type="text" placeholder="Last Name" value="<%= lastName %>"> <span class='hide-me'> Please enter both a first and last name! </span>
+				<input class="txt_name" autocomplete="off" id="lastName" name="lastName" type="text" placeholder="Last Name" value="<%= lastName %>"> <span class='hide-me error-text'> Please enter both a first and last name! </span>
 			</div>
 			<div class="collect_password"> 
-				 <input class="txt_password" id="password" name="password" type="password" placeholder="Password" value=""> <span class='hide-me'> Please enter a password :)</span>
+				 <input class="txt_password" id="password" name="password" type="password" placeholder="Password" value=""> <span class='hide-me error-text'> Please enter a password :)</span>
 			</div>
 			<div class="photo_upload">
-				<div class = "enter_pic"><h4> 2) Select a photo of your pretty face!</h4></div>
+				<div class="enter_pic"><h4><span style="font-weight:300; padding-right:3px">2)</span> Select a photo of your pretty face!</h4></div>
 				<div class="enter_pic_req"><h5><strong>(required):</strong></h5></div>
-				<span class='hide-me'> Please upload a photo, good looking ;D </span>
+				<span class="hide-me error-text"> Please upload a photo, good looking ;D </span>
 
 				<!-- <button class="btn btn-inverse btn_custom btn_upload">Choose Photo</button> -->
 				<div class = "file_uploader"> <input type="file" accept="image/*"  name="picture" id="picture"></div>
