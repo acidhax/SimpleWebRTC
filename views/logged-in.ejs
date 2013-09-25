@@ -93,6 +93,9 @@
 		margin-top: -5px;
 		margin-left: 25px;
 	}
+	.btn_friendless.disco-hide{
+		-webkit-transform: scale(0);
+	}
 	.friend-heading-container{
 		height:18px;	
 	}
@@ -212,7 +215,7 @@
 	.popup{
 		position: fixed;
 		width:550px;
-		height:300px;
+		height:230px;
 		background-color: #161616;
 		opacity: .95;
 		border-radius: 20px;
@@ -258,10 +261,16 @@
 	}
 
 	.btn-popup {
-		display: inline-block;
-		margin-left: 236px;
+		display: inline;
 		margin-top: 20px;
+		margin-right:10px;
 		font-weight:normal !important;
+	}
+
+	.btn-popup-cancel {
+		margin-left: 182px;
+		padding-left: 18px !important;
+		padding-right: 18px !important;
 	}
 
 	.faq .btn-popup {
@@ -270,7 +279,7 @@
 
 	.faq .faq-nl {
 		display: inline-block;
-		margin-bottom: 20px;
+		margin-bottom: 10px;
 	}
 
 	.faq .faq-title {
@@ -278,6 +287,7 @@
 		font-size:23pt; 
 		font-weight:400;
 		margin-bottom: 35px;
+		margin-top: 20px;
 	}
 
 	.change-pic{
@@ -520,27 +530,56 @@
 		cursor: pointer;
 	}
 
+	.popup-1st {
+		display: inline-block;
+		font-size: 29px;
+
+		margin-bottom: 22px;
+	}
+
+	.popup-email-input {
+		display: inline-block;
+		margin-bottom: -11px !important;
+	}
+
+	.popup-email-input input {
+		width:245px !important;
+	}
+
+	.popup-2nd {
+		display: block;
+		font-size: 10pt;
+
+	}
+
+	.popup-3rd {
+		font-size: 10pt;
+	}
+
 </style>
 
 <div class="modal-bg disco-hide"></div>
 
 <div class="popup disco-hide">
 	<div class="popup-text add-friends">
-		<span>
-			You can only add friends who have already signed up for Project Disco, tell your friends to sign up at <p><%= serviceUrl %></p> <br/> We love you! <3
-		</span>
+		<span class='popup-1st'> Invite a friend to signup:</span>
+		<div class="popup-email-input"><input placeholder="Enter Friend's Email" type="text" name="friends_email"></div>
+		<span class='popup-2nd'> or tell them to visit: <strong> <%= serviceUrl %> </strong>  </span>
+		<!-- <span class = 'popup-3rd'> </span> -->
+		
 	</div>
-	<div class="btn btn-large disco-button-homepage disco-button-homepage-highlight btn-popup">Close</div>
+	<div class="btn btn-large disco-button-homepage btn-popup-cancel btn-popup">Cancel</div>
+	<div class="btn btn-large disco-button-homepage disco-button-homepage-highlight btn-popup" onclick="inviteDisUser();">Invite</div>
 </div>
 
 <div class="faq disco-hide">
 	<div class="popup-text add-friends">
 		<span>
-			<span class='faq-title'>Disco is for Sharing the Web with Friends!</span>
-			<span class='faq-nl'>You can make micro-chats on any webpage and share them with your friends</span>
-			<span class='faq-nl'>As your browsing <strong>click and hold</strong> your mouse down on any webpage to share</span>
-			<span class='faq-nl'>Add friends on this page, or invite them to signup below</span>
-			<span class='faq-nl'>Get out there and start sharing!!</span>
+			<span class='faq-title'>Disco is for sharing and talking with your friends!</span>
+			<span class='faq-nl'>You can make a group IM chat on any webpage, which is shared instantly</span>
+			<span class='faq-nl'>As you browse, just <a style="text-decoration:none; color:#FFF;" href="http://imgur.com/1fxX95j" target="_blank"><strong>click and hold</strong></a> your mouse down on a page to share</span>
+			<span class='faq-nl'>Add your friends on this page, or invite them to sign up</span>
+			<span class='faq-nl'><a style="text-decoration:none; color:#FFF;" href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Ftwitter.com%2Fabout%2Fresources%2Fbuttons&related=DiscoBeta&screen_name=DiscoBeta&text=Help!&tw_p=tweetbutton" target="_blank">Contact us</a> with any questions or feedback, we love you! <3</span>
 		</span>
 	</div>
 	<div class="btn btn-large disco-button-homepage disco-button-homepage-highlight btn-popup">Close</div>
@@ -573,7 +612,7 @@
 			FAQ
 		</a>
 		<a class="homepage-link" href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Ftwitter.com%2Fabout%2Fresources%2Fbuttons&related=DiscoBeta&screen_name=DiscoBeta&text=Help!&tw_p=tweetbutton" target="_blank">
-			help
+			contact
 		</a>
 		<div class="me">
 			<img class="person-picture" src="/user/profilePhoto/<%= accountId %>">
@@ -596,7 +635,7 @@
 
 	<div class="right-column">
 		<div class="friend-heading-container">			
-			<div class="btn btn-inverse btn-custom-2 btn_friendless">Invite Friends to Disco!</div>
+			<div class="btn btn-inverse btn-custom-2 btn_friendless disco-hide">Invite Friends to Disco!</div>
 			<div class="main-text right">Add Friends Here!</div>
 		</div>
 		
@@ -604,7 +643,7 @@
 		<div class="search-field"><input type="text" class="search-field-input" placeholder="Search by name or email"></input></div>
 		<div class="person-container" id="style-1">
 			<% for (var n = 0; n < accounts.length; n++) { %>
-				<div class="person" data-accountid="<%=accounts[n]._id%>" <%= if (n > 10) { %> style="display:none;"<%= } %> data-name="<%=(accounts[n].firstName)?(accounts[n].firstName + ' ' + accounts[n].lastName):accounts[n].email %>" style="cursor:pointer">					
+				<div class="person" data-accountid="<%=accounts[n]._id%>" data-name="<%=(accounts[n].firstName)?(accounts[n].firstName + ' ' + accounts[n].lastName):accounts[n].email %>" style="cursor:pointer">					
 					<img class="person-picture" src="/user/profilePhoto/<%= accounts[n]._id %>">
 					<div class="person-name" style="cursor:pointer"><span><%= accounts[n].displayName %></span></div>
 					<div class="btn btn-danger btn-small btn-confirm btn-cancel">Cancel</div>
@@ -623,7 +662,6 @@
 
 	$.get('/get-friends', function(data) {
 		if (data && data.friends) {
-			data.friends = data.friends.slice(0,15);
 			for(var n = 0; n < data.friends.length; n++) {
 				renderFriend(data.friends[n]);
 			}
@@ -707,6 +745,14 @@
 	});
 </script>
 
+<script>
+	function inviteDisUser(){
+		var inviteEmail = $('.popup-email-input input').val();
+		$('.popup-email-input input').val(''); //Clear dat bitch
+	}
+
+</script>
+
 
 <script>
 	$('body').on('click', '.btn-ok', function(e) {
@@ -757,6 +803,13 @@
 		$(this).parent().parent().parent().parent().find(".popup").removeClass("disco-hide");
 	});
 </script>
+<script>
+	$('.popup-email-input input').keydown(function (e){
+	    if(e.keyCode == 13){
+	        inviteDisUser();
+	    }
+</script>
+
 <script>
 	$('.btn-popup').on('click', function(e) {
 		e.stopPropagation();
