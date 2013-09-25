@@ -93,6 +93,9 @@
 		margin-top: -5px;
 		margin-left: 25px;
 	}
+	.btn_friendless.disco-hide{
+		-webkit-transform: scale(0);
+	}
 	.friend-heading-container{
 		height:18px;	
 	}
@@ -631,7 +634,7 @@
 
 	<div class="right-column">
 		<div class="friend-heading-container">			
-			<div class="btn btn-inverse btn-custom-2 btn_friendless">Invite Friends to Disco!</div>
+			<div class="btn btn-inverse btn-custom-2 btn_friendless disco-hide">Invite Friends to Disco!</div>
 			<div class="main-text right">Add Friends Here!</div>
 		</div>
 		
@@ -803,7 +806,7 @@
 <script>
 	$('.popup-email-input input').keydown(function (e){
 	    if(e.keyCode == 13){
-	        inviteDisUser()
+	        inviteDisUser();
 	    }
 </script>
 
