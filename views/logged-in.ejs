@@ -212,7 +212,7 @@
 	.popup{
 		position: fixed;
 		width:550px;
-		height:300px;
+		height:230px;
 		background-color: #161616;
 		opacity: .95;
 		border-radius: 20px;
@@ -258,10 +258,16 @@
 	}
 
 	.btn-popup {
-		display: inline-block;
-		margin-left: 236px;
+		display: inline;
 		margin-top: 20px;
+		margin-right:10px;
 		font-weight:normal !important;
+	}
+
+	.btn-popup-cancel {
+		margin-left: 182px;
+		padding-left: 18px !important;
+		padding-right: 18px !important;
 	}
 
 	.faq .btn-popup {
@@ -520,17 +526,46 @@
 		cursor: pointer;
 	}
 
+	.popup-1st {
+		display: inline-block;
+		font-size: 29px;
+
+		margin-bottom: 22px;
+	}
+
+	.popup-email-input {
+		display: inline-block;
+		margin-bottom: -11px !important;
+	}
+
+	.popup-email-input input {
+		width:245px !important;
+	}
+
+	.popup-2nd {
+		display: block;
+		font-size: 10pt;
+
+	}
+
+	.popup-3rd {
+		font-size: 10pt;
+	}
+
 </style>
 
 <div class="modal-bg disco-hide"></div>
 
 <div class="popup disco-hide">
 	<div class="popup-text add-friends">
-		<span>
-			You can only add friends who have already signed up for Project Disco, tell your friends to sign up at <p><%= serviceUrl %></p> <br/> We love you! <3
-		</span>
+		<span class='popup-1st'> Invite a friend to signup:</span>
+		<div class="popup-email-input"><input placeholder="Enter Friend's Email" type="text" name="friends_email"></div>
+		<span class='popup-2nd'> or tell them to visit: <strong> <%= serviceUrl %> </strong>  </span>
+		<!-- <span class = 'popup-3rd'> </span> -->
+		
 	</div>
-	<div class="btn btn-large disco-button-homepage disco-button-homepage-highlight btn-popup">Close</div>
+	<div class="btn btn-large disco-button-homepage btn-popup-cancel btn-popup">Cancel</div>
+	<div class="btn btn-large disco-button-homepage disco-button-homepage-highlight btn-popup" onclick="inviteDisUser();">Invite</div>
 </div>
 
 <div class="faq disco-hide">
@@ -707,6 +742,14 @@
 	});
 </script>
 
+<script>
+	function inviteDisUser(){
+		var inviteEmail = $('.popup-email-input input').val();
+		$('.popup-email-input input').val(''); //Clear dat bitch
+	}
+
+</script>
+
 
 <script>
 	$('body').on('click', '.btn-ok', function(e) {
@@ -757,6 +800,13 @@
 		$(this).parent().parent().parent().parent().find(".popup").removeClass("disco-hide");
 	});
 </script>
+<script>
+	$('.popup-email-input input').keydown(function (e){
+	    if(e.keyCode == 13){
+	        inviteDisUser();
+	    }
+</script>
+
 <script>
 	$('.btn-popup').on('click', function(e) {
 		e.stopPropagation();
