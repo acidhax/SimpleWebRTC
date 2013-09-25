@@ -769,7 +769,7 @@
 			_id : $(this).closest('.person').data('accountid'),
 			name : $(this).closest('.person').data('name')
 		};
-		var personElement  $(this).closest('.person')[0];
+		var personElement = $(this).closest('.person')[0];
 		var self = this;
 		if (email && email.length) {
 			$.post('/add-friend', {email: email}, function(data) {
