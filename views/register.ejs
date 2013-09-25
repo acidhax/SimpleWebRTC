@@ -61,6 +61,7 @@
 		text-align: center;
 		margin-top:5px;
 		text-decoration: none;
+		z-index: 300;
 	}
 
 	.btn-cancel span {
@@ -90,13 +91,14 @@
 	.loading-overlay {
 		position: absolute;
 		margin-right: auto;
-		margin-left: 0px;
+		margin-left: -200px;
 		top: 291px;
-		width: 500px;
+		width: 900px;
 		height: 500px;
 		background: white;
-		opacity: 0.9;
+		opacity: 0.95;
 		text-align: center;
+		z-index:200;
 	}
 
 	.loading-overlay h5 {
@@ -130,11 +132,11 @@
 		<div class="disco_content">
 			<h4 style="margin-top: 32px;"> 1) Set up your account: </h4> 
 			<div class="collect_email"> 
-				 <input class="txt_email" id="email" name="email" type="email" placeholder="Email" value="<%= email %>"> <span class='hide-me'> Please enter an email! </span>
+				 <input autocomplete="off" class="txt_email" id="email" name="email" type="text" placeholder="Email" value="<%= email %>"> <span class='hide-me'> Please enter an email! </span>
 			</div>
 			<div class="collect_names">
-				<input class="txt_name" id="firstName" name="firstName" type="text" placeholder="First Name" value="<%= firstName %>"> 
-				<input class="txt_name" id="lastName" name="lastName" type="text" placeholder="Last Name" value="<%= lastName %>"> <span class='hide-me'> Please enter both a first and last name! </span>
+				<input class="txt_name" autocomplete="off" id="firstName" name="firstName" type="text" placeholder="First Name" value="<%= firstName %>"> 
+				<input class="txt_name" autocomplete="off" id="lastName" name="lastName" type="text" placeholder="Last Name" value="<%= lastName %>"> <span class='hide-me'> Please enter both a first and last name! </span>
 			</div>
 			<div class="collect_password"> 
 				 <input class="txt_password" id="password" name="password" type="password" placeholder="Password" value=""> <span class='hide-me'> Please enter a password :)</span>
@@ -145,7 +147,7 @@
 				<span class='hide-me'> Please upload a photo, good looking ;D </span>
 
 				<!-- <button class="btn btn-inverse btn_custom btn_upload">Choose Photo</button> -->
-				<div class = "file_uploader"> <input type="file" accept="image" name="picture" id="picture"></div>
+				<div class = "file_uploader"> <input type="file" accept="image/png" name="picture" id="picture"></div>
 				<!-- <div class="photo_name"> No photo selected </div> -->
 			</div>
 			<div class="signup_nativation">
@@ -166,11 +168,15 @@
 <script>
 	$('form').submit(function(e){
 		//Get all the fields values:
-		var email = $(".txt_email").val().trim() != ''; 
+		var emailVal = $(".txt_email").val().trim(); 
+		var validEmail = emailVal.indexOf('@') > -1 && emailVal.indexOf('.') > -1 && emailVal.lastIndexOf('.') > emailVal.indexOf('@');
+		var email = emailVal != '';
 		var firstName = $($(".txt_name")[0]).val().trim() != '';
 		var lastName = $($(".txt_name")[1]).val().trim() != '';
 		var password = $(".txt_password").val().trim() != '';
 		var profilePic = $(".file_uploader input").val().trim() != '';
+
+		console.log(email,validEmail,firstName, lastName, password, profilePic);
 
 		//Reset Error Messages:
 		$('.collect_email span').addClass('hide-me');
@@ -178,12 +184,10 @@
 		$('.collect_password span').addClass('hide-me');
 		$('.photo_upload span').addClass('hide-me');
 
-
-
-		if (email && firstName && lastName && password && profilePic) {
+		if (validEmail && firstName && lastName && password && profilePic) {
 			$('.loading-overlay').removeClass('hide-me');
 		} else {
-			if(!email) {
+			if(!validEmail) {
 				$('.collect_email span').removeClass('hide-me');
 			}
 			if(!firstName || !lastName) {
@@ -198,6 +202,8 @@
 
 			e.preventDefault(); //stop the form from actually submitting
 		}
+
+
 
 	});
 
