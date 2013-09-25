@@ -24,8 +24,8 @@ AccountSearch.prototype.search = function(string, cb) {
 AccountSearch.prototype.remove = function (el) {
 	var found = false;
 	for (var i = 0; i < this.accounts.length && !found; i++) {
-		if (this.accounts._el = el) {
-			this.accounts = this.accounts.splice(i,1);
+		if (this.accounts[i]._el == el) {
+			this.accounts.splice(i,1);
 			found = true;
 		}
 	}
