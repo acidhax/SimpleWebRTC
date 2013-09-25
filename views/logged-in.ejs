@@ -543,6 +543,7 @@
 
 	$.get('/get-friends', function(data) {
 		if (data && data.friends) {
+			data.friends = data.friends.slice(0,15);
 			for(var n = 0; n < data.friends.length; n++) {
 				renderFriend(data.friends[n]);
 			}
