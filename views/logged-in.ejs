@@ -697,7 +697,7 @@
 			if ($(self).val().trim() != "") {
 				accountSearcher.search($(self).val(), applySearchResults);
 			} else {
-				async.forEach(accountSearcher.accounts, function (account, next) {
+				async.forEach(accountSearcher.accounts.splice(0,10), function (account, next) {
 					if (account._el.parentElement) {
 						account._el.parentElement.removeChild(account._el);
 					}
