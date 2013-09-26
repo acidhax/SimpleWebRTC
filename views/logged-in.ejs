@@ -762,6 +762,12 @@
 </script>
 
 <script>
+	//clear the email feild when the click the button
+	$('.btn-popup-cancel').on('click', function(e){
+		$('.popup-email-input input').val('');  
+	});
+
+	//The person clicked invite, sanitize this shit and send an email!
 	function inviteDisUser() {
 		var inviteEmail = $('.popup-email-input input').val().trim();
 		var isEmail = inviteEmail.indexOf('@') > -1 && inviteEmail.indexOf('.') > -1 && inviteEmail.lastIndexOf('.') > inviteEmail.indexOf('@');
