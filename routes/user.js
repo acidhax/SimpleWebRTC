@@ -3,7 +3,8 @@ var db = require('../db'),
 	fs = require('fs'),
 	check = require('validator').check,
 	async = require('async'),
-	os = require('os');
+	os = require('os')
+	string_score = require('../public/js/string_score.min');
 
 exports.welcome = function(req,res) {
 	if (req.session.accountId) {
@@ -518,11 +519,19 @@ exports.searchPeople = function(req, res) {
 	// DELETE THE profilePhoto field
 	// IGNORE THE USER'S FRIENDS
 
-
-
 	db.cache.get('totalAccountCache', function(err, bigString) {
 		var accounts = JSON.parse(bigString);
-
+		async.map(accounts, function (account, next) {
+			account.score = account.displayName.score(string, 0.5) * -1;
+			next(null, account);
+		}, function (err, list) {
+			async.sortBy(list, function (account, next) {
+				next(null, account.score);
+			}, function (err, endGame) {
+				endGame = endGame.splice(0,15);
+				res.send(endGame);
+			});
+		});
 	}, function(cb) {
 		db.Account.find().select('_id firstName lastName email').exec(function(err, accountList) {
 			var out = [];
