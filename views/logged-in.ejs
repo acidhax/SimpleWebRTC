@@ -267,6 +267,13 @@
 		font-weight:normal !important;
 	}
 
+	.btn-popup-invite {
+		display: inline;
+		margin-top: 20px;
+		margin-right:10px;
+		font-weight:normal !important;
+	}
+
 	.btn-popup-cancel {
 		margin-left: 182px;
 		padding-left: 18px !important;
@@ -530,6 +537,22 @@
 		cursor: pointer;
 	}
 
+	.invite-confirmation {
+		position: absolute;
+		width: 444px;
+		left: calc(50% - 222px);
+		top: -30px;
+		text-align: center;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		-webkit-transition: color 0.1s ease-in-out;
+	}
+	.invite-confirmation.disco-hide {
+		-webkit-transform: scale(0);
+	}
+
 	.popup-1st {
 		display: inline-block;
 		font-size: 29px;
@@ -561,15 +584,15 @@
 <div class="modal-bg disco-hide"></div>
 
 <div class="popup disco-hide">
+	<div class="invite-confirmation disco-hide">Invite sent to jason@groupnotes.ca!</div>
 	<div class="popup-text add-friends">
-		<span class='popup-1st'> Invite a friend to signup:</span>
+		<span class='popup-1st'> Invite a friend to sign up:</span>
 		<div class="popup-email-input"><input placeholder="Enter Friend's Email" type="text" name="friends_email"></div>
 		<span class='popup-2nd'> or tell them to visit: <strong> <%= serviceUrl %> </strong>  </span>
 		<!-- <span class = 'popup-3rd'> </span> -->
-		
 	</div>
 	<div class="btn btn-large disco-button-homepage btn-popup-cancel btn-popup">Cancel</div>
-	<div class="btn btn-large disco-button-homepage disco-button-homepage-highlight btn-popup" onclick="inviteDisUser();">Invite</div>
+	<div class="btn btn-large disco-button-homepage disco-button-homepage-highlight btn-popup-invite" onclick="inviteDisUser();">Invite</div>
 </div>
 
 <div class="faq disco-hide">
@@ -635,7 +658,7 @@
 
 	<div class="right-column">
 		<div class="friend-heading-container">			
-			<div class="btn btn-inverse btn-custom-2 btn_friendless disco-hide">Invite Friends to Disco!</div>
+			<div class="btn btn-inverse btn-custom-2 btn_friendless">Invite Friends to Disco!</div>
 			<div class="main-text right">Add Friends Here!</div>
 		</div>
 		
@@ -737,9 +760,29 @@
 </script>
 
 <script>
-	function inviteDisUser(){
-		var inviteEmail = $('.popup-email-input input').val();
-		$('.popup-email-input input').val(''); //Clear dat bitch
+	function inviteDisUser() {
+		var inviteEmail = $('.popup-email-input input').val().trim();
+		var isEmail = inviteEmail.indexOf('@') > -1 && inviteEmail.indexOf('.') > -1 && inviteEmail.lastIndexOf('.') > inviteEmail.indexOf('@');
+
+		if (isEmail) {
+			$('.popup-email-input input').val(''); //Clear dat bitch
+			$('.invite-confirmation')[0].innerHTML = "Invite sent to <strong>" + inviteEmail +"</strong>";
+			$('.invite-confirmation').css({"background":"hsl(146, 48%, 69%)", "color":"rgb(27, 105, 27)"}) //MAKE IT GREEN!
+
+			//********************************************// <--------------------------------------  <--------------------------------------
+			//** GRAHAM...HEY GRAHAM!!!! LOOK OVER HERE **//<-------------------------------------- <--------------------------------------
+			//**        PUT DA MIX PANEL STUFF HERE     **//  <--------------------------------------	<--------------------------------------
+			//**           YUP RIGHT HURRR              **//<-------------------------------------- <--------------------------------------
+			//********************************************//<--------------------------------------    <--------------------------------------
+
+			$('.invite-confirmation').removeClass('disco-hide');
+		} else {
+			$('.invite-confirmation')[0].innerHTML = "Sorry, <strong>" + inviteEmail + "</strong> isn't a valid email!";
+			$('.invite-confirmation').css({"background":"hsl(0, 46%, 63%)", "color":"rgb(121, 37, 37)"}) //MAKE IT RED!
+
+			$('.invite-confirmation').removeClass('disco-hide');
+		}
+
 	}
 
 </script>
@@ -792,6 +835,7 @@
 		e.stopPropagation();
 		e.preventDefault();		
 
+		$('.invite-confirmation').addClass('disco-hide');
 		$(this).parent().parent().parent().parent().find(".modal-bg").removeClass("disco-hide");
 		$(this).parent().parent().parent().parent().find(".popup").removeClass("disco-hide");
 	});
@@ -799,8 +843,9 @@
 <script>
 	$('.popup-email-input input').keydown(function (e){
 	    if(e.keyCode == 13){
-	        inviteDisUser();
+	       $('.btn-popup-invite').click();
 	    }
+	});
 </script>
 
 <script>
