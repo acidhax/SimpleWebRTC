@@ -521,10 +521,26 @@ exports.searchPeople = function(req, res) {
 
 
 exports.inviteFriend = function(req, res) {
-	var email = req.body.email;
-	if (email.length % 2 === 0) {
+	if (req.session.accountId) {
+		var email = req.body.email;
+
+		if (!email) {
+			res.send({ success: false, reason: 'invalid-email' });
+			return;
+		} else {
+			email = email.toLowerCase();
+			try {
+				!check(email).isEmail();
+			} catch(e) {
+				res.send({ success: false, reason: 'invalid-email' });
+				return;
+			}
+		}
+
+		db.metrics.inviteFriend(req.session.accountId, email);
 		res.send({ success: true });
 	} else {
-		res.send({ success: false, reason: 'invalid-email' });
+		res.send({ success: false });
 	}
+
 };
