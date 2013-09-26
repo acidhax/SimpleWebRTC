@@ -776,8 +776,16 @@
 
 				} else if (data.reason === 'invalid-email') {
 
+					$('.invite-confirmation')[0].innerHTML = "Sorry, <strong>" + inviteEmail + "</strong> isn't a valid email!";
+					$('.invite-confirmation').css({"background":"hsl(0, 46%, 63%)", "color":"rgb(121, 37, 37)"}) //MAKE IT RED!
+
+					$('.invite-confirmation').removeClass('disco-hide');
+
 				} else {
-					// RUH-ROH
+					$('.invite-confirmation')[0].innerHTML = "Woh! Something went wrong! We're working on a fix.";
+					$('.invite-confirmation').css({"background":"hsl(0, 46%, 63%)", "color":"rgb(121, 37, 37)"}) //MAKE IT RED!
+
+					$('.invite-confirmation').removeClass('disco-hide');
 				}
 			});
 		} else {
