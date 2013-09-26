@@ -518,47 +518,59 @@ exports.searchPeople = function(req, res) {
 	var accountId = req.session.accountId;
 	// DELETE THE profilePhoto field
 	// IGNORE THE USER'S FRIENDS
+	db.Account.findById(accountId, function(err, personAccount) {
+		if (!err && personAccount) {
+			var accountsToIgnore = JSON.parse(JSON.stringify(personAccount)).friends;
+			accountsToIgnore.push(personAccount._id.toString());
+			db.cache.get('totalAccountCache', function(err, bigString) {
+				if (!err && bigString) {
+					var accounts = JSON.parse(bigString);
 
-	db.cache.get('totalAccountCache', function(err, bigString) {
-		if (!err && bigString) {
-			var accounts = JSON.parse(bigString);
-			if (query) {
-				async.map(accounts, function (account, next) {
-					console.log(account.displayName.score(query, 0.5));
-					account.score = account.displayName.score(query, 0.5) * -1;
-					next(null, account);
-				}, function (err, list) {
-					async.sortBy(list, function (account, next) {
-						next(null, account.score);
-					}, function (err, endGame) {
-						endGame = endGame.splice(0,10);
-						res.send(endGame);
+					async.filter(accounts, function(account, next) {
+						next(accountsToIgnore.indexOf(account._id) === -1);
+					}, function(accounts) {
+						if (query) {
+							async.map(accounts, function (account, next) {
+								account.score = account.displayName.score(query, 0.5) * -1;
+								next(null, account);
+							}, function (err, list) {
+								async.sortBy(list, function (account, next) {
+									next(null, account.score);
+								}, function (err, endGame) {
+									endGame = endGame.splice(0,10);
+									res.send(endGame);
+								});
+							});
+						} else {
+							async.sortBy(accounts, function (account, next) {
+								next(null, account.displayName.toLowerCase());
+							}, function(err, endGame) {
+								res.send(endGame.slice(0, 10));
+							});
+						}
+					});
+
+				} else {
+					res.send([]);
+				}
+			}, function(cb) {
+				db.Account.find({}).select('_id firstName lastName email').exec(function(err, accountList) {
+					var out = [];
+					async.forEach(accountList, function(account, next) {
+						out.push({
+							_id: account._id,
+							email: account.email,
+							displayName: account.firstName?account.firstName + ' ' + account.lastName:account.email
+						});
+						next();
+					}, function() {
+						cb(null, JSON.stringify(out));
 					});
 				});
-			} else {
-				async.sortBy(accounts, function (account, next) {
-					next(null, account.displayName.toLowerCase());
-				}, function(err, endGame) {
-					res.send(endGame.slice(0, 10));
-				})
-			}
+			});
 		} else {
 			res.send([]);
 		}
-	}, function(cb) {
-		db.Account.find({}).select('_id firstName lastName email').exec(function(err, accountList) {
-			var out = [];
-			async.forEach(accountList, function(account, next) {
-				out.push({
-					_id: account._id,
-					email: account.email,
-					displayName: account.firstName?account.firstName + ' ' + account.lastName:account.email
-				});
-				next();
-			}, function() {
-				cb(null, JSON.stringify(out));
-			});
-		});
 	});
 };
 
