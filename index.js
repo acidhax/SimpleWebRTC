@@ -187,6 +187,24 @@ app.get('/setup-vanity', function(req, res) {
   });
 });
 
+app.get('/setup-person-cache', function(req, res) {
+  db.Account.find({}).select('_id firstName lastName email').exec(function(err, accountList) {
+    var out = [];
+    async.forEach(function(account, next) {
+      out.push({
+        _id: account._id,
+        email: account.email,
+        displayName: account.firstName?account.firstName + ' ' + account.lastName:account.email
+      });
+      next();
+    }, function() {
+      db.cache.set('totalAccountCache', JSON.stringify(out), function() {
+        res.send('k');
+      });
+    });
+  });
+});
+
 app.get('/thing', function(req, res) {
   if (!req.session.somenum) {
     req.session.somenum = 0;
