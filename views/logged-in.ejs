@@ -665,9 +665,7 @@
 		<div class="main-text sub-heading">Some people you might know (click to add):</div>		
 		<div class="search-field"><input type="text" class="search-field-input" placeholder="Search by name or email"></input></div>
 		<div class="person-container" id="style-1">
-			<% for (var n = 0; n < accounts.length; n++) { %>
-				
-			<% } %>
+			
 		</div>
 	</div>
 	<div class="vertical-line"></div>
@@ -676,7 +674,9 @@
 <script src="/js/AccountSearch.js"></script>
 
 <script>
-
+	var emptyDiv = $('<span class="empty-search">Search for your friends, yo.</span>');
+	var noFriendsDiv = $('<span class="no-friends-search">We found nobody with that name! :\'(</span>');
+	$('.person-container').append(emptyDiv);
 	$.get('/get-friends', function(data) {
 		if (data && data.friends) {
 			for(var n = 0; n < data.friends.length; n++) {
@@ -715,12 +715,21 @@
 			clearTimeout(searchTimeout);
 		}
 		searchTimeout = setTimeout(function () {
-			$.post('/search-people', { query: $(self).val().trim() }, function(results) {
-				$('.person-container').empty();
-				async.eachSeries(results, renderSearchResult, function() {
-					$('.person-container').scrollTop(0);
+			if ($(self).val().trim() != "") {
+				$.post('/search-people', { query: $(self).val().trim() }, function(results) {
+					$('.person-container').empty();
+					if (results.length == 0) {
+						$('.person-container').append(noFriendsDiv);
+					} else {
+						async.eachSeries(results, renderSearchResult, function() {
+							$('.person-container').scrollTop(0);
+						});
+					}
 				});
-			});
+			} else {
+				$('.person-container').empty();
+				$('.person-container').append(emptyDiv);
+			}
 		}, 300);
 	}
 	$('.search-field-input').on('textInput', looker);
@@ -729,7 +738,7 @@
 			looker.call(this, ev);
 		}
 	});
-	$('.search-field-input').trigger('textInput');
+	// $('.search-field-input').trigger('textInput');
 </script>
 
 <!-- Friend adding -->
