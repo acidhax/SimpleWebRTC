@@ -283,7 +283,7 @@ exports.loggedIn = function(req, res) {
 			res.redirect('/welcome');
 		}
 	} else {
-		res.redirect('/extension-get-login');
+		res.redirect('/logout');
 	}
 };
 
