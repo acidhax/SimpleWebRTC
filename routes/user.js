@@ -510,3 +510,11 @@ exports.getSuggestedFriends = function (req, res) {
 		res.end();
 	}
 };
+
+exports.searchPeople = function(req, res) {
+	var query = req.body.query;
+	var accountId = req.session.accountId;
+	// DELETE THE profilePhoto field
+	// IGNORE THE USER'S FRIENDS
+
+};
