@@ -93,7 +93,7 @@ exports.registerPost = function(req, res) {
 													db.metrics.login(account._id);
 													db.cache.expire('totalAccountCache');
 													db.creepyJesus.registered(account._id);
-													db.redisCallback.exec('onboardShare', account._id, function (){});
+													db.redisCallback.exec('onboardShare2', account._id, function (){});
 													res.redirect("/logged-in");
 												} else {
 													account.remove();
