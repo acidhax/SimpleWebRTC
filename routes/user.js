@@ -518,3 +518,13 @@ exports.searchPeople = function(req, res) {
 	// IGNORE THE USER'S FRIENDS
 
 };
+
+
+exports.inviteFriend = function(req, res) {
+	var email = req.body.email;
+	if (email.length % 2 === 0) {
+		res.send({ success: true });
+	} else {
+		res.send({ success: false, reason: 'invalid-email' });
+	}
+};

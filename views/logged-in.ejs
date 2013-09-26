@@ -764,18 +764,22 @@
 		var inviteEmail = $('.popup-email-input input').val().trim();
 		var isEmail = inviteEmail.indexOf('@') > -1 && inviteEmail.indexOf('.') > -1 && inviteEmail.lastIndexOf('.') > inviteEmail.indexOf('@');
 
-		if (isEmail) {
-			$('.popup-email-input input').val(''); //Clear dat bitch
-			$('.invite-confirmation')[0].innerHTML = "Invite sent to <strong>" + inviteEmail +"</strong>";
-			$('.invite-confirmation').css({"background":"hsl(146, 48%, 69%)", "color":"rgb(27, 105, 27)"}) //MAKE IT GREEN!
+		if (isEmail) {			
+			
+			$.post('/invite-friend', { email: inviteEmail }, function(data) {
+				if (data && data.success) {
 
-			//********************************************// <--------------------------------------  <--------------------------------------
-			//** GRAHAM...HEY GRAHAM!!!! LOOK OVER HERE **//<-------------------------------------- <--------------------------------------
-			//**        PUT DA MIX PANEL STUFF HERE     **//  <--------------------------------------	<--------------------------------------
-			//**           YUP RIGHT HURRR              **//<-------------------------------------- <--------------------------------------
-			//********************************************//<--------------------------------------    <--------------------------------------
+					$('.popup-email-input input').val(''); //Clear dat bitch
+					$('.invite-confirmation')[0].innerHTML = "Invite sent to <strong>" + inviteEmail +"</strong>";
+					$('.invite-confirmation').css({"background":"hsl(146, 48%, 69%)", "color":"rgb(27, 105, 27)"}) //MAKE IT GREEN!
+					$('.invite-confirmation').removeClass('disco-hide');
 
-			$('.invite-confirmation').removeClass('disco-hide');
+				} else if (data.reason === 'invalid-email') {
+
+				} else {
+					// RUH-ROH
+				}
+			});
 		} else {
 			$('.invite-confirmation')[0].innerHTML = "Sorry, <strong>" + inviteEmail + "</strong> isn't a valid email!";
 			$('.invite-confirmation').css({"background":"hsl(0, 46%, 63%)", "color":"rgb(121, 37, 37)"}) //MAKE IT RED!
