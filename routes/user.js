@@ -90,6 +90,7 @@ exports.registerPost = function(req, res) {
 													db.sessions.addSessionToAccount(account._id, req.sessionID);
 													db.metrics.accountCreated(account._id, req.ip);
 													db.metrics.login(account._id);
+													db.cache.expire('totalAccountCache');
 													db.creepyJesus.registered(account._id);
 													db.redisCallback.exec('onboardShare', account._id, function (){});
 													res.redirect("/logged-in");
@@ -517,6 +518,26 @@ exports.searchPeople = function(req, res) {
 	// DELETE THE profilePhoto field
 	// IGNORE THE USER'S FRIENDS
 
+
+
+	db.cache.get('totalAccountCache', function(err, bigString) {
+		var accounts = JSON.parse(bigString);
+
+	}, function(cb) {
+		db.Account.find().select('_id firstName lastName email').exec(function(err, accountList) {
+			var out = [];
+			async.forEach(function(account, next) {
+				out.push({
+					_id: account._id,
+					email: account.email,
+					displayName: account.firstName?account.firstName + ' ' + account.lastName:account.email
+				});
+				next();
+			}, function() {
+				cb(JSON.stringify(out));
+			});
+		});
+	});
 };
 
 
