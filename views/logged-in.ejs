@@ -8,7 +8,7 @@
 		height: 100%;
 	}
 	.small-logo {		
-		background-image: url("/img/discoSmallLogo.png");				
+		background-image: url("/img/discoSmallLogo.png");					
 		background-size:180px;
 		background-repeat: none;
 		height:63px;
@@ -579,6 +579,23 @@
 		font-size: 10pt;
 	}
 
+	.empty-search {
+		display: block;
+		text-align: center;
+		margin-top:42px;
+	}
+
+	.disco-arrow {
+		height: 50px;
+		width: 55px;
+		position: relative;
+		display:block;
+		background-image: url("/img/TempArrow.png");
+		background-repeat: no-repeat;
+		margin-top: -60px;
+		margin-left: 425px; 
+	}
+
 </style>
 
 <div class="modal-bg disco-hide"></div>
@@ -674,7 +691,7 @@
 <script src="/js/AccountSearch.js"></script>
 
 <script>
-	var emptyDiv = $('<span class="empty-search">Search for your friends, yo.</span>');
+	var emptyDiv = $('<span class="empty-search">To find friends who <strong>already have Disco</strong>, use the search above!</span><div class="disco-arrow"></div>');
 	var noFriendsDiv = $('<span class="no-friends-search">We found nobody with that name! :\'(</span>');
 	$('.person-container').append(emptyDiv);
 	$.get('/get-friends', function(data) {
