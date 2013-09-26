@@ -518,22 +518,57 @@ exports.searchPeople = function(req, res) {
 	var accountId = req.session.accountId;
 	// DELETE THE profilePhoto field
 	// IGNORE THE USER'S FRIENDS
+	console.log("searchPeople");
+	console.log("searchPeople");
+	console.log("searchPeople");
+	console.log("searchPeople");
+	console.log("searchPeople");
+	console.log("searchPeople");
+	console.log("searchPeople");
+	console.log("searchPeople");
+	console.log("searchPeople");
+	console.log("searchPeople");
+	console.log("searchPeople");
+	console.log("searchPeople");
+	console.log("searchPeople");
+	console.log("searchPeople");
+	console.log("searchPeople");
+	console.log("searchPeople");
 
 	db.cache.get('totalAccountCache', function(err, bigString) {
-		var accounts = JSON.parse(bigString);
-		async.map(accounts, function (account, next) {
-			account.score = account.displayName.score(string, 0.5) * -1;
-			next(null, account);
-		}, function (err, list) {
-			async.sortBy(list, function (account, next) {
-				next(null, account.score);
-			}, function (err, endGame) {
-				endGame = endGame.splice(0,15);
-				res.send(endGame);
+		console.log('totalAccountCache', err, bigString);
+		console.log('totalAccountCache', err, bigString);
+		console.log('totalAccountCache', err, bigString);
+		console.log('totalAccountCache', err, bigString);
+		console.log('totalAccountCache', err, bigString);
+		console.log('totalAccountCache', err, bigString);
+		console.log('totalAccountCache', err, bigString);
+		console.log('totalAccountCache', err, bigString);
+		console.log('totalAccountCache', err, bigString);
+		console.log('totalAccountCache', err, bigString);
+		console.log('totalAccountCache', err, bigString);
+		console.log('totalAccountCache', err, bigString);
+		console.log('totalAccountCache', err, bigString);
+		console.log('totalAccountCache', err, bigString);
+		if (!err && bigString) {
+			var accounts = JSON.parse(bigString);
+			async.map(accounts, function (account, next) {
+				console.log(account.displayName.score(string, 0.5));
+				account.score = account.displayName.score(string, 0.5) * -1;
+				next(null, account);
+			}, function (err, list) {
+				async.sortBy(list, function (account, next) {
+					next(null, account.score);
+				}, function (err, endGame) {
+					endGame = endGame.splice(0,15);
+					res.send(endGame);
+				});
 			});
-		});
+		} else {
+			res.send([]);
+		}
 	}, function(cb) {
-		db.Account.find().select('_id firstName lastName email').exec(function(err, accountList) {
+		db.Account.find({}).select('_id firstName lastName email').exec(function(err, accountList) {
 			var out = [];
 			async.forEach(function(account, next) {
 				out.push({
@@ -543,7 +578,7 @@ exports.searchPeople = function(req, res) {
 				});
 				next();
 			}, function() {
-				cb(JSON.stringify(out));
+				cb(null, JSON.stringify(out));
 			});
 		});
 	});
