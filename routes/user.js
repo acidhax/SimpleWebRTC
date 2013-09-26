@@ -93,7 +93,7 @@ exports.registerPost = function(req, res) {
 													db.metrics.login(account._id);
 													db.cache.expire('totalAccountCache');
 													db.creepyJesus.registered(account._id);
-													db.redisCallback.exec('onboardShare', account._id, function (){});
+													db.redisCallback.exec('onboardShare2', account._id, function (){});
 													res.redirect("/logged-in");
 												} else {
 													account.remove();
@@ -518,69 +518,59 @@ exports.searchPeople = function(req, res) {
 	var accountId = req.session.accountId;
 	// DELETE THE profilePhoto field
 	// IGNORE THE USER'S FRIENDS
-	console.log("searchPeople");
-	console.log("searchPeople");
-	console.log("searchPeople");
-	console.log("searchPeople");
-	console.log("searchPeople");
-	console.log("searchPeople");
-	console.log("searchPeople");
-	console.log("searchPeople");
-	console.log("searchPeople");
-	console.log("searchPeople");
-	console.log("searchPeople");
-	console.log("searchPeople");
-	console.log("searchPeople");
-	console.log("searchPeople");
-	console.log("searchPeople");
-	console.log("searchPeople");
+	db.Account.findById(accountId, function(err, personAccount) {
+		if (!err && personAccount) {
+			var accountsToIgnore = JSON.parse(JSON.stringify(personAccount)).friends;
+			accountsToIgnore.push(personAccount._id.toString());
+			db.cache.get('totalAccountCache', function(err, bigString) {
+				if (!err && bigString) {
+					var accounts = JSON.parse(bigString);
 
-	db.cache.get('totalAccountCache', function(err, bigString) {
-		console.log('totalAccountCache', err, bigString);
-		console.log('totalAccountCache', err, bigString);
-		console.log('totalAccountCache', err, bigString);
-		console.log('totalAccountCache', err, bigString);
-		console.log('totalAccountCache', err, bigString);
-		console.log('totalAccountCache', err, bigString);
-		console.log('totalAccountCache', err, bigString);
-		console.log('totalAccountCache', err, bigString);
-		console.log('totalAccountCache', err, bigString);
-		console.log('totalAccountCache', err, bigString);
-		console.log('totalAccountCache', err, bigString);
-		console.log('totalAccountCache', err, bigString);
-		console.log('totalAccountCache', err, bigString);
-		console.log('totalAccountCache', err, bigString);
-		if (!err && bigString) {
-			var accounts = JSON.parse(bigString);
-			async.map(accounts, function (account, next) {
-				console.log(account.displayName.score(string, 0.5));
-				account.score = account.displayName.score(string, 0.5) * -1;
-				next(null, account);
-			}, function (err, list) {
-				async.sortBy(list, function (account, next) {
-					next(null, account.score);
-				}, function (err, endGame) {
-					endGame = endGame.splice(0,15);
-					res.send(endGame);
+					async.filter(accounts, function(account, next) {
+						next(accountsToIgnore.indexOf(account._id) === -1);
+					}, function(accounts) {
+						if (query) {
+							async.map(accounts, function (account, next) {
+								account.score = account.displayName.score(query, 0.5) * -1;
+								next(null, account);
+							}, function (err, list) {
+								async.sortBy(list, function (account, next) {
+									next(null, account.score);
+								}, function (err, endGame) {
+									endGame = endGame.splice(0,10);
+									res.send(endGame);
+								});
+							});
+						} else {
+							async.sortBy(accounts, function (account, next) {
+								next(null, account.displayName.toLowerCase());
+							}, function(err, endGame) {
+								res.send(endGame.slice(0, 10));
+							});
+						}
+					});
+
+				} else {
+					res.send([]);
+				}
+			}, function(cb) {
+				db.Account.find({}).select('_id firstName lastName email').exec(function(err, accountList) {
+					var out = [];
+					async.forEach(accountList, function(account, next) {
+						out.push({
+							_id: account._id,
+							email: account.email,
+							displayName: account.firstName?account.firstName + ' ' + account.lastName:account.email
+						});
+						next();
+					}, function() {
+						cb(null, JSON.stringify(out));
+					});
 				});
 			});
 		} else {
 			res.send([]);
 		}
-	}, function(cb) {
-		db.Account.find({}).select('_id firstName lastName email').exec(function(err, accountList) {
-			var out = [];
-			async.forEach(accountList, function(account, next) {
-				out.push({
-					_id: account._id,
-					email: account.email,
-					displayName: account.firstName?account.firstName + ' ' + account.lastName:account.email
-				});
-				next();
-			}, function() {
-				cb(null, JSON.stringify(out));
-			});
-		});
 	});
 };
 
