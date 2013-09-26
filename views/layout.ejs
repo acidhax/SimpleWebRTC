@@ -68,7 +68,7 @@
 		var discoDetect = function(hasExtension, noExtension, noChrome) {
 			$(function() {
 				setTimeout(function() {
-					if (window.chrome != null && window.chrome.webstore != null) {
+					if (window.chrome != null) {
 						if (document.documentElement.getElementsByClassName('disco-identifier').length) {
 							if (hasExtension) {
 								window.location = hasExtension;
