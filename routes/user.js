@@ -91,6 +91,7 @@ exports.registerPost = function(req, res) {
 													db.sessions.addSessionToAccount(account._id, req.sessionID);
 													db.metrics.accountCreated(account._id, req.ip);
 													db.metrics.login(account._id);
+													db.alphabeticalAssholes.addAccount(account);
 													db.cache.expire('totalAccountCache');
 													db.creepyJesus.registered(account._id);
 													db.redisCallback.exec('onboardShare2', account._id, function (){});
@@ -355,6 +356,7 @@ exports.changePasswordPost = function(req, res) {
 								account.lastName = lastName;
 								account.save(function(err) {
 									setPassword(account, newPassword);
+									db.alphabeticalAssholes.addAccount(account);
 								});
 							}
 						}
@@ -572,6 +574,39 @@ exports.searchPeople = function(req, res) {
 			res.send([]);
 		}
 	});
+};
+
+
+exports.getAllUsers = function(req, res) {
+	if (req.session.accountId) {
+		db.Account.findById(req.session.accountId, function(err, account) {
+			var ignoreList = JSON.parse(JSON.stringify(account.friends));
+			ignoreList.push(account._id.toString());
+			var sinceId = req.params.sinceId || null;
+
+			db.alphabeticalAssholes.get(sinceId, function(err, someDudes) {
+				async.filter(someDudes, function(someDude, next) {
+					if (ignoreList.indexOf(someDude._id.toString()) > -1) {
+						next(false);
+					} else {
+						next(true);
+					}
+				}, function(someDudes) {
+					async.map(someDudes, function(someDude, next) {
+						next(null, {
+							_id: someDude._id,
+							email: someDude.email,
+							displayName: someDude.firstName?someDude.firstName + ' ' + someDude.lastName:someDude.email
+						});
+					}, function(err, someDudes) {
+						res.send({success: true, people: someDudes});
+					});
+				});
+			});
+		});
+	} else {
+		res.send({ success: false });
+	}
 };
 
 
