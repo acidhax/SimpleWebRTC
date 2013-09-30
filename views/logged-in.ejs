@@ -790,6 +790,10 @@
 
 	    $(scope).scroll(scrollbarCallback);
 
+	    this.reset = function() {
+	    	entered = false;
+	    }
+
 	    return this;
 	};
 
@@ -799,12 +803,13 @@
 	var startInfinite = function() {
 		infiniteEnabled = true;
 		lastInfiniteId = null;
+		personScroll.reset();
 		$('.person-container').scroll();
 	}
 	var stopInfinite = function() {
 		infiniteEnabled = false;
 	}
-	new infiniteScroll($('.person-container')[0], function() {
+	var personScroll = new infiniteScroll($('.person-container')[0], function() {
 		if (infiniteEnabled) {
 			$.get(lastInfiniteId?'/get-all-users/' + lastInfiniteId:'/get-all-users', function(data) {
 				if (data.success && data.people && data.people.length) {
