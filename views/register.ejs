@@ -34,7 +34,7 @@
 	}
 
 	.signup_nativation {
-		margin-top: 25px;
+		margin-top: 45px;
 	}
 
 	.disco_content {
@@ -82,12 +82,7 @@
 	select, input[type="file"] {
 		line-height: 8px !important;
 	}
-	.file_uploader {
-		margin-right: auto;
-		margin-left: auto;
-		margin-top: 15px;
-		width: 232px;
-	}
+	
 
 	.loading-overlay {
 		position: absolute;
@@ -127,6 +122,39 @@
 	.photo_upload span.error-text.hide-me {
 		display:none;
 	}
+	.actual-upload-wrapper {
+		height:80px;
+		width:380px;
+		margin:0 auto;
+		padding-left: 88px;
+	}
+	.selected-file-upload-wrapper{
+		height:80px;
+		width:80px;
+		border-radius:40px;
+		overflow:hidden;	
+		display:block;
+		float: left;		
+	}
+
+	.selected-file-upload{
+		width:80px;
+		height:80px;
+		background-size:cover;
+		background-position: center center;
+		display:inline-block;
+		background-image: url("/img/Email-Batman.png")
+	}
+
+	.file_uploader{
+		box-sizing:border-box;
+		padding-top: 30px;
+		height:80px;
+		display:block;
+		float:left;
+		clear-right;
+		margin-left:20px;
+	}
 
 </style>
 
@@ -153,13 +181,14 @@
 			</div>
 			<div class="photo_upload">
 				<div class="enter_pic"><h4><span style="font-weight:300; padding-right:3px">2)</span> Select a photo of your pretty face!</h4></div>
-				<div class="enter_pic_req"><h5><strong>(required):</strong></h5></div>
-				<span class="hide-me error-text"> Please upload a photo, good looking ;D </span>
+				<div class="enter_pic_req"><h5><strong>(required):</strong></h5></div>				
 
 				<!-- <button class="btn btn-inverse btn_custom btn_upload">Choose Photo</button> -->
-				<div class="file_uploader"> <input type="file" accept="image/*"  name="picture" id="picture"></div>
-				<img class="selected-file-upload" src="#" alt="your profile picture" />
-				<!-- <div class="photo_name"> No photo selected </div> -->
+				<div class="actual-upload-wrapper">
+					<div class="selected-file-upload-wrapper"><div class="selected-file-upload" alt="your profile picture"></div></div>
+					<div class="file_uploader"> <input type="file" accept="image/*"  name="picture" id="picture"></div>				
+				</div>
+				<span class="hide-me error-text" style="margin-top:5px;"> Please upload a photo, good looking ;D </span>
 			</div>
 			<div class="signup_nativation">
 				<% if(message) { %>
@@ -214,8 +243,6 @@
 			e.preventDefault(); //stop the form from actually submitting
 		}
 
-
-
 	});
 
 </script>
@@ -230,10 +257,11 @@
 			var reader = new FileReader();
 
 			reader.onload = function (e) {
-				$('.selected-file-upload').attr('src', e.target.result);
+				$('.selected-file-upload').css('background-image', 'url(' + e.target.result + ')');
 			}
 
 			reader.readAsDataURL(this.files[0]);
+
 		}
 	});
 </script>

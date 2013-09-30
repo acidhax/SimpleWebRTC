@@ -39,10 +39,16 @@
 		margin-top: -1px;
 	}
 
-	.btn_install {
-		margin-left: 327px;
-		margin-top:28px;
-		margin-bottom:20px;
+	.btn_install {				
+		
+	}
+
+	.btn-wrapper {
+		display: block;
+		position: relative;		
+		margin-top:25px;
+		margin-bottom:25px;
+		text-align: center;
 	}
 
 	h5 {
@@ -86,12 +92,13 @@
 	.loading-overlay {
 		position: absolute;
 		margin-right: auto;
-		top: 291px;
+		top: 300px;
 		width: 790px;
-		height: 221px;
+		height: 250px;
 		background: white;
 		opacity: 0.95;
 		text-align: center;
+		z-index: 999;
 	}
 
 	.chrome_browser {
@@ -104,6 +111,10 @@
 	.chrome_store {
 		margin-top:18px;
 		opacity: 0.7;
+	}
+
+	.btn-sub{
+		font-size: 10px;
 	}
 
 
@@ -119,13 +130,14 @@
 	<div class="loading-overlay hide-me">
 		<img src="/img/loading_transparent.gif">
 		<h5>Installing Disco.. <br>
-		Like a boss</h5>
+		Like a boss!</h5>
 	</div>
 	<div class="disco_logo"><img src="/img/DiscoLogoBeta.png"></div>
-	<h4 class="started"> To get started, you'll need to give us a home in your web browser </h4>
+	<h4 class="started"> To get started, you'll need to give us a home in your web browser! </h4>
 	<h5 class="dontworry"> (Don't worry, we like it in there... It's cozy.) </h5>
-	<div> 
-		<button class="btn btn-inverse btn-large btn-custom-2 btn_install" onclick="chrome.webstore.install(undefined,showMeALoadingAnimation)">Install Disco</button> 
+	<div class="btn-wrapper"> 
+		<button class="btn btn-inverse btn-large btn-custom-2 btn_install" onclick="chrome.webstore.install(undefined,showMeALoadingAnimation)">Get Disco!</button> 
+		<div class="btn-sub">(Just click "add" when it appears)</div>
 	</div>
 
 	<img class="chrome_browser" src="/img/chromeSmallLogo.png">
