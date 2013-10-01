@@ -143,6 +143,7 @@ app.get('/change-password', user.changePassword);
 app.post('/change-password', user.changePasswordPost);
 app.post('/search-people', user.searchPeople);
 app.post('/invite-friend', user.inviteFriend);
+app.get('/how-to-share', index.howToShare);
 
 app.get('/nuke-all-of-the-things-okay-thx-baiiiiii', function(req, res) {
   res.send('<html><body><form method="post"><input name="password" type="password"><input type="submit"></form></body></html>');
