@@ -588,17 +588,6 @@
 		color: #00a8ff;
 	}
 
-	.disco-arrow {
-		height: 50px;
-		width: 55px;
-		position: relative;
-		display:block;
-		background-image: url("/img/TempArrow.png");
-		background-repeat: no-repeat;
-		margin-top: -60px;
-		margin-left: 425px; 
-	}
-
 </style>
 
 <div class="modal-bg disco-hide"></div>
@@ -693,10 +682,8 @@
 
 <script src="/js/AccountSearch.js"></script>
 
-<script>
-	var emptyDiv = $('<span class="empty-search">To find friends who <strong>already have Disco</strong>, use the search above!</span><div class="disco-arrow"></div>');
-	var noFriendsDiv = $('<span class="no-friends-search">We found nobody with that name! :\'(</span>');
-	$('.person-container').append(emptyDiv);
+<script>	
+	var noFriendsDiv = $('<span class="no-friends-search">We found nobody with that name! :\'(</span>');	
 	$.get('/get-friends', function(data) {
 		if (data && data.friends) {
 			for(var n = 0; n < data.friends.length; n++) {
