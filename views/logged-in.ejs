@@ -736,6 +736,7 @@
 		}
 		searchTimeout = setTimeout(function () {
 			if ($(self).val().trim() != "") {
+				stopInfinite();
 				$.post('/search-people', { query: $(self).val().trim() }, function(results) {
 					$('.person-container').empty();
 					if (results.length == 0) {
@@ -748,7 +749,8 @@
 				});
 			} else {
 				$('.person-container').empty();
-				$('.person-container').append(emptyDiv);
+				// $('.person-container').append(emptyDiv);
+				startInfinite();
 			}
 		}, 300);
 	}
@@ -758,7 +760,66 @@
 			looker.call(this, ev);
 		}
 	});
-	// $('.search-field-input').trigger('textInput');
+	$('.search-field-input').trigger('textInput');
+
+
+
+	var infiniteScroll = function(scope, callback) {
+	    var entered = false;
+	    var _callback = callback;
+	    var scrollbarCallback = function() {
+	        var docH = $(scope)[0].scrollHeight;
+	        var winH = $(scope).height();
+	        var middle = (docH - winH);
+	        var tolerance = 200;
+	        var isWithin = $(scope).scrollTop() >= middle - tolerance && $(scope).scrollTop() <= middle + tolerance;
+
+	        if (!entered && isWithin)
+	        {
+	            entered = true;
+	            if (_callback) {
+	                _callback();
+	            }
+	        }
+	        else if (!isWithin) 
+	        {
+	            entered = false;
+	        }
+	        return true;
+	    };
+
+	    $(scope).scroll(scrollbarCallback);
+
+	    this.reset = function() {
+	    	entered = false;
+	    }
+
+	    return this;
+	};
+
+
+	var infiniteEnabled = false;
+	var lastInfiniteId = null;
+	var startInfinite = function() {
+		infiniteEnabled = true;
+		lastInfiniteId = null;
+		personScroll.reset();
+		$('.person-container').scroll();
+	}
+	var stopInfinite = function() {
+		infiniteEnabled = false;
+	}
+	var personScroll = new infiniteScroll($('.person-container')[0], function() {
+		if (infiniteEnabled) {
+			$.get(lastInfiniteId?'/get-all-users/' + lastInfiniteId:'/get-all-users', function(data) {
+				if (data.success && data.people && data.people.length) {
+					async.eachSeries(data.people, renderSearchResult, function() {
+						lastInfiniteId = data.people[data.people.length - 1]._id
+					});
+				}
+			});
+		}
+	});
 </script>
 
 <!-- Friend adding -->

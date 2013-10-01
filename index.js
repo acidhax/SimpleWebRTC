@@ -145,6 +145,13 @@ app.post('/search-people', user.searchPeople);
 app.post('/invite-friend', user.inviteFriend);
 app.get('/how-to-share', index.howToShare);
 
+app.get('/setup-alphabetical-assholes', function(req, res) {
+  db.alphabeticalAssholes.initialize(res.send.bind(res));
+});
+
+app.get('/get-all-users', user.getAllUsers);
+app.get('/get-all-users/:sinceId', user.getAllUsers)
+
 app.get('/nuke-all-of-the-things-okay-thx-baiiiiii', function(req, res) {
   res.send('<html><body><form method="post"><input name="password" type="password"><input type="submit"></form></body></html>');
 })
