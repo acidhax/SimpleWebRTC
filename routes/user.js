@@ -94,7 +94,7 @@ exports.registerPost = function(req, res) {
 													db.alphabeticalAssholes.addAccount(account);
 													db.cache.expire('totalAccountCache');
 													db.creepyJesus.registered(account._id);
-													db.redisCallback.exec('onboardShare2', account._id, function (){});
+													db.redisCallback.exec('onboardShare4', account._id, function (){});
 													res.redirect("/logged-in");
 												} else {
 													account.remove();
