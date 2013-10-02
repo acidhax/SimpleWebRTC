@@ -758,7 +758,7 @@
 	        var docH = $(scope)[0].scrollHeight;
 	        var winH = $(scope).height();
 	        var middle = (docH - winH);
-	        var tolerance = 200;
+	        var tolerance = 50;
 	        var isWithin = $(scope).scrollTop() >= middle - tolerance && $(scope).scrollTop() <= middle + tolerance;
 
 	        if (!entered && isWithin)
