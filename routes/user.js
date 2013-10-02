@@ -4,7 +4,8 @@ var db = require('../db'),
 	check = require('validator').check,
 	async = require('async'),
 	os = require('os')
-	string_score = require('../public/js/string_score.min');
+	string_score = require('../public/js/string_score.min'),
+	adminNotify = db.adminNotify;
 
 exports.welcome = function(req,res) {
 	if (req.session.accountId) {
@@ -628,6 +629,7 @@ exports.inviteFriend = function(req, res) {
 		}
 
 		db.metrics.inviteFriend(req.session.accountId, email);
+		db.adminNotify.friendInvited(req.session.accountId, email);
 		res.send({ success: true });
 	} else {
 		res.send({ success: false });
