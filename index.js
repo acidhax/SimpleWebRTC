@@ -257,9 +257,32 @@ wh.on("live", function (cb) {
   });
   var accountId;
   var pubsubFriendAdded = function (friendId) {
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
     self.rpc.friendAdded(null, friendId);
   }
   this.socket.getSessionKey("accountId", function(err, _accountId) {
+    console.log("this.socket.getSessionKey:"+_accountId);
+    console.log("this.socket.getSessionKey:"+_accountId);
+    console.log("this.socket.getSessionKey:"+_accountId);
+    console.log("this.socket.getSessionKey:"+_accountId);
+    console.log("this.socket.getSessionKey:"+_accountId);
+    console.log("this.socket.getSessionKey:"+_accountId);
     if (!err && _accountId) {
       accountId = _accountId;
       _pubsub.on("friendAdded:" + accountId, pubsubFriendAdded);
