@@ -355,7 +355,7 @@
 	}
 
 	.change-pic .btn-popup {
-		margin-left:238px;
+		margin-left:0px;
 		margin-top: 16px;
 		-webkit-font-smoothing: antialiased;
 	}
@@ -549,6 +549,12 @@
 	  background: #d8891e;
 	  color: #8d5303;  
 	}
+
+	.disco-button-homepage-highlight.btn-popup {
+		height:34px;
+	}
+
+
 	.secret {
 		-webkit-animation: secretAni 3s linear;
 	}
@@ -712,7 +718,7 @@
 			<span class='faq-nl'><a style="text-decoration:none; color:#FFF;" href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Ftwitter.com%2Fabout%2Fresources%2Fbuttons&related=DiscoBeta&screen_name=DiscoBeta&text=Help!&tw_p=tweetbutton" target="_blank">Contact us</a> with any questions or feedback, we love you! <3</span>
 		</span>
 	</div>
-	<div class="btn btn-large disco-button-homepage disco-button-homepage-highlight btn-popup">Close</div>
+	<div class="btn btn-large  disco-button-homepage disco-button-homepage-highlight btn-popup">Close</div>
 </div>
 
 <div class="change-pic disco-hide">
@@ -727,10 +733,9 @@
 			</div>
 			<div class="file_uploader"> 
 				<form method="POST" action="/uploadPhoto" enctype="multipart/form-data">
-					<input type="file" accept="image/*" name="displayImage" id="picture">
+					<input class="photo-upload-file" type="file" accept="image/*" name="displayImage" id="picture">
 					<div class="btn btn-large disco-button-homepage btn-popup-cancel btn-popup">Close</div>
-					<input type="submit" class="btn disco-button-homepage-highlight btn-popup btn-photo-upload" value="Upload!">
-					
+					<input type="submit" class="btn disco-button-homepage-highlight btn-popup" value="Change Photo">
 				</form>
 			</div>				
 		</div>		
@@ -1104,15 +1109,16 @@
 </script>
 
 <script>
-	$('form').submit(function(e){
-		//Get all the fields values:
-		var profilePic = $(".btn-photo-upload").val().trim() != '';
-		if (profilePic == "") {
-			e.preventDefault(); //stop the form from actually submitting
-		}
+// 	$('form').submit(function(e){
+// 		console.log('ahhH!');
+// 		//Get all the fields values:
+// 		var profilePic = $(".photo-upload-file").val().trim() != '';
+// 		console.log(profilePic);
+// 		if (profilePic) {
+// 			e.preventDefault(); //stop the form from actually submitting
+// 		}
 			
-
-	});
+// 	});
 </script>
 
 <!-- shh -->
