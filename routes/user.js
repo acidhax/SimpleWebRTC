@@ -471,6 +471,7 @@ exports.uploadPhoto = function (req, res) {
 	if (req.session && req.session.accountId && req.files && req.files.displayImage) {
 		fs.readFile(req.files.displayImage.path, function (err, photo) {
 			db.Account.setPhoto(req.session.accountId, photo, function (err) {
+				db.actionList.updatePhoto(req.session.accountId);
 				res.redirect("back");
 			});
 		});
