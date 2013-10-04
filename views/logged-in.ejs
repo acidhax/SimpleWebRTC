@@ -1100,6 +1100,16 @@
 	});
 </script>
 
+<script>
+	$('form').submit(function(e){
+		//Get all the fields values:
+		var profilePic = $(".file_uploader input").val().trim() != '';
+
+			e.preventDefault(); //stop the form from actually submitting
+
+	});
+</script>
+
 <!-- shh -->
 <script>
 	$('.small-logo').on('click', function(e) {
