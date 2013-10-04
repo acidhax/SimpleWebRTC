@@ -1,6 +1,7 @@
 <script>
 	wh.on("friendAdded", function (err, friendId) {
 		renderFriend({_id: friendId});
+		$('.person-container .person[data-accountid="'+friendId+'"]').remove();
 	});
 </script>
 <style>
