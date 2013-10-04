@@ -285,13 +285,13 @@ wh.on("live", function (cb) {
     console.log("this.socket.getSessionKey:"+_accountId);
     if (!err && _accountId) {
       accountId = _accountId;
-      _pubsub.on("friendAdded:" + accountId, pubsubFriendAdded);
+      db.pubsub.on("friendAdded:" + accountId, pubsubFriendAdded);
     }
   });
   this.on("disconnect", function () {
     commentDone();
     noteDone();
-    _pubsub.removeListener("friendAdded:"+accountId, pubsubFriendAdded);
+    db.pubsub.removeListener("friendAdded:"+accountId, pubsubFriendAdded);
   });
 });
 
