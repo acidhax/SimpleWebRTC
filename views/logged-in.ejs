@@ -357,6 +357,7 @@
 	.change-pic .btn-popup {
 		margin-left:238px;
 		margin-top: 16px;
+		-webkit-font-smoothing: antialiased;
 	}
 
 	.change-pic{
@@ -727,12 +728,12 @@
 			<div class="file_uploader"> 
 				<form method="POST" action="/uploadPhoto" enctype="multipart/form-data">
 					<input type="file" accept="image/*" name="displayImage" id="picture">
-					<input type="submit" class="btn btn-inverse btn_custom" value="Upload!">
+					<input type="submit" class="btn disco-button-homepage-highlight btn-popup" value="Upload!">
 				</form>
 			</div>				
 		</div>		
 	</div>
-	<div class="btn btn-large disco-button-homepage disco-button-homepage-highlight btn-popup">Close</div>
+	<div class="btn btn-large disco-button-homepage btn-popup-cancel btn-popup">Close</div>
 </div>
 
 <div class = "homepage-container">
