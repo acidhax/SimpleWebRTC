@@ -947,7 +947,6 @@
 				if (data.success) {
 					renderFriend(friendObj);
 					$(self).closest('.person').remove();
-					accountSearcher.remove(personElement);
 				} else if (data.reason === 'not-yourself-bro') {
 					alert("You can't add yourself, bro");
 				} else if (data.reason === 'no-account') {
