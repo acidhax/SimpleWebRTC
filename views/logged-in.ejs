@@ -88,7 +88,6 @@
 	}
 
 	.edit-text {
-		position: fixed;
 		display: block;
 		margin-top: 47px;
 		margin-left: 5px;
@@ -355,7 +354,7 @@
 	}
 
 	.change-pic .btn-popup {
-		margin-left:0px;
+		margin-left:1px;
 		margin-top: 16px;
 		-webkit-font-smoothing: antialiased;
 	}
@@ -388,7 +387,7 @@
 		width:450px;
 		margin:0 auto;		
 		margin-top:16px;
-		margin-left:-20px;
+		margin-left:0px;
 	}
 
 	.file_uploader form {
@@ -550,8 +549,10 @@
 	  color: #8d5303;  
 	}
 
-	.disco-button-homepage-highlight.btn-popup {
-		height:34px;
+	.disco-button-homepage-highlight.btn-email-submit {
+		margin-top:15px;
+		-webkit-font-smoothing: antialiased;
+		height:35px;
 	}
 
 
@@ -692,6 +693,17 @@
 		color: #00a8ff;
 	}
 
+	.email-btn-wrapper {
+		margin: 0 auto;
+		width: 50%;
+		margin-top: 20px;
+	}
+
+	.photo-upload-file {
+		line-height: 16px !important;
+		margin-top: 11px;
+	}
+
 </style>
 
 <div class="modal-bg disco-hide"></div>
@@ -734,8 +746,10 @@
 			<div class="file_uploader"> 
 				<form method="POST" action="/uploadPhoto" enctype="multipart/form-data">
 					<input class="photo-upload-file" type="file" accept="image/*" name="displayImage" id="picture">
-					<div class="btn btn-large disco-button-homepage btn-popup-cancel btn-popup">Close</div>
-					<input type="submit" class="btn disco-button-homepage-highlight" value="Change Photo">
+					<div class ="email-btn-wrapper">
+						<div class="btn btn-large disco-button-homepage btn-popup-cancel btn-popup" onclick="hidePhotoChange();">Close</div>
+						<input type="submit" class="btn disco-button-homepage-highlight btn-email-submit" value="Change Photo">
+					</div>
 				</form>
 			</div>				
 		</div>		
@@ -956,6 +970,16 @@
 </script>
 
 <script>
+
+function hidePhotoChange() {
+	$('.change-pic').addClass('disco-hide');
+	$(".modal-bg").addClass("disco-hide");
+}
+
+
+</script>
+
+<script>
 	//clear the email feild when the click the button
 	$('.btn-popup-cancel').on('click', function(e){
 		$('.popup-email-input input').val('');  
@@ -1114,7 +1138,8 @@
 		var profilePic = $(".photo-upload-file").val().trim() != '';
 		if (!profilePic) {
 			e.preventDefault(); //stop the form from actually submitting
-		}
+			alert("Please select a photo first!");
+		} 
 			
 	});
 </script>
