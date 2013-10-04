@@ -231,44 +231,16 @@ exports.loggedIn = function(req, res) {
 							if (!hasPassword) {
 								res.redirect('/change-password');
 							} else {
-								var emails = [account.email];
-								for (var n = 0; n < account.friends.length; n++) {
-									emails.push(account.friends[n].email);
+								var serviceUrl = (process.env.serviceExternalProtocol || 'http') + '://' + os.hostname();
+								if (process.env.serviceExternalUrl) {
+									serviceUrl = process.env.serviceExternalUrl;
 								}
-
-								db.Account.find({email: {$nin: emails}}).sort({email: 1}).exec(function(err, accounts) {
-									if (!err && accounts) {
-
-										async.map(accounts, function(mongoAccount, next) {
-											var account = mongoAccount.toObject();
-											account.displayName = account.email;
-
-											if (account.firstName) {
-												account.displayName = account.firstName + ' ' + account.lastName;
-											}
-
-											next(null, account);
-										}, function(err, accounts) {
-											async.sortBy(accounts, function(account, next) {
-												next(null, account.displayName.toLowerCase())
-											}, function(err, accounts) {
-												var serviceUrl = (process.env.serviceExternalProtocol || 'http') + '://' + os.hostname();
-												if (process.env.serviceExternalUrl) {
-													serviceUrl = process.env.serviceExternalUrl;
-												}
-												res.render('logged-in', {
-													email: account.email, 
-													friends: account.friends, 
-													accountId: account._id, 
-													accounts: accounts, 
-													serviceUrl: serviceUrl
-												});
-											});
-										});
-									} else {
-										res.send('db-error');
-									}
+								res.render('logged-in', {
+									email: account.email, 
+									accountId: account._id, 
+									serviceUrl: serviceUrl
 								});
+							
 							}
 						} else {
 							res.send('db-error');
