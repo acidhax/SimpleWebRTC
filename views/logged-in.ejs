@@ -36,6 +36,7 @@
 		float:right;				
 		margin-top: auto;
 		margin-bottom: auto;
+		cursor: pointer;
 	}
 	.me .person-picture {
 		width: 30px;
@@ -48,16 +49,45 @@
 		-webkit-transform: scale(1);
 		-webkit-transition: -webkit-transform .1s ease-in-out 0s;
 	}
-	.me .person-picture:hover {
-		/*-webkit-transform: scale(1.1);*/
+
+	.me .person-picture-overlay {
+		display:none;
+		-webkit-transform: scale(1);
+		-webkit-transition: -webkit-transform .1s ease-in-out 0s;
 	}
-	.me .person-picture:active {
-		/*-webkit-transform: scale(.9);*/
+
+	.me:hover .person-picture-overlay {
+		position: absolute;
+		display:block;
+		margin-top: 16px;
+		width: 30px;
+		height: 30px;
+		border-radius: 15px;
+		background: red;
+		opacity: 0.5;
+		-webkit-transform: scale(1.1);
+	}
+
+	.me:hover .person-picture {
+		-webkit-transform: scale(1.1);
 	}
 	.me .person-name {		
 		line-height:63px;
 		width: auto;
 	}
+
+	.edit-text {
+		position: fixed;
+		display: block;
+		margin-top: 47px;
+		margin-left: 4px;
+		opacity: 0.4;
+	}
+	.me:hover .edit-text {
+		opacity: 1;
+		/*-webkit-transform: scale(1.1);*/
+	}
+
 	
 	.left-column{
 		width:548px;
@@ -156,6 +186,7 @@
 		float:left;
 		line-height:50px;
 		margin-left:3px;
+		margin-right: 20px;
 		font-size: 16px;
 		color: rgb(22,22,22) !important;
 		text-overflow: ellipsis;
@@ -659,9 +690,11 @@
 		</a>
 		<div class="me">
 			<img class="person-picture" src="/user/profilePhoto/<%= accountId %>">
+			<img class="person-picture-overlay" src="/img/EditPhotoOverlay.png">
 			<div class="person-name">				
 				<%= email %>
 			</div>
+			<div class="edit-text"> edit </div>
 			<div class="clear"></div>
 		</div>			
 	</div>
@@ -715,7 +748,7 @@
 		var person = $('<div class="person" style="cursor:pointer"></div>')
 			.attr('data-accountid', friendObj._id)
 			.attr('data-name', friendObj.displayName);
-		var picture = $('<img class="person-picture" src="/user/profilePhoto/' + friendObj._id +'" />')
+		var picture = $('<img class="person-picture" src="/user/profilePhoto/' + friendObj._id +'" />');
 		var name = $('<div class="person-name" style="cursor:pointer"><span>' + friendObj.displayName + '</span></div>');
 		var btnCancel = $('<div class="btn btn-danger btn-small btn-confirm btn-cancel">Cancel</div>');
 		var btnOkay = $('<div class="btn btn-success btn-small btn-confirm btn-ok">Add</div>')
