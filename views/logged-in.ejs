@@ -619,17 +619,6 @@
 		color: #00a8ff;
 	}
 
-	.disco-arrow {
-		height: 50px;
-		width: 55px;
-		position: relative;
-		display:block;
-		background-image: url("/img/TempArrow.png");
-		background-repeat: no-repeat;
-		margin-top: -60px;
-		margin-left: 425px; 
-	}
-
 </style>
 
 <div class="modal-bg disco-hide"></div>
@@ -642,7 +631,7 @@
 		<span class='popup-2nd'> or tell them to visit: <strong> <%= serviceUrl %> </strong>  </span>
 		<!-- <span class = 'popup-3rd'> </span> -->
 	</div>
-	<div class="btn btn-large disco-button-homepage btn-popup-cancel btn-popup">Cancel</div>
+	<div class="btn btn-large disco-button-homepage btn-popup-cancel btn-popup" style="width: 52px;">Close</div>
 	<div class="btn btn-large disco-button-homepage disco-button-homepage-highlight btn-popup-invite" onclick="inviteDisUser();">Invite</div>
 </div>
 
@@ -650,9 +639,9 @@
 	<div class="popup-text add-friends">
 		<span>
 			<span class='faq-title'>Disco is for sharing and talking with your friends!</span>
-			<span class='faq-nl'>You can make a group IM chat on any webpage, which is shared instantly</span>
-			<span class='faq-nl'>As you browse, just <a style="text-decoration:none; color:#FFF;" href="http://imgur.com/1fxX95j" target="_blank"><strong>click and hold</strong></a> your mouse down on a page to share</span>
-			<span class='faq-nl'>Add your friends on this page, or invite them to sign up</span>
+			<span class='faq-nl'>You can make a group IM chat on any webpage, which is shared instantly.</span>
+			<span class='faq-nl'>As you browse, just <a style="text-decoration:none; color:#FFF;" href="http://imgur.com/1fxX95j" target="_blank"><strong>click and hold</strong></a> your mouse down on a page to share.</span>
+			<span class='faq-nl'>Add your friends on this page, or invite them to sign up.</span>
 			<span class='faq-nl'><a style="text-decoration:none; color:#FFF;" href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Ftwitter.com%2Fabout%2Fresources%2Fbuttons&related=DiscoBeta&screen_name=DiscoBeta&text=Help!&tw_p=tweetbutton" target="_blank">Contact us</a> with any questions or feedback, we love you! <3</span>
 		</span>
 	</div>
@@ -726,10 +715,8 @@
 
 <script src="/js/AccountSearch.js"></script>
 
-<script>
-	var emptyDiv = $('<span class="empty-search">To find friends who <strong>already have Disco</strong>, use the search above!</span><div class="disco-arrow"></div>');
-	var noFriendsDiv = $('<span class="no-friends-search">We found nobody with that name! :\'(</span>');
-	$('.person-container').append(emptyDiv);
+<script>	
+	var noFriendsDiv = $('<span class="no-friends-search">We found nobody with that name! :\'(</span>');	
 	$.get('/get-friends', function(data) {
 		if (data && data.friends) {
 			for(var n = 0; n < data.friends.length; n++) {
@@ -804,7 +791,7 @@
 	        var docH = $(scope)[0].scrollHeight;
 	        var winH = $(scope).height();
 	        var middle = (docH - winH);
-	        var tolerance = 200;
+	        var tolerance = 50;
 	        var isWithin = $(scope).scrollTop() >= middle - tolerance && $(scope).scrollTop() <= middle + tolerance;
 
 	        if (!entered && isWithin)

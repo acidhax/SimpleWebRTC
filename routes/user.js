@@ -4,7 +4,8 @@ var db = require('../db'),
 	check = require('validator').check,
 	async = require('async'),
 	os = require('os')
-	string_score = require('../public/js/string_score.min');
+	string_score = require('../public/js/string_score.min'),
+	adminNotify = db.adminNotify;
 
 exports.welcome = function(req,res) {
 	if (req.session.accountId) {
@@ -60,8 +61,9 @@ exports.registerPost = function(req, res) {
 			message += 'You\'re going to need a last name!<br/>';
 		}
 
-		if (!req.files || !req.files.picture) {
-			message += 'That\'s not a photo!<br>Try a .png .jpg or .pdf please!<br/>';
+		var picturePath = __dirname + '/../public/img/Email-Batman.png';
+		if (req.files && req.files.picture && req.files.picture.length) {
+			picturePath = req.files.picture.path;
 		}
 
 		if (!message) {
@@ -69,8 +71,7 @@ exports.registerPost = function(req, res) {
 			db.Account.findByEmail(email, function(err, account) {
 				if (!err && !account) {
 					// Create account, maybe?
-					fs.readFile(req.files.picture.path, function (err, photo) {
-						console.log('THIS IS A THING THAT SHOULD FIRE PLZ', err, photo);
+					fs.readFile(picturePath, function (err, photo) {
 
 						if (!err && photo && photo.length) {
 
@@ -94,7 +95,7 @@ exports.registerPost = function(req, res) {
 													db.alphabeticalAssholes.addAccount(account);
 													db.cache.expire('totalAccountCache');
 													db.creepyJesus.registered(account._id);
-													db.redisCallback.exec('onboardShare2', account._id, function (){});
+													db.redisCallback.exec('onboardShare4', account._id, function (){});
 													res.redirect("/logged-in");
 												} else {
 													account.remove();
@@ -469,12 +470,17 @@ exports.addFriend = function(req, res) {
 exports.uploadPhoto = function (req, res) {
 	if (req.session && req.session.accountId && req.files && req.files.displayImage) {
 		fs.readFile(req.files.displayImage.path, function (err, photo) {
-			db.Account.setPhoto(req.session.accountId, photo, function (err) {
-				res.redirect("back");
-			});
+			if (!err && photo) {
+				db.Account.setPhoto(req.session.accountId, photo, function (err) {
+					db.actionList.updatePhoto(req.session.accountId);
+					res.redirect("back");
+				});
+			} else {
+				res.redirect('back');
+			}
 		});
 	} else {
-		res.send("not done");
+		res.redirect('back');
 	}
 };
 
@@ -628,6 +634,7 @@ exports.inviteFriend = function(req, res) {
 		}
 
 		db.metrics.inviteFriend(req.session.accountId, email);
+		db.adminNotify.friendInvited(req.session.accountId, email);
 		res.send({ success: true });
 	} else {
 		res.send({ success: false });
