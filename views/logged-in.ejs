@@ -729,7 +729,7 @@
 				<form method="POST" action="/uploadPhoto" enctype="multipart/form-data">
 					<input type="file" accept="image/*" name="displayImage" id="picture">
 					<div class="btn btn-large disco-button-homepage btn-popup-cancel btn-popup">Close</div>
-					<input type="submit" class="btn disco-button-homepage-highlight btn-popup" value="Upload!">
+					<input type="submit" class="btn disco-button-homepage-highlight btn-popup btn-photo-upload" value="Upload!">
 					
 				</form>
 			</div>				
@@ -1106,7 +1106,7 @@
 <script>
 	$('form').submit(function(e){
 		//Get all the fields values:
-		var profilePic = $(".file_uploader input").val().trim() != '';
+		var profilePic = $(".btn-photo-upload").val().trim() != '';
 		if (profilePic == "") {
 			e.preventDefault(); //stop the form from actually submitting
 		}
