@@ -181,7 +181,6 @@
 			</div>
 			<div class="photo_upload">
 				<div class="enter_pic"><h4><span style="font-weight:300; padding-right:3px">2)</span> Select a photo of your pretty face!</h4></div>
-				<div class="enter_pic_req"><h5><strong>(required):</strong></h5></div>				
 
 				<!-- <button class="btn btn-inverse btn_custom btn_upload">Choose Photo</button> -->
 				<div class="actual-upload-wrapper">
@@ -222,9 +221,8 @@
 		$('.collect_email span').addClass('hide-me');
 		$('.collect_names span').addClass('hide-me');
 		$('.collect_password span').addClass('hide-me');
-		$('.photo_upload span').addClass('hide-me');
 
-		if (validEmail && firstName && lastName && password && profilePic) {
+		if (validEmail && firstName && lastName && password) {
 			$('.loading-overlay').removeClass('hide-me');
 		} else {
 			if(!validEmail) {
@@ -235,9 +233,6 @@
 			} 
 			if (!password) {
 				$('.collect_password span').removeClass('hide-me');
-			}
-			if (!profilePic) {
-				$('.photo_upload span').removeClass('hide-me');
 			}
 
 			e.preventDefault(); //stop the form from actually submitting
