@@ -33,8 +33,9 @@ if (fs.existsSync('../redis-pub-sub')) {
 } else {
   RedisPubSub = require('redis-sub');
 }
+var _pubsub = new RedisPubSub({pubClient: db.redis.client, subClient: db.redis.subClient});
 var sessionStore = new RedisStore({
-    pubsub: new RedisPubSub({pubClient: db.redis.client, subClient: db.redis.subClient}),
+    pubsub: _pubsub,
     prefix: process.env.sessionPrefix || 'discoSession:'
 });
 
@@ -254,10 +255,43 @@ wh.on("live", function (cb) {
       self.rpc.setTotalCount(null, commentCount + noteCount);
     }
   });
-
+  var accountId;
+  var pubsubFriendAdded = function (friendId) {
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    console.log("pubsubFriendAdded:"+friendId);
+    self.rpc.friendAdded(null, friendId);
+  }
+  this.socket.getSessionKey("accountId", function(err, _accountId) {
+    console.log("this.socket.getSessionKey:"+_accountId);
+    console.log("this.socket.getSessionKey:"+_accountId);
+    console.log("this.socket.getSessionKey:"+_accountId);
+    console.log("this.socket.getSessionKey:"+_accountId);
+    console.log("this.socket.getSessionKey:"+_accountId);
+    console.log("this.socket.getSessionKey:"+_accountId);
+    if (!err && _accountId) {
+      accountId = _accountId;
+      db.pubsub.on("friendAdded:" + accountId, pubsubFriendAdded);
+    }
+  });
   this.on("disconnect", function () {
     commentDone();
     noteDone();
+    db.pubsub.removeListener("friendAdded:"+accountId, pubsubFriendAdded);
   });
 });
 
