@@ -443,6 +443,7 @@ exports.addFriend = function(req, res) {
 					theirAccount.friends.addToSet(myAccount);
 					db.actionList.friendAdded(myAccount._id, {accountId: theirAccount._id});
 					db.actionList.friendAdded(theirAccount._id, {accountId: myAccount._id});
+					db.pubsub.emit("friendAdded:"+theirAccount._id, myAccount._id);
 					myAccount.save(function(err) {
 						if (!err) {
 							theirAccount.save(function(err) {
