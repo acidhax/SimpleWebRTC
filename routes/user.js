@@ -468,7 +468,7 @@ exports.addFriend = function(req, res) {
 };
 
 exports.uploadPhoto = function (req, res) {
-	if (req.session && req.session.accountId && req.files && req.files.displayImage) {
+	if (req.session && req.session.accountId && req.files && req.files.displayImage && req.files.displayImage.length) {
 		fs.readFile(req.files.displayImage.path, function (err, photo) {
 			if (!err && photo) {
 				db.Account.setPhoto(req.session.accountId, photo, function (err) {
