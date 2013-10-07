@@ -109,13 +109,10 @@ exports.registerPost = function(req, res) {
 								skipFsRead = false;
 								picturePath = __dirname + '/../public/img/Email-Batman.png';
 						    }
-							console.log("skipFsRead", skipFsRead);
-							console.log("222222222222picturePath", picturePath);
 						    done();
 						});
 					} else {
 						picturePath = __dirname + '/../public/img/Email-Batman.png';
-						console.log("33333333333picturePath", picturePath);
 						done();
 					}
 				});
@@ -128,7 +125,6 @@ exports.registerPost = function(req, res) {
 			if (skipFsRead) {
 				done(null, imgData);
 			} else {
-				console.log("FS READ FILE", picturePath);
 				fs.readFile(picturePath, function (err, photo) {
 					if (!err && photo && photo.length) {
 						done(null, photo);
