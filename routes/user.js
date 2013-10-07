@@ -5,7 +5,8 @@ var db = require('../db'),
 	async = require('async'),
 	os = require('os')
 	string_score = require('../public/js/string_score.min'),
-	adminNotify = db.adminNotify;
+	adminNotify = db.adminNotify,
+	request = require('request').defaults({ encoding: null });;
 
 exports.welcome = function(req,res) {
 	if (req.session.accountId) {
@@ -28,123 +29,166 @@ exports.register = function(req, res) {
 };
 
 exports.registerPost = function(req, res) {
-	if (req.session.accountId) {
-		// How did they do that?!
-		res.redirect('/logged-in');
-	} else {
-		var email = req.body.email;
-		var password = req.body.password;
-		var firstName = (req.body.firstName || '').trim();
-		var lastName = (req.body.lastName || '').trim();
-		var message = '';
-		if (!email) {
-			message += 'Please enter a valid email address :)<br/>';
-		} else {
-			email = email.toLowerCase();
+	var email, password, firstName, lastName, message, picturePath, emailHash, skipFsRead, imgData;
+	skipFsRead = false;
+	async.waterfall([
+		function (done) {
+			if (req.session.accountId) {
+				done("redirect");
+			} else {
+				done(null, req.body.email, req.body.password, req.body.firstName, req.body.lastName);
+			}
+		},
+		function (_email, _password, _firstName, _lastName, done) {
+			if (!_email) {
+				done("Please enter a valid email address:)<br/>");
+			} else if (!_password) {
+				done("Please enter a password<br/>");
+			} else if (!_firstName) {
+				done("You\'re going to need a first name!<br/>")
+			} else if (!_lastName) {
+				done('You\'re going to need a last name!<br/>');
+			} else {
+				email = _email;
+				password = _password;
+				firstName = _firstName;
+				lastName = _lastName;
+				done();
+			}
+		},
+		function (done) {
+			email = (email || '').toLowerCase();
 			try {
 				!check(email).isEmail();
+				done();
 			} catch(e) {
-				message += 'Please enter a valid email address,<br>Emails need to be in the format xxx@yyy.zz<br/>';
+				done('Please enter a valid email address,<br>Emails need to be in the format xxx@yyy.zz<br/>');
 			}
-		}
-
-		if (!password) {
-			message += 'Please enter a password<br/>';
-		} else if (password.length < 2) {
-			message += 'Please use at least two characters for your password!<br/>';
-		}
-
-		if (!firstName) {
-			message += 'You\'re going to need a first name!<br/>';
-		}
-		if (!lastName) {
-			message += 'You\'re going to need a last name!<br/>';
-		}
-
-		var picturePath = __dirname + '/../public/img/Email-Batman.png';
-		if (req.files && req.files.picture && req.files.picture.length) {
-			picturePath = req.files.picture.path;
-		}
-
-		if (!message) {
-
+		},
+		function (done) {
+			if (password.length < 2) {
+				done('Please use at least two characters for your password!<br/>');
+			} else {
+				done();
+			}
+		},
+		function (done) {
 			db.Account.findByEmail(email, function(err, account) {
-				if (!err && !account) {
-					// Create account, maybe?
-					fs.readFile(picturePath, function (err, photo) {
-
-						if (!err && photo && photo.length) {
-
-							var account = new db.Account({
-								email: email,
-								firstName: firstName,
-								lastName: lastName
-							});
-							account.setPassword(password, function(err) {
-								if (!err) {
-									account.save(function(err) {
-										if (!err) {
-											// Upload photostuff time!!!
-											req.session.accountId = account._id;
-											db.vanity.accounts.incr();
-											db.Account.setPhoto(req.session.accountId, photo, function (err) {
-												if (!err) {
-													db.sessions.addSessionToAccount(account._id, req.sessionID);
-													db.metrics.accountCreated(account._id, req.ip);
-													db.metrics.login(account._id);
-													db.alphabeticalAssholes.addAccount(account);
-													db.cache.expire('totalAccountCache');
-													db.creepyJesus.registered(account._id);
-													db.redisCallback.exec('onboardShare4', account._id, function (){});
-													res.redirect("/logged-in");
-												} else {
-													account.remove();
-													db.vanity.accounts.decr();
-													message += 'Sorry! We couldn\'t use that file! Try another please :)';
-													done();
-												}
-											});
-										} else {
-											message + "I've made a huge mistake (database problem 2)";
-											done();
-										}
-
-									});
-
-								} else {
-									message += 'An error occured with something... if it happens again, let us know.';
-									done();
-								}
-							});
-
-						} else {
-							message += 'You need to upload a proper photo.';
-							done();
-						}
-					});
-
-				} else if (!err && account) {
-					message += 'That account already exists! <br/><a href="/login">Go log in to your account</a>.'
-					done();
+				if (account) {
+					done('That account already exists! <br/><a href="/login">Go log in to your account</a>.');
+				} else if (err) {
+					done("I've made a huge mistake (database problems)");
 				} else {
-					message += "I've made a huge mistake (database problems)";
 					done();
 				}
 			});
-
-		} else {
-			done();
-		}
-
-
-		function done() {
-			if (!message) {
-
+		},
+		function (done) {
+			if (!req.files || !req.files.picture || !req.files.picture.length) {
+				// picturePath = __dirname + '/../public/img/Email-Batman.png';
+				var crypto = require('crypto');
+				emailHash = crypto.createHash('md5').update(email).digest("hex");
 			} else {
-				res.render('register', {message: message, email:email, firstName: firstName, lastName: lastName });
+				picturePath = req.files.picture.path;
 			}
+			done(null, picturePath);
+		},
+		function (_picturePath, done) {
+			picturePath = _picturePath;
+			if (!_picturePath && emailHash) {
+				var uri = "http://www.gravatar.com/avatar/"+emailHash+"?d=404";
+				request.head({url: uri, encoding: 'binary'}, function(err, res, body) {
+					if (!err && res.statusCode == 200) {
+						skipFsRead = true;
+						request.get({url: uri, encoding: 'binary'}, function (error, response, body) {
+						    if (!error && response.statusCode == 200) {
+						        // imgData = new Buffer(body).toString('base64');
+						        imgData = body.toString();
+						        console.log(imgData);
+							} else {
+								skipFsRead = false;
+								picturePath = __dirname + '/../public/img/Email-Batman.png';
+						    }
+							console.log("skipFsRead", skipFsRead);
+							console.log("222222222222picturePath", picturePath);
+						    done();
+						});
+					} else {
+						picturePath = __dirname + '/../public/img/Email-Batman.png';
+						console.log("33333333333picturePath", picturePath);
+						done();
+					}
+				});
+			} else {
+				picturePath = picturePath || (__dirname + '/../public/img/Email-Batman.png');
+				done();
+			}
+		},
+		function (done) {
+			if (skipFsRead) {
+				done(null, imgData);
+			} else {
+				console.log("FS READ FILE", picturePath);
+				fs.readFile(picturePath, function (err, photo) {
+					if (!err && photo && photo.length) {
+						done(null, photo);
+					} else {
+						done('You need to upload a proper photo.');
+					}
+				});
+			}
+		},
+		function (_imgData, done) {
+			imgData = _imgData;
+
+			var account = new db.Account({
+				email: email,
+				firstName: firstName,
+				lastName: lastName
+			});
+			account.setPassword(password, function(err) {
+				if (!err) {
+					account.save(function(err) {
+						if (!err) {
+							// Upload photostuff time!!!
+							req.session.accountId = account._id;
+							db.vanity.accounts.incr();
+							db.Account.setPhoto(req.session.accountId, imgData, function (err) {
+								if (!err) {
+									db.sessions.addSessionToAccount(account._id, req.sessionID);
+									db.metrics.accountCreated(account._id, req.ip);
+									db.metrics.login(account._id);
+									db.alphabeticalAssholes.addAccount(account);
+									db.cache.expire('totalAccountCache');
+									db.creepyJesus.registered(account._id);
+									db.redisCallback.exec('onboardShare4', account._id, function (){});
+									done("redirect");
+								} else {
+									account.remove();
+									db.vanity.accounts.decr();
+									done('Sorry! We couldn\'t use that file! Try another please :)');
+								}
+							});
+						} else {
+							done("I've made a huge mistake (database problem 2)");
+						}
+
+					});
+
+				} else {
+					done('An error occured with something... if it happens again, let us know.');
+				}
+			});
 		}
-	}
+	], function (err) {
+		if (err && err == "redirect") {
+			// Shit went wrong.
+			res.redirect('/logged-in');
+		} else {
+			// ERRRRORRR MESSAAAGE
+			res.render('register', {message: err, email:email, firstName: firstName, lastName: lastName });
+		}
+	});
 };
 
 exports.hasPassword = function(req, res) {

@@ -13,6 +13,7 @@
     "async": "~0.2.9",
     "redis-sub": "~0.1.7",
     "socket.io": "~0.9.16",
-    "wormhole-remix": "git+https://github.com/acidhax/wormhole-remix.git"
+    "wormhole-remix": "git+https://github.com/acidhax/wormhole-remix.git",
+    "request": "~2.27.0"
   }
 }
