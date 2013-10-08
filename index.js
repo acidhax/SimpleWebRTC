@@ -6,6 +6,7 @@ var express = require('express'),
 	db = require('./db'),
   index = require('./routes'),
   user = require('./routes/user'),
+  facebook = require('./routes/facebook'),
   fs = require('fs'),
   os = require('os'),
   async = require('async'),
@@ -145,6 +146,9 @@ app.post('/change-password', user.changePasswordPost);
 app.post('/search-people', user.searchPeople);
 app.post('/invite-friend', user.inviteFriend);
 app.get('/how-to-share', index.howToShare);
+
+app.get('/facebook/get-profile-photo', facebook.getProfilePhoto);
+app.get('/facebook/get-profile-photo-callback', facebook.getProfilePhotoCallback);
 
 app.get('/setup-alphabetical-assholes', function(req, res) {
   db.alphabeticalAssholes.initialize(res.send.bind(res));

@@ -29,8 +29,9 @@ exports.register = function(req, res) {
 };
 
 exports.registerPost = function(req, res) {
-	var email, password, firstName, lastName, message, picturePath, emailHash, skipFsRead, imgData;
+	var email, password, firstName, lastName, message, picturePath, emailHash, skipFsRead, imgData, defaultProfilePhoto;
 	skipFsRead = false;
+	defaultProfilePhoto = false;
 	async.waterfall([
 		function (done) {
 			if (req.session.accountId) {
@@ -85,39 +86,20 @@ exports.registerPost = function(req, res) {
 		},
 		function (done) {
 			if (!req.files || !req.files.picture || !req.files.picture.length) {
-				// picturePath = __dirname + '/../public/img/Email-Batman.png';
-				var crypto = require('crypto');
-				emailHash = crypto.createHash('md5').update(email).digest("hex");
+				db.oauth.gravatar.getImageData(email, function(err, data) {
+					if (!err && data) {
+						skipFsRead = true;
+						imgData = data;
+					} else {
+						skipFsRead = false;
+						picturePath = __dirname + '/../public/img/Email-Batman.png';
+						defaultProfilePhoto = true;
+					}
+					done()
+				});
+
 			} else {
 				picturePath = req.files.picture.path;
-			}
-			done(null, picturePath);
-		},
-		function (_picturePath, done) {
-			picturePath = _picturePath;
-			if (!_picturePath && emailHash) {
-				var uri = "http://www.gravatar.com/avatar/"+emailHash+"?d=404";
-				request.head({url: uri, encoding: 'binary'}, function(err, res, body) {
-					if (!err && res.statusCode == 200) {
-						skipFsRead = true;
-						request.get({url: uri, encoding: 'binary'}, function (error, response, body) {
-						    if (!error && response.statusCode == 200) {
-						        // imgData = new Buffer(body).toString('base64');
-						        imgData = body.toString();
-						        console.log(imgData);
-							} else {
-								skipFsRead = false;
-								picturePath = __dirname + '/../public/img/Email-Batman.png';
-						    }
-						    done();
-						});
-					} else {
-						picturePath = __dirname + '/../public/img/Email-Batman.png';
-						done();
-					}
-				});
-			} else {
-				picturePath = picturePath || (__dirname + '/../public/img/Email-Batman.png');
 				done();
 			}
 		},
@@ -179,7 +161,11 @@ exports.registerPost = function(req, res) {
 	], function (err) {
 		if (err && err == "redirect") {
 			// Shit went wrong.
-			res.redirect('/logged-in');
+			if (defaultProfilePhoto) {
+				res.redirect('/update-photo');
+			} else {
+				res.redirect('/logged-in');
+			}
 		} else {
 			// ERRRRORRR MESSAAAGE
 			res.render('register', {message: err, email:email, firstName: firstName, lastName: lastName });
@@ -492,14 +478,14 @@ exports.uploadPhoto = function (req, res) {
 			if (!err && photo) {
 				db.Account.setPhoto(req.session.accountId, photo, function (err) {
 					db.actionList.updatePhoto(req.session.accountId);
-					res.redirect("back");
+					res.redirect("/logged-in");
 				});
 			} else {
-				res.redirect('back');
+				res.redirect('/logged-in');
 			}
 		});
 	} else {
-		res.redirect('back');
+		res.redirect('logged-in');
 	}
 };
 
