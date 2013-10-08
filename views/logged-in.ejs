@@ -740,6 +740,9 @@
 		background-image: url("/img/FacebookPhotoButtonHover.png");
 	}
 
+	.logout {
+		cursor: pointer;
+	}
 </style>
 
 <div class="modal-bg disco-hide"></div>
@@ -802,8 +805,8 @@
 			<div class="vanity-line"><div class="vanity-caption">days in beta: </div><span class="vanity-days"></span></div>
 			<div class="vanity-line"><div class="vanity-caption">messages sent: </div><span class="activity-count"></span></div>
 		</div>
-		<a class="homepage-link" href="/logout">
-			log out
+		<a class="homepage-link logout"> <!-- href="/logout"> -->
+			switch account
 		</a>
 		<a class="homepage-link faq-link">
 			FAQ
@@ -1181,6 +1184,15 @@ function hidePhotoChange() {
 
 		$(".btn-email-submit").blur();
 			
+	});
+</script>
+
+<!-- logout -->
+<script>
+	$('.logout').on('click', function(e) {
+		if(window.confirm("This will log you out of Disco, you will no longer be able to send or receive messages! Are you sure?")==true){
+			open('/logout', '_self');
+		}
 	});
 </script>
 
