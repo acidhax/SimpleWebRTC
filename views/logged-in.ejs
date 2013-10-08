@@ -90,7 +90,7 @@
 	.edit-text {
 		display: block;
 		margin-top: 47px;
-		margin-left: 5px;
+		margin-left: -4px;
 		opacity: 0.4;
 		font-size:12px;
 		cursor:pointer;
@@ -105,7 +105,6 @@
 		/*-webkit-transform: scale(1.1);*/
 	}
 
-	
 	.left-column{
 		width:548px;
 		height: 100%;
@@ -362,7 +361,7 @@
 	.change-pic{
 		position: fixed;
 		width:550px;
-		height:240px;
+		height:250px;
 		background-color: #161616;
 		opacity: .95;
 		border-radius: 20px;
@@ -695,13 +694,50 @@
 
 	.email-btn-wrapper {
 		margin: 0 auto;
-		width: 50%;
-		margin-top: 20px;
+		width: 90%;
+		margin-top: 30px;
 	}
 
 	.photo-upload-file {
 		line-height: 16px !important;
 		margin-top: 11px;
+	}
+
+	.email-facebook-wrapper {
+		margin-bottom:20px;
+		margin-top:28px;
+	}
+
+	.email-facebook-wrapper a{		
+		display: block;
+		opacity: 1;			
+	}
+
+	.email-facebook-wrapper a:hover{
+		opacity: 1;
+	}
+
+	.email-or{
+		margin-top:20px;
+		display: block;
+		text-decoration: none;
+		color: white;
+		opacity: .6;
+		font-size: 18px;
+	}
+
+	.facebook-photo-btn{
+		background-image: url("/img/FacebookPhotoButton.png");
+		background-repeat: no-repeat;
+		background-position: center center;
+		width: 280px;
+		height:47px;
+		display: inline-block;
+		text-align: center;
+	}
+
+	.facebook-photo-btn:hover{
+		background-image: url("/img/FacebookPhotoButtonHover.png");
 	}
 
 </style>
@@ -745,8 +781,10 @@
 			</div>
 			<div class="file_uploader"> 
 				<form method="POST" action="/uploadPhoto" enctype="multipart/form-data">
-					<input class="photo-upload-file" type="file" accept="image/*" name="displayImage" id="picture">
+					<input class="photo-upload-file" type="file" accept="image/*" name="displayImage" id="picture">					
 					<div class ="email-btn-wrapper">
+						<!-- <div class="email-or">-OR-</div>
+						<div class="email-facebook-wrapper"><a class="facebook-link" href="/facebook/get-profile-photo"><div class="facebook-photo-btn"></div></a></div> -->
 						<div class="btn btn-large disco-button-homepage btn-popup-cancel btn-popup" onclick="hidePhotoChange();">Close</div>
 						<input type="submit" class="btn disco-button-homepage-highlight btn-email-submit" value="Change Photo">
 					</div>
@@ -777,7 +815,7 @@
 			<div class="photo-wrapper">
 				<img class="person-picture" src="/user/profilePhoto/<%= accountId %>">
 				<img class="person-picture-overlay" src="/img/EditPhotoOverlay.png">
-				<div class="edit-text"> edit </div>
+				<div class="edit-text"> change </div>
 			</div>
 			<div class="person-name">				
 				<%= email %>

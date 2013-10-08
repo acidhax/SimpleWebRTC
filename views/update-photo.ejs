@@ -1,8 +1,96 @@
-<h2>Change your picture:</h2>
-<form method="POST" action="/uploadPhoto" enctype="multipart/form-data">
-	<input type="file" name="displayImage"></input>
-	<input type="submit" value="upload">
-</form>
+<style>
+	html, html a {
+	    -webkit-font-smoothing: antialiased !important;	    
+	}
 
-<a href="/facebook/get-profile-photo">Get from Facebook</a>
-<a href="/logged-in">Skip</a>
+	.main-text{
+		font-family: 'Lato', sans-serif !important;
+	}
+
+	a, a:hover {
+		color: rgb(22,22,22) !important;
+		text-decoration:none !important;
+	}
+
+	a {
+		opacity: .8;
+	}
+	a:hover{
+		opacity: 1;
+	}
+
+	.photo-container {
+		margin: auto auto;		
+		width: 1100px;
+		height: 100%;
+		text-align: center;
+		padding-top: 50px;
+	}
+
+	.email-facebook-wrapper {		
+		margin-top:40px;
+	}
+
+	.email-facebook-wrapper a{		
+		display: block;
+		opacity: 1;			
+	}
+
+	.email-facebook-wrapper a:hover{
+		opacity: 1;
+	}
+
+	.email-or{
+		margin-top:20px;
+		display: block;
+		text-decoration: none;
+		color: white;
+		opacity: .6;
+		font-size: 18px;
+	}
+
+	.facebook-photo-btn{
+		background-image: url("/img/FacebookPhotoButton.png");
+		background-repeat: no-repeat;
+		background-position: center center;
+		width: 280px;
+		height:47px;
+		display: inline-block;
+		text-align: center;
+	}
+
+	.facebook-photo-btn:hover{
+		background-image: url("/img/FacebookPhotoButtonHover.png");
+	}
+
+	.header{
+		font-weight: 400;
+		font-size: 36px;
+		margin-top: 80px
+	}
+	.subheader{
+		font-size: 18px;
+		margin-top: 20px;		
+	}
+
+	.next{
+		font-size:12px;
+		margin-top:2px;
+	}
+
+	
+
+</style>
+
+<div class="photo-container main-text">
+	<div class="disco_logo"><img src="/img/DiscoLogoBeta.png"></div>
+	<div class="header">Holy missing profile picture, Batman!</div>
+	<!-- <form method="POST" action="/uploadPhoto" enctype="multipart/form-data">
+		<input type="file" name="displayImage"></input>
+		<input type="submit" value="upload">
+	</form> -->
+	<div class="subheader">Disco is way more awesome with a picture, wanna use your profile pic?</div>
+	<div class="email-facebook-wrapper"><a class="facebook-link" href="/facebook/get-profile-photo"><div class="facebook-photo-btn"></div></a></div>
+
+	<a class="next" href="/logged-in">No thanks! Let me add friends!</a>
+</div>
