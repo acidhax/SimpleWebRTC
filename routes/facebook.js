@@ -16,11 +16,11 @@ exports.getProfilePhotoCallback = function(req, res) {
 			if (!err && imageData) {
 				db.Account.setPhoto(req.session.accountId, imageData, function (err) {
 					db.actionList.updatePhoto(req.session.accountId);
-					res.redirect("/logged-in");
+					res.redirect("/onboard-complete");
 				});
 			} else {
 				console.log('facebook profile photo callback error', err);
-				res.redirect('/logged-in?fberr=true');
+				res.redirect('/onboard-complete');
 			}
 		});
 	} else {

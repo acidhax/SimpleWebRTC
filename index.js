@@ -135,6 +135,7 @@ app.post('/register', user.registerPost);
 app.post('/has-password', user.hasPassword);
 app.get('/login', user.login);
 app.post('/login', user.loginPost);
+app.get('/onboard-complete', user.onboardComplete);
 app.get('/logged-in', user.loggedIn);
 app.get('/get-friends', user.getFriends);
 app.get('/get-suggested-friends', user.getSuggestedFriends);
