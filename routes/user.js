@@ -130,6 +130,7 @@ exports.registerPost = function(req, res) {
 						if (!err) {
 							// Upload photostuff time!!!
 							req.session.accountId = account._id;
+							req.session.processOnboard = true;
 							db.vanity.accounts.incr();
 							db.Account.setPhoto(req.session.accountId, imgData, function (err) {
 								if (!err) {
@@ -139,7 +140,6 @@ exports.registerPost = function(req, res) {
 									db.alphabeticalAssholes.addAccount(account);
 									db.cache.expire('totalAccountCache');
 									db.creepyJesus.registered(account._id);
-									req.session.processOnboard = true;
 									done("redirect");
 								} else {
 									account.remove();
