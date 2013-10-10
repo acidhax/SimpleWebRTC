@@ -147,6 +147,9 @@ app.post('/change-password', user.changePasswordPost);
 app.post('/search-people', user.searchPeople);
 app.post('/invite-friend', user.inviteFriend);
 app.get('/how-to-share', index.howToShare);
+app.get('/rate', function(req, res) {
+  res.redirect('https://chrome.google.com/webstore/detail/disco-beta/edpngmdlbbfkmjhmoelpbhdalhmmjfap');
+});
 
 app.get('/facebook/get-profile-photo', facebook.getProfilePhoto);
 app.get('/facebook/get-profile-photo-callback', facebook.getProfilePhotoCallback);
