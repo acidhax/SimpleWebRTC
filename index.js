@@ -159,6 +159,16 @@ app.get('/facebook/get-profile-photo-callback', facebook.getProfilePhotoCallback
 app.get('/setup-alphabetical-assholes', function(req, res) {
   db.alphabeticalAssholes.initialize(res.send.bind(res));
 });
+app.get('/setup-account-created', function(req, res) {
+  db.Account.find({}, function(err, accounts) {
+    async.forEach(accounts, function(account, next) {
+      db.metrics.setAccountCreatedOnUser(account.email, account._id.getTimestamp());
+      next();
+    }, function(err) {
+      res.send(err);
+    });
+  });
+});
 
 app.get('/get-all-users', user.getAllUsers);
 app.get('/get-all-users/:sinceId', user.getAllUsers)
