@@ -1,7 +1,7 @@
 var db = require('../db'),
 	async = require('async');
 
-exports.goTime = function(req, res) {
+exports.autoNoteFiveThousand = function(req, res) {
 
 	var theKey = req.params.theKey;
 	// Get array of people

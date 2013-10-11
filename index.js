@@ -6,6 +6,7 @@ var express = require('express'),
 	db = require('./db'),
   index = require('./routes'),
   user = require('./routes/user'),
+  mixpanel = require('./routes/mixpanel'),
   facebook = require('./routes/facebook'),
   fs = require('fs'),
   os = require('os'),
@@ -147,7 +148,7 @@ app.post('/change-password', user.changePasswordPost);
 app.post('/search-people', user.searchPeople);
 app.post('/invite-friend', user.inviteFriend);
 app.get('/how-to-share', index.howToShare);
-app.post('/mixpanel/auto-note-five-thousand/:theKey');
+app.post('/mixpanel/auto-note-five-thousand/:theKey', mixpanel.autoNoteFiveThousand);
 app.get('/rate', function(req, res) {
   res.redirect('https://chrome.google.com/webstore/detail/disco-beta/edpngmdlbbfkmjhmoelpbhdalhmmjfap');
 });
