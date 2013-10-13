@@ -130,6 +130,7 @@ exports.registerPost = function(req, res) {
 						if (!err) {
 							// Upload photostuff time!!!
 							req.session.accountId = account._id;
+							req.session.processOnboard = true;
 							db.vanity.accounts.incr();
 							db.Account.setPhoto(req.session.accountId, imgData, function (err) {
 								if (!err) {
@@ -139,7 +140,6 @@ exports.registerPost = function(req, res) {
 									db.alphabeticalAssholes.addAccount(account);
 									db.cache.expire('totalAccountCache');
 									db.creepyJesus.registered(account._id);
-									db.redisCallback.exec('onboardShare4', account._id, function (){});
 									done("redirect");
 								} else {
 									account.remove();
@@ -164,7 +164,7 @@ exports.registerPost = function(req, res) {
 			if (defaultProfilePhoto) {
 				res.redirect('/update-photo');
 			} else {
-				res.redirect('/logged-in');
+				res.redirect('/onboard-complete');
 			}
 		} else {
 			// ERRRRORRR MESSAAAGE
@@ -245,6 +245,15 @@ exports.loginPost = function(req, res) {
 		db.creepyJesus.loggedIn(account._id);
 		db.sessions.addSessionToAccount(account._id, req.sessionID);
 	}
+};
+
+exports.onboardComplete = function(req, res) {
+	if (req.session.accountId && req.session.processOnboard) {
+		req.session.processOnboard = false;
+		db.redisCallback.exec('onboardShare4', req.session.accountId, function (){});
+	}
+
+	res.redirect('/logged-in')
 };
 
 exports.loggedIn = function(req, res) {

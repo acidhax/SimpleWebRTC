@@ -6,6 +6,7 @@ var express = require('express'),
 	db = require('./db'),
   index = require('./routes'),
   user = require('./routes/user'),
+  mixpanel = require('./routes/mixpanel'),
   facebook = require('./routes/facebook'),
   fs = require('fs'),
   os = require('os'),
@@ -135,6 +136,7 @@ app.post('/register', user.registerPost);
 app.post('/has-password', user.hasPassword);
 app.get('/login', user.login);
 app.post('/login', user.loginPost);
+app.get('/onboard-complete', user.onboardComplete);
 app.get('/logged-in', user.loggedIn);
 app.get('/get-friends', user.getFriends);
 app.get('/get-suggested-friends', user.getSuggestedFriends);
@@ -146,12 +148,26 @@ app.post('/change-password', user.changePasswordPost);
 app.post('/search-people', user.searchPeople);
 app.post('/invite-friend', user.inviteFriend);
 app.get('/how-to-share', index.howToShare);
+app.post('/mixpanel/auto-note-five-thousand/:theKey', mixpanel.autoNoteFiveThousand);
+app.get('/rate', function(req, res) {
+  res.redirect('https://chrome.google.com/webstore/detail/disco-beta/edpngmdlbbfkmjhmoelpbhdalhmmjfap');
+});
 
 app.get('/facebook/get-profile-photo', facebook.getProfilePhoto);
 app.get('/facebook/get-profile-photo-callback', facebook.getProfilePhotoCallback);
 
 app.get('/setup-alphabetical-assholes', function(req, res) {
   db.alphabeticalAssholes.initialize(res.send.bind(res));
+});
+app.get('/setup-account-created', function(req, res) {
+  db.Account.find({}, function(err, accounts) {
+    async.forEach(accounts, function(account, next) {
+      db.metrics.setAccountCreatedOnUser(account.email, account._id.getTimestamp());
+      next();
+    }, function(err) {
+      res.send(err);
+    });
+  });
 });
 
 app.get('/get-all-users', user.getAllUsers);
