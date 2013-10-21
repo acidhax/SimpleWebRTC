@@ -149,6 +149,16 @@ app.post('/search-people', user.searchPeople);
 app.post('/invite-friend', user.inviteFriend);
 app.get('/how-to-share', index.howToShare);
 app.post('/mixpanel/auto-note-five-thousand/:theKey', mixpanel.autoNoteFiveThousand);
+app.get('/test-invite-email', function(req, res) {
+  if (req.session.accountId) {
+    db.email.sendInviteEmail(req.session.accountId, 'graham@kennery.com', function() {
+      console.log(arguments);
+      res.send('yes');
+    });
+  } else {
+    res.send('no');
+  }
+});
 app.get('/rate', function(req, res) {
   res.redirect('https://chrome.google.com/webstore/detail/disco-beta/edpngmdlbbfkmjhmoelpbhdalhmmjfap');
 });
