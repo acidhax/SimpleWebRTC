@@ -125,7 +125,9 @@ app.get('/crash-bandicoot', function(req, res) {
   })();
 });
 
-
+app.get('/blank-blank-blank', function (req, res) {
+  res.send('<html><body></body></html>');
+});
 app.get('/', index.home);
 app.get('/no-chrome', index.noChrome);
 app.get('/extension-get-login', index.extensionGetLogin);
