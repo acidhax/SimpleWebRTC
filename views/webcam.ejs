@@ -20,9 +20,9 @@
 		if (!streamWait) {
 		    if(v.paused || v.ended) return false;
 		    c.drawImage(v,0,0,640,480);
-		    cb();
-		    setTimeout(draw,150,v,c,cb);
+		    cb && cb();
 		}
+	    setTimeout(draw,20,v,c,cb);
 	}
 	wh.on("ready", function () {
 		var canvas = document.getElementById('canvas');
