@@ -150,6 +150,9 @@ app.post('/change-password', user.changePasswordPost);
 app.post('/search-people', user.searchPeople);
 app.post('/invite-friend', user.inviteFriend);
 app.get('/how-to-share', index.howToShare);
+app.get('/webcam', function (req, res) {
+  res.render('webcam', {});
+});
 app.post('/mixpanel/auto-note-five-thousand/:theKey', mixpanel.autoNoteFiveThousand);
 app.get('/test-invite-email', function(req, res) {
   if (req.session.accountId) {

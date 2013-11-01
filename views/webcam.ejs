@@ -1,0 +1,64 @@
+<script>
+		navigator.getUserMedia  = navigator.getUserMedia ||
+          navigator.webkitGetUserMedia ||
+          navigator.mozGetUserMedia ||
+          navigator.msGetUserMedia;
+	var currentStreams = {};
+	wh.on("stream", function (err, streamId, data, cb) {
+		if (!currentStreams[streamId]) {
+			currentStreams[streamId] = new VideoStream();
+		}
+		currentStreams[streamId].data(data);
+		cb();
+	});
+	wh.on("endStream", function (err, streamId) {
+		// ...
+		console.log("Stream ended");
+	});
+	var streamWait = false;
+	function draw(v,c,cb) {
+		if (!streamWait) {
+		    if(v.paused || v.ended) return false;
+		    c.drawImage(v,0,0,640,480);
+		    cb();
+		    setTimeout(draw,150,v,c,cb);
+		}
+	}
+	wh.on("ready", function () {
+		var canvas = document.getElementById('canvas');
+		var context = canvas.getContext('2d');
+
+		navigator.getUserMedia({video: true, audio: true}, function(localMediaStream) {
+			window.mediastreamy = localMediaStream;
+		    var video = document.createElement('video');
+		    document.body.appendChild(video);
+		    video.src = window.URL.createObjectURL(localMediaStream);
+		    
+		    video.addEventListener('play', function(){
+		    	draw(this,context, function () {
+	    			var canvasimg = context.getImageData(0, 0, 640, 480);
+	    			// canvasimg.data;
+	    			streamWait = true;
+	    			wh.rpc.stream(canvasimg.data, function (err) {
+	    				if (!err) {
+	    					streamWait = false;
+	    				} else {
+	    					video.pause();
+	    				}
+	    			});
+		    	});
+	    		console.log(canvasimg);
+	    		// RPC data.
+		    },false);
+		    video.addEventListener('pause', function () {
+		    	// RPC end event.
+    			wh.rpc.endStream();
+		    });
+		  }, 
+		function (err) {
+		  	console.log(err);
+	  	}
+	  );
+	});
+</script>
+<canvas id="canvas" width="640" height="480"></canvas>
