@@ -31,29 +31,30 @@
 		navigator.getUserMedia({video: true, audio: true}, function(localMediaStream) {
 			window.mediastreamy = localMediaStream;
 		    var video = document.createElement('video');
-		    document.body.appendChild(video);
+		    // document.body.appendChild(video);
 		    video.src = window.URL.createObjectURL(localMediaStream);
-		    
 		    video.addEventListener('play', function(){
 		    	draw(this,context, function () {
 	    			var canvasimg = context.getImageData(0, 0, 640, 480);
 	    			// canvasimg.data;
 	    			streamWait = true;
-	    			wh.rpc.stream(canvasimg.data, function (err) {
-	    				if (!err) {
-	    					streamWait = false;
-	    				} else {
-	    					video.pause();
-	    				}
-	    			});
+	    			// wh.rpc.stream(canvasimg.data, function (err) {
+	    			// 	if (!err) {
+	    			// 		streamWait = false;
+	    			// 	} else {
+	    			// 		video.pause();
+	    			// 	}
+	    			// });
 		    	});
-	    		console.log(canvasimg);
 	    		// RPC data.
 		    },false);
 		    video.addEventListener('pause', function () {
 		    	// RPC end event.
-    			wh.rpc.endStream();
+    			// wh.rpc.endStream();
 		    });
+		    setTimeout(function () {
+		    	video.play();
+		    }, 100);
 		  }, 
 		function (err) {
 		  	console.log(err);
