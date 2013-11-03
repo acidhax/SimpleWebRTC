@@ -1,4 +1,4 @@
-var SocketIOExtensionClient = function (collider, socket) {
+var SocketIOExtensionClient = function (collider, wh) {
 	this.collider = theBackgroundPage;
 	SimplEE.EventEmitter.call(this);
 	var self = this;
@@ -9,12 +9,15 @@ var SocketIOExtensionClient = function (collider, socket) {
 		});
 	});
 	this.isBackground = chrome.runtime.getBackgroundPage != null || false;
-	this.socket = socket || {};
+	
 	if (this.isBackground) {
+		this.wh = wh;
+		this.socket = wh.socket || {};
 		this.on("Session", function (cb) {
 			cb(self.socket.socket.sessionid);
 		});
 	} else if (!this.isBackground) {
+		this.socket = {};
 		this.collider.transmit("socketIOSession", function (sessionId) {
 			self.socket.sessionId = sessionId;
 		})
