@@ -330,6 +330,13 @@ wh.on("live", function (cb) {
   });
 });
 
+wh.on("stream", function (data, cb) {
+  this.rpc.stream(null, 1, data, function () {
+    console.log("NEXT");
+    cb();
+  });
+});
+
 var server = http.createServer(app);
 server.listen(serviceListenPort, function(){
   console.log("Service listening on port " + clc.yellow(serviceListenPort + ' ' +serviceExternalPort)  + " in " + app.settings.env + " mode");
