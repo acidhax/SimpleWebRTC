@@ -12,7 +12,7 @@ function SimpleWebRTC(opts) {
     var self = this;
     var options = opts || {};
     var config = this.config = {
-            url: 'http://signaling.simplewebrtc.com:8888',
+            url: 'http://localhost:8001',
             debug: false,
             localVideoEl: '',
             remoteVideosEl: '',
@@ -69,6 +69,7 @@ function SimpleWebRTC(opts) {
             if (peers.length) {
                 peer = peers[0];
             } else {
+                console.log("Creating peer.");
                 peer = self.webrtc.createPeer({
                     id: message.from,
                     type: message.roomType,
@@ -199,6 +200,7 @@ SimpleWebRTC.prototype.joinRoom = function (name, cb) {
                 client = roomDescription.clients[id];
                 for (type in client) {
                     if (client[type]) {
+                        console.log("Creating peer.");
                         peer = self.webrtc.createPeer({
                             id: id,
                             type: type
@@ -283,6 +285,7 @@ SimpleWebRTC.prototype.shareScreen = function (cb) {
             self.webrtc.peers.forEach(function (existingPeer) {
                 var peer;
                 if (existingPeer.type === 'video') {
+                    console.log("Creating peer.");
                     peer = self.webrtc.createPeer({
                         id: existingPeer.id,
                         type: 'screen',
@@ -831,6 +834,7 @@ WebRTC.prototype = Object.create(WildEmitter.prototype, {
 });
 
 WebRTC.prototype.createPeer = function (opts) {
+    console.log("Creating peer.");
     var peer;
     opts.parent = this;
     peer = new Peer(opts);

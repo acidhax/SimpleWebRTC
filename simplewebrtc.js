@@ -55,37 +55,15 @@ function SimpleWebRTC(opts) {
     connection = this.connection = io.connect(this.config.url);
 
     connection.on('connect', function () {
-        self.emit('connectionReady', connection.socket.sessionid);
-        self.sessionReady = true;
-        self.testReadiness();
+        self.onSignalConnect();
     });
 
     connection.on('message', function (message) {
-        var peers = self.webrtc.getPeers(message.from, message.roomType);
-        var peer;
-
-        if (message.type === 'offer') {
-            if (peers.length) {
-                peer = peers[0];
-            } else {
-                peer = self.webrtc.createPeer({
-                    id: message.from,
-                    type: message.roomType,
-                    sharemyscreen: message.roomType === 'screen' && !message.broadcaster
-                });
-            }
-            peer.handleMessage(message);
-        } else if (peers.length) {
-            peers.forEach(function (peer) {
-                peer.handleMessage(message);
-            });
-        }
+        self.onSignalMessage(message);
     });
 
     connection.on('remove', function (room) {
-        if (room.id !== self.connection.socket.sessionid) {
-            self.webrtc.removePeers(room.id, room.type);
-        }
+        self.onSignalRemove(room);
     });
 
     // instantiate our main WebRTC helper
@@ -136,6 +114,41 @@ SimpleWebRTC.prototype = Object.create(WildEmitter.prototype, {
         value: SimpleWebRTC
     }
 });
+
+SimpleWebRTC.prototype.onSignalMessage = function(message) {
+    var peers = this.webrtc.getPeers(message.from, message.roomType);
+    var peer;
+
+    if (message.type === 'offer') {
+        if (peers.length) {
+            peer = peers[0];
+        } else {
+            console.log("Creating peer.");
+            peer = this.webrtc.createPeer({
+                id: message.from,
+                type: message.roomType,
+                sharemyscreen: message.roomType === 'screen' && !message.broadcaster
+            });
+        }
+        peer.handleMessage(message);
+    } else if (peers.length) {
+        peers.forEach(function (peer) {
+            peer.handleMessage(message);
+        });
+    }
+};
+
+SimpleWebRTC.prototype.onSignalRemove = function(room) {
+    if (room.id !== this.connection.socket.sessionid) {
+        this.webrtc.removePeers(room.id, room.type);
+    }
+};
+
+SimpleWebRTC.prototype.onSignalConnect = function() {
+    this.emit('connectionReady', this.connection.socket.sessionid);
+    this.sessionReady = true;
+    this.testReadiness();
+};
 
 SimpleWebRTC.prototype.leaveRoom = function () {
     if (this.roomName) {
@@ -198,6 +211,7 @@ SimpleWebRTC.prototype.joinRoom = function (name, cb) {
                 client = roomDescription.clients[id];
                 for (type in client) {
                     if (client[type]) {
+                        console.log("Creating peer.");
                         peer = self.webrtc.createPeer({
                             id: id,
                             type: type
@@ -282,6 +296,7 @@ SimpleWebRTC.prototype.shareScreen = function (cb) {
             self.webrtc.peers.forEach(function (existingPeer) {
                 var peer;
                 if (existingPeer.type === 'video') {
+                    console.log("Creating peer.");
                     peer = self.webrtc.createPeer({
                         id: existingPeer.id,
                         type: 'screen',
