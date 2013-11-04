@@ -352,6 +352,7 @@ server.listen(serviceListenPort, function(){
     , 'jsonp-polling'
   ]);
   io.set('log level', process.env.socketioLogLevel || 0);
+  
   configureWebRTC();
 
   wh.start({

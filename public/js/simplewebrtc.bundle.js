@@ -7,7 +7,6 @@ var attachMediaStream = require('attachmediastream');
 var getScreenMedia = require('getscreenmedia');
 var mockconsole = require('mockconsole');
 
-
 function SimpleWebRTC(opts) {
     console.log("SimpleWebRTC");
     var self = this;
