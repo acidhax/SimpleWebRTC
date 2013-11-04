@@ -78,9 +78,7 @@ function SimpleWebRTC(opts) {
     });
 
     // proxy events from WebRTC
-    this.webrtc.on('*', function () {
-       self.emit.apply(self, arguments);
-    });
+    this.webrtc.on('*', this.onWebRTCLocalStream.bind(this));
 
     // log all events in debug mode
     if (config.debug) {
@@ -88,13 +86,9 @@ function SimpleWebRTC(opts) {
     }
 
     // check for readiness
-    this.webrtc.on('localStream', function () {
-       this.onWebRTCLocalStream();
-    });
+    this.webrtc.on('localStream', this.onWebRTCLocalStream.bind(this));
 
-    this.webrtc.on('message', function (payload) {
-       this.onWebRTCMessage(payload);
-    });
+    this.webrtc.on('message', this.onWebRTCMessage.bind(this));
 
     this.webrtc.on('peerStreamAdded', this.handlePeerStreamAdded.bind(this));
     this.webrtc.on('peerStreamRemoved', this.handlePeerStreamRemoved.bind(this));
