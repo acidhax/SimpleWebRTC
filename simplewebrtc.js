@@ -79,9 +79,7 @@ function SimpleWebRTC(opts) {
 
     // check for readiness
     this.webrtc.on('localStream', this.onWebRTCLocalStream.bind(this));
-
     this.webrtc.on('message', this.onWebRTCMessage.bind(this));
-
     this.webrtc.on('peerStreamAdded', this.handlePeerStreamAdded.bind(this));
     this.webrtc.on('peerStreamRemoved', this.handlePeerStreamRemoved.bind(this));
 
@@ -101,6 +99,7 @@ SimpleWebRTC.prototype = Object.create(WildEmitter.prototype, {
     }
 });
 
+
 SimpleWebRTC.prototype.onWebRTCMessages = function() {
    this.emit.apply(this, arguments);
 };
@@ -113,6 +112,14 @@ SimpleWebRTC.prototype.onWebRTCMessage = function(payload) {
    this.connection.emit('message', payload);
 };
 
+SimpleWebRTC.prototype.onSignalPeerConnected = function(id, type) {
+    var peer = self.webrtc.createPeer({
+        id: id,
+        type: type
+    });
+    peer.start();
+};
+
 SimpleWebRTC.prototype.onSignalMessage = function(message) {
     var peers = this.webrtc.getPeers(message.from, message.roomType);
     var peer;
@@ -121,7 +128,7 @@ SimpleWebRTC.prototype.onSignalMessage = function(message) {
         if (peers.length) {
             peer = peers[0];
         } else {
-            console.log("Creating peer.");
+            console.log("Creating peer."); // Me?
             peer = this.webrtc.createPeer({
                 id: message.from,
                 type: message.roomType,
