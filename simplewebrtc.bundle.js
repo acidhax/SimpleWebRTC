@@ -4997,7 +4997,6 @@ var getScreenMedia = require('getscreenmedia');
 var mockconsole = require('mockconsole');
 var io = require('socket.io-client');
 
-
 function SimpleWebRTC(opts) {
     var self = this;
     var options = opts || {};
@@ -5090,7 +5089,6 @@ SimpleWebRTC.prototype = Object.create(WildEmitter.prototype, {
     }
 });
 
-
 SimpleWebRTC.prototype.onWebRTCMessages = function() {
    this.emit.apply(this, arguments);
 };
@@ -5104,7 +5102,7 @@ SimpleWebRTC.prototype.onWebRTCMessage = function(payload) {
 };
 
 SimpleWebRTC.prototype.onSignalPeerConnected = function(id, type) {
-    var peer = self.webrtc.createPeer({
+    var peer = this.webrtc.createPeer({
         id: id,
         type: type
     });
@@ -5207,12 +5205,7 @@ SimpleWebRTC.prototype.joinRoom = function (name, cb) {
                 client = roomDescription.clients[id];
                 for (type in client) {
                     if (client[type]) {
-                        console.log("Creating peer.");
-                        peer = self.webrtc.createPeer({
-                            id: id,
-                            type: type
-                        });
-                        peer.start();
+                        self.onSignalPeerConnected(id, type);
                     }
                 }
             }
