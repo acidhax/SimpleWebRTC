@@ -330,6 +330,10 @@ wh.on("live", function (cb) {
   });
 });
 
+wh.on("getStreamChannel", function () {
+  this.rpc.joinRTCRoom("testiemctester");
+});
+
 wh.on("stream", function (data, cb) {
   this.rpc.stream(null, 1, data, function () {
     console.log("NEXT");

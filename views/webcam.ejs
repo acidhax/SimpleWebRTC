@@ -1,3 +1,5 @@
+<script src="/js/simplee.js"></script>
+<script src="/js/Socket.IO-ExtensionClient.js"></script>
 <script src="/js/simplewebrtc.bundle.js"></script> 
 <style>
     #remoteVideos video {
@@ -27,13 +29,22 @@
 		}
 	};
 	wh.on("joinRTCRoom", joinRTCRoom);
+	var _readyToGo = false;
 	webrtc.on('readyToCall', function () {
 		// you can name it anything
 		// if (rtcReady)
 		rtcReady = true;
+		if (_readyToGo) {
+			wh.rpc.getStreamChannel();
+		}
+		_readyToGo = true;
 	});
 	wh.on("ready", function () {
 		// we have to wait until it's ready
+		if (_readyToGo) {
+			wh.rpc.getStreamChannel();
+		}
+		_readyToGo = true;
 	});
 </script>
 <video id="localVideo"></video>
