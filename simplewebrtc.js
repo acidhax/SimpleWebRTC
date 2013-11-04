@@ -11,16 +11,16 @@ function SimpleWebRTC(opts) {
     var self = this;
     var options = opts || {};
     var config = this.config = {
-            url: 'http://signaling.simplewebrtc.com:8888',
-            debug: false,
-            localVideoEl: '',
-            remoteVideosEl: '',
-            enableDataChannels: true,
-            autoRequestMedia: false,
-            autoRemoveVideos: true,
-            adjustPeerVolume: true,
-            peerVolumeWhenSpeaking: 0.25
-        };
+        url: 'http://signaling.simplewebrtc.com:8888',
+        debug: false,
+        localVideoEl: '',
+        remoteVideosEl: '',
+        enableDataChannels: true,
+        autoRequestMedia: false,
+        autoRemoveVideos: true,
+        adjustPeerVolume: true,
+        peerVolumeWhenSpeaking: 0.25
+    };
     var item, connection;
 
     // We also allow a 'logger' option. It can be any object that implements
@@ -89,11 +89,11 @@ function SimpleWebRTC(opts) {
 
     // check for readiness
     this.webrtc.on('localStream', function () {
-       self.testReadiness();
+       this.onWebRTCLocalStream();
     });
 
     this.webrtc.on('message', function (payload) {
-       self.connection.emit('message', payload);
+       this.onWebRTCMessage(payload);
     });
 
     this.webrtc.on('peerStreamAdded', this.handlePeerStreamAdded.bind(this));
@@ -114,6 +114,18 @@ SimpleWebRTC.prototype = Object.create(WildEmitter.prototype, {
         value: SimpleWebRTC
     }
 });
+
+SimpleWebRTC.prototype.onWebRTCMessages = function() {
+   this.emit.apply(this, arguments);
+};
+
+SimpleWebRTC.prototype.onWebRTCLocalStream = function() {
+    this.testReadiness();
+};
+
+SimpleWebRTC.prototype.onWebRTCMessage = function(payload) {
+   this.connection.emit('message', payload);
+};
 
 SimpleWebRTC.prototype.onSignalMessage = function(message) {
     var peers = this.webrtc.getPeers(message.from, message.roomType);
