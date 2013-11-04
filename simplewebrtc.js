@@ -54,17 +54,9 @@ function SimpleWebRTC(opts) {
     // our socket.io connection
     connection = this.connection = io.connect(this.config.url);
 
-    connection.on('connect', function () {
-        self.onSignalConnect();
-    });
-
-    connection.on('message', function (message) {
-        self.onSignalMessage(message);
-    });
-
-    connection.on('remove', function (room) {
-        self.onSignalRemove(room);
-    });
+    connection.on('connect', this.onSignalConnect.bind(this));
+    connection.on('message', this.onSignalMessage.bind(this));
+    connection.on('remove', this.onSignalRemove.bind(this));
 
     // instantiate our main WebRTC helper
     // using same logger from logic here
