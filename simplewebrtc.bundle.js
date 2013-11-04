@@ -5002,7 +5002,7 @@ function SimpleWebRTC(opts) {
     var self = this;
     var options = opts || {};
     var config = this.config = {
-        url: 'http://signaling.simplewebrtc.com:8888',
+        url: opts.url || 'https://hp.discome.com',
         debug: false,
         localVideoEl: '',
         remoteVideosEl: '',
